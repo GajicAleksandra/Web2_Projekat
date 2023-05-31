@@ -10,7 +10,6 @@ import Container from '@mui/material/Container';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -31,6 +30,17 @@ const Profile = () => {
     fetchData();
   }, []);
 
+  const fetchData = async () => {
+    await GetLoggedInUser()
+      .then(function(response){
+          setUserData(JSON.parse(JSON.stringify(response.data))); 
+          console.log(response.data)
+      })
+      .catch(function(error){
+          console.log(error);
+      });
+  }
+
   const handleChange = (e) => {
     const {name, value} = e.target;
     if(value == ''){
@@ -42,26 +52,17 @@ const Profile = () => {
     setUserData({...userData, [name]: value});
   }
 
-  const fetchData = async () => {
-    await GetLoggedInUser()
-      .then(function(response){
-          setUserData(JSON.parse(JSON.stringify(response.data))); 
-      })
-      .catch(function(error){
-          console.log(error);
-      });
-  }
-
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = async (data) => {
-    await ChangeProfile(data)
+  const onSubmit = async () => {
+    console.log(userData);
+    event.preventDefault();
+    await ChangeProfile(userData)
       .then(function () {
         navigate("/");
       })
       .catch(function (error) {
-        document.getElementById("registerError").innerHTML =
-          error.response.data;
+        document.getElementById("registerError").innerHTML = error.response.data;
       });
   };
 
@@ -88,7 +89,7 @@ const Profile = () => {
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={onSubmit}
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>

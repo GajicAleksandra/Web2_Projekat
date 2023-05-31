@@ -7,7 +7,6 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
-
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
@@ -35,6 +34,9 @@ export default function Register() {
   const handleChange = (e) => {
     const {name, value} = e.target;
     setUserData({...userData, [name]: value});
+    if(value != ''){
+      document.getElementById(name+'Error').innerHTML = "";
+    }
   };
 
   const formSchema = Yup.object().shape({
@@ -56,7 +58,9 @@ export default function Register() {
       .required('Potvrdite lozinku.')
       .oneOf([Yup.ref('password')], 'Lozinke se ne poklapaju.'),
     userType: Yup.string()
-      .required("Izaberite tip korisnika.")
+      .required("Izaberite tip korisnika."),
+    birthDate: Yup.string()
+      .required("Unesite datum rođenja.")
   })
   
   const formOptions = { resolver: yupResolver(formSchema) }
@@ -110,7 +114,7 @@ export default function Register() {
                   autoFocus
                   onChange={e => handleChange(e)}
                 />
-                { errors.username && <span style={{color: "red"}}>{errors.username.message}</span> }
+                { errors.username && <span id='usernameError' style={{color: "red"}}>{errors.username.message}</span> }
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -123,7 +127,7 @@ export default function Register() {
                   autoComplete="email"
                   onChange={e => handleChange(e)}
                 />
-                { errors.email && <span style={{color: "red"}}>{errors.email.message}</span> }
+                { errors.email && <span id='emailError' style={{color: "red"}}>{errors.email.message}</span> }
               </Grid>
               
               <Grid item xs={12} sm={6}>
@@ -137,7 +141,7 @@ export default function Register() {
                   label="Ime"
                   onChange={e => handleChange(e)}
                 />
-                { errors.name && <span style={{color: "red"}}>{errors.name.message}</span> }
+                { errors.name && <span id='nameError' style={{color: "red"}}>{errors.name.message}</span> }
               </Grid>
               
               <Grid item xs={12} sm={6}>
@@ -151,7 +155,7 @@ export default function Register() {
                   autoComplete="family-name"
                   onChange={e => handleChange(e)}
                 />
-                { errors.lastName && <span style={{color: "red"}}>{errors.lastName.message}</span> }
+                { errors.lastName && <span id='lastNameError' style={{color: "red"}}>{errors.lastName.message}</span> }
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -163,7 +167,7 @@ export default function Register() {
                   name="address"
                   onChange={e => handleChange(e)}
                 />
-                { errors.address && <span style={{color: "red"}}>{errors.address.message}</span> }
+                { errors.address && <span id='addressError' style={{color: "red"}}>{errors.address.message}</span> }
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -180,6 +184,7 @@ export default function Register() {
                   name="birthDate"
                   onChange={e => handleChange(e)}
                 />
+                { errors.birthDate && <span id='birthDateError' style={{color: "red"}}>{errors.birthDate.message}</span> }
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -193,7 +198,7 @@ export default function Register() {
                   autoComplete="new-password"
                   onChange={e => handleChange(e)}
                 />
-                { errors.password && <span style={{color: "red", width: 200}}>{errors.password.message}</span> }
+                { errors.password && <span id='passwordError' style={{color: "red", width: 200}}>{errors.password.message}</span> }
               </Grid>
               
               <Grid item xs={12} sm={6}>
@@ -208,7 +213,7 @@ export default function Register() {
                   autoComplete="new-password"
                   onChange={e => handleChange(e)}
                 />
-                { errors.confirmPassword && <span style={{color: "red"}}>{errors.confirmPassword.message}</span> }
+                { errors.confirmPassword && <span id='confirmPasswordError' style={{color: "red"}}>{errors.confirmPassword.message}</span> }
               </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth variant="outlined" >
@@ -225,7 +230,7 @@ export default function Register() {
                     <MenuItem value={2}>Prodavac</MenuItem>
                   </Select>
                 </FormControl>
-                { errors.userType && <span style={{color: "red"}}>{errors.userType.message}</span> }
+                { errors.userType && <span id='userTypeError' style={{color: "red"}}>{errors.userType.message}</span> }
               </Grid>
               <Grid item xs={12} sm={6}>
                 

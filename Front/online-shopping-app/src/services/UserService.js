@@ -11,5 +11,5 @@ export const ChangeProfile = (data) => {
     const config = {
         headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
     }
-    return axios.post(`https://localhost:7066/changeprofile`, data, config);
+    return axios.put(`https://localhost:7066/changeprofile`, data, config);
 }
