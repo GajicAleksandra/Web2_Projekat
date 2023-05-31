@@ -11,6 +11,7 @@ namespace App.UserService.BussinessLogic.Services.Interface
     public interface IUserService
     {
         ReturnValue<LoggedInDto> GetLoggedInUser(string email);
-        ReturnValue<LoggedInDto> ChangeUserData(LoggedInDto loggedInDto);
+        ReturnValue<LoggedInDto> UpdateUserData(LoggedInDto loggedInDto);
+        ReturnValue<List<LoggedInDto>> GetSalesmen();
     }
 }

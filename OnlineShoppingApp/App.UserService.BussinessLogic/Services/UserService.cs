@@ -42,7 +42,7 @@ namespace App.UserService.BussinessLogic.Services
             return returnValue;
         }
 
-        public ReturnValue<LoggedInDto> ChangeUserData(LoggedInDto loggedInDto)
+        public ReturnValue<LoggedInDto> UpdateUserData(LoggedInDto loggedInDto)
         {
             //validacija
             ReturnValue<LoggedInDto> returnValue = new ReturnValue<LoggedInDto>();
@@ -60,6 +60,27 @@ namespace App.UserService.BussinessLogic.Services
             returnValue.Success = true;
             returnValue.Message = string.Empty;
             returnValue.Object = editedUser;
+
+            return returnValue;
+        }
+
+        public ReturnValue<List<LoggedInDto>> GetSalesmen()
+        {
+            ReturnValue<List<LoggedInDto>> returnValue = new ReturnValue<List<LoggedInDto>>();
+            List<LoggedInDto> salesmen = _userRepository.GetAllSalesmen();
+
+            if(salesmen == null || salesmen.Count == 0)
+            {
+                returnValue.Success = false;
+                returnValue.Message = "Desila se greška.";
+                returnValue.Object = null;
+
+                return returnValue;
+            }
+
+            returnValue.Success = true;
+            returnValue.Message = string.Empty;
+            returnValue.Object = salesmen;
 
             return returnValue;
         }

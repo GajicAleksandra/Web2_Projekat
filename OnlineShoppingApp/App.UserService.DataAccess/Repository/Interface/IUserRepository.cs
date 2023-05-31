@@ -14,5 +14,6 @@ namespace App.UserService.DataAccess.Repository.Interface
         bool CheckIfUserExists(string email);
         T FindUser<T>(string email);
         LoggedInDto UpdateUser(LoggedInDto loggedInDto);
+        List<LoggedInDto> GetAllSalesmen();
     }
 }

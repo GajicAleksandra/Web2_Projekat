@@ -1,6 +1,7 @@
 ﻿using App.UserService.DataAccess.Data;
 using App.UserService.DataAccess.Repository.Interface;
 using App.UserService.Models.DTOs;
+using App.UserService.Models.Enums;
 using App.UserService.Models.Models;
 using AutoMapper;
 using System;
@@ -60,6 +61,12 @@ namespace App.UserService.DataAccess.Repository
             _db.SaveChanges();
 
             return loggedInDto;
+        }
+
+        public List<LoggedInDto> GetAllSalesmen()
+        {
+            List<User> salesmen = _db.Users.Where(u => u.UserType == UserType.Salesman).ToList();
+            return _mapper.Map<List<LoggedInDto>>(salesmen) ?? new List<LoggedInDto>();
         }
     }
 }

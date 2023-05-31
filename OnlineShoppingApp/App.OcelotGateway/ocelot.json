@@ -71,6 +71,18 @@
       ],
       "UpstreamPathTemplate": "/changeprofile",
       "UpstreamHttpMethod": [ "put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/user/getallsalesmen",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7059
+        }
+      ],
+      "UpstreamPathTemplate": "/getsalesmen",
+      "UpstreamHttpMethod": [ "get" ]
     }
   ]
 }

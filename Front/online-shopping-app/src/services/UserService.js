@@ -13,3 +13,13 @@ export const ChangeProfile = (data) => {
     }
     return axios.put(`https://localhost:7066/changeprofile`, data, config);
 }
+
+export const getAllSalesmen = () => {
+    const config = {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
+    }
+    return axios.get(`https://localhost:7066/getsalesmen`, config)
+    .then(function(response){
+        console.log(response.data);
+    });
+}

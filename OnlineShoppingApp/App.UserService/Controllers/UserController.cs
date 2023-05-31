@@ -50,9 +50,24 @@ namespace App.UserService.Controllers
                 return BadRequest();
             }
 
-            ReturnValue<LoggedInDto> returnValue = _userService.ChangeUserData(loggedInUser);
+            ReturnValue<LoggedInDto> returnValue = _userService.UpdateUserData(loggedInUser);
 
             if(!returnValue.Success)
+            {
+                return BadRequest(returnValue.Message);
+            }
+
+            return Ok(returnValue.Object);
+        }
+
+        [Authorize(Roles = "0")]
+        [Route("getallsalesmen")]
+        [HttpGet]
+        public IActionResult GetAllSalesmen()
+        {
+            ReturnValue<List<LoggedInDto>> returnValue = _userService.GetSalesmen();
+
+            if (!returnValue.Success)
             {
                 return BadRequest(returnValue.Message);
             }

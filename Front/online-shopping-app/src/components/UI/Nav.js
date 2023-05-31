@@ -42,12 +42,17 @@ export default function Nav() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <Button component={Link} href="/" color="inherit">Pocetna strana</Button>
           </Typography>
+          {user && 
+          <Typography variant="h6" component="div" sx={{ mr: 2}}>
+              <Button component={Link} href="/verifysalesmen" color="inherit">Zahtevi za verifikaciju</Button>
+          </Typography>}
           {!user && <>
             <Button component={Link} href="/register" color="inherit">Registrujte se</Button>
             <Button component={Link} href='/login' color="inherit">Ulogujte se</Button>
           </>}
           
-          { user && <Box sx={{ flexGrow: 0 }}>
+          { user && 
+            <Box sx={{ flexGrow: 0 }}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
               </IconButton>
@@ -73,8 +78,9 @@ export default function Nav() {
                 <MenuItem key="logout" component={Link} href='/' onClick={handleLogout}>
                   <Typography textAlign="center">Izlogujte se</Typography>
                 </MenuItem>
-            </Menu>
-          </Box>}
+              </Menu>
+            </Box>
+          }
         </Toolbar>
       </AppBar>
     </Box>
