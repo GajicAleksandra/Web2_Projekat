@@ -22,6 +22,8 @@ import { useState } from 'react';
 import { RegisterUser } from '../../services/AuthService';
 import Nav from '../UI/Nav'
 import RegisterVM from '../../models/RegisterVM'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const defaultTheme = createTheme();
 
@@ -34,7 +36,10 @@ export default function Register() {
   const handleChange = (e) => {
     const {name, value} = e.target;
     setUserData({...userData, [name]: value});
-    if(value != ''){
+    if(value === ''){
+      document.getElementById(name+'Error').innerHTML = "Popunite obavezno polje.";
+    }
+    else{
       document.getElementById(name+'Error').innerHTML = "";
     }
   };
@@ -71,12 +76,32 @@ export default function Register() {
     
   const onSubmit = async (data) => {
     console.log(data);
+    data.image = "";
     await RegisterUser(data)
-    .then(function(){
-      navigate('/');
+    .then(function(response){
+      toast.success(response.data, {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        });
+      navigate('/login');
     })
     .catch(function(error){
-      document.getElementById('registerError').innerHTML = error.response.data;
+      toast.error(error.response.data, {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        });
     });
   };
 
@@ -114,7 +139,7 @@ export default function Register() {
                   autoFocus
                   onChange={e => handleChange(e)}
                 />
-                { errors.username && <span id='usernameError' style={{color: "red"}}>{errors.username.message}</span> }
+                <span id='usernameError' style={{color: "red"}}>{errors.username?.message}</span>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -127,7 +152,7 @@ export default function Register() {
                   autoComplete="email"
                   onChange={e => handleChange(e)}
                 />
-                { errors.email && <span id='emailError' style={{color: "red"}}>{errors.email.message}</span> }
+                <span id='emailError' style={{color: "red"}}>{errors.email?.message}</span>
               </Grid>
               
               <Grid item xs={12} sm={6}>
@@ -141,7 +166,7 @@ export default function Register() {
                   label="Ime"
                   onChange={e => handleChange(e)}
                 />
-                { errors.name && <span id='nameError' style={{color: "red"}}>{errors.name.message}</span> }
+                <span id='nameError' style={{color: "red"}}>{errors.name?.message}</span>
               </Grid>
               
               <Grid item xs={12} sm={6}>
@@ -155,7 +180,7 @@ export default function Register() {
                   autoComplete="family-name"
                   onChange={e => handleChange(e)}
                 />
-                { errors.lastName && <span id='lastNameError' style={{color: "red"}}>{errors.lastName.message}</span> }
+                <span id='lastNameError' style={{color: "red"}}>{errors.lastName?.message}</span>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -167,7 +192,7 @@ export default function Register() {
                   name="address"
                   onChange={e => handleChange(e)}
                 />
-                { errors.address && <span id='addressError' style={{color: "red"}}>{errors.address.message}</span> }
+                <span id='addressError' style={{color: "red"}}>{errors.address?.message}</span>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -184,7 +209,7 @@ export default function Register() {
                   name="birthDate"
                   onChange={e => handleChange(e)}
                 />
-                { errors.birthDate && <span id='birthDateError' style={{color: "red"}}>{errors.birthDate.message}</span> }
+                <span id='birthDateError' style={{color: "red"}}>{errors.birthDate?.message}</span>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -198,7 +223,7 @@ export default function Register() {
                   autoComplete="new-password"
                   onChange={e => handleChange(e)}
                 />
-                { errors.password && <span id='passwordError' style={{color: "red", width: 200}}>{errors.password.message}</span> }
+                <span id='passwordError' style={{color: "red", width: 200}}>{errors.password?.message}</span>
               </Grid>
               
               <Grid item xs={12} sm={6}>
@@ -213,7 +238,7 @@ export default function Register() {
                   autoComplete="new-password"
                   onChange={e => handleChange(e)}
                 />
-                { errors.confirmPassword && <span id='confirmPasswordError' style={{color: "red"}}>{errors.confirmPassword.message}</span> }
+                <span id='confirmPasswordError' style={{color: "red"}}>{errors.confirmPassword?.message}</span>
               </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth variant="outlined" >
@@ -230,7 +255,7 @@ export default function Register() {
                     <MenuItem value={2}>Prodavac</MenuItem>
                   </Select>
                 </FormControl>
-                { errors.userType && <span id='userTypeError' style={{color: "red"}}>{errors.userType.message}</span> }
+                <span id='userTypeError' style={{color: "red"}}>{errors.userType?.message}</span>
               </Grid>
               <Grid item xs={12} sm={6}>
                 

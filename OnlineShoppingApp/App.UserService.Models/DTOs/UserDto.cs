@@ -20,5 +20,6 @@ namespace App.UserService.Models.DTOs
         public string Address { get; set; }
         public int UserType { get; set; }
         public string? Image { get; set; }
+        public int Status { get; set; }
     }
 }

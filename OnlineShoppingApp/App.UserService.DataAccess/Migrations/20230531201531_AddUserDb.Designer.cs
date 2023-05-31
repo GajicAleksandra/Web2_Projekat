@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.UserService.DataAccess.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20230525183335_CreateUserDb")]
-    partial class CreateUserDb
+    [Migration("20230531201531_AddUserDb")]
+    partial class AddUserDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -58,6 +58,9 @@ namespace App.UserService.DataAccess.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
 
                     b.Property<int>("UserType")
                         .HasColumnType("int");

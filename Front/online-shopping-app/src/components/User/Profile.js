@@ -9,8 +9,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Nav from '../UI/Nav';
@@ -43,7 +41,7 @@ const Profile = () => {
 
   const handleChange = (e) => {
     const {name, value} = e.target;
-    if(value == ''){
+    if(value === ''){
       document.getElementById(name + 'Error').innerHTML = "Ovo polje je obavezno.";
     }
     else{
@@ -52,11 +50,8 @@ const Profile = () => {
     setUserData({...userData, [name]: value});
   }
 
-  const { register, handleSubmit } = useForm();
-
   const onSubmit = async () => {
     console.log(userData);
-    event.preventDefault();
     await ChangeProfile(userData)
       .then(function () {
         navigate("/");
@@ -95,7 +90,6 @@ const Profile = () => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  {...register("username")}
                   autoComplete="username"
                   name="username"
                   required
@@ -110,7 +104,6 @@ const Profile = () => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  {...register("email")}
                   sx={{ cursor: "not-allowed" }}
                   fullWidth
                   disabled
@@ -125,7 +118,6 @@ const Profile = () => {
 
               <Grid item xs={12} sm={6}>
                 <TextField
-                  {...register("name")}
                   autoComplete="given-name"
                   name="name"
                   required
@@ -140,7 +132,6 @@ const Profile = () => {
 
               <Grid item xs={12} sm={6}>
                 <TextField
-                  {...register("lastName")}
                   required
                   fullWidth
                   id="lastName"
@@ -154,7 +145,6 @@ const Profile = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  {...register("address")}
                   required
                   fullWidth
                   id="address"
@@ -167,7 +157,6 @@ const Profile = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  {...register("birthDate")}
                   required
                   type="date"
                   bgcolor="transparent"

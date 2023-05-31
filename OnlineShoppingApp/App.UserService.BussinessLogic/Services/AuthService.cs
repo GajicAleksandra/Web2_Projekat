@@ -2,6 +2,7 @@
 using App.UserService.DataAccess.Repository.Interface;
 using App.UserService.Models;
 using App.UserService.Models.DTOs;
+using App.UserService.Models.Enums;
 using App.UserService.Models.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -42,10 +43,15 @@ namespace App.UserService.BussinessLogic.Services
                 return returnValue;
             }
 
+            if(userDto.UserType == 2)
+            {
+                userDto.Status = 0;
+            }
+
             userDto.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
             returnValue.Success = true;
             returnValue.Message = "";
-            returnValue.Object = GenerateToken(userDto);
+            returnValue.Object = "Uspesna registracija.";
 
             _userRepository.AddUser(userDto);
 
@@ -119,7 +125,7 @@ namespace App.UserService.BussinessLogic.Services
                 return false;
             }
 
-            UserDto userFromDb = _userRepository.FindUser(loginDto.Email);
+            UserDto userFromDb = _userRepository.FindUser<UserDto>(loginDto.Email);
 
             if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, userFromDb.Password))
             {

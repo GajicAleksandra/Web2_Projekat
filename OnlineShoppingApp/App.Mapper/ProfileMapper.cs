@@ -9,6 +9,7 @@ namespace App.Mapper
         public ProfileMapper() 
         {
             CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User, LoggedInDto>().ReverseMap();
         }
     }
 }

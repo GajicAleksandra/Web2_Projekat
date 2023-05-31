@@ -47,6 +47,30 @@
       ],
       "UpstreamPathTemplate": "/register",
       "UpstreamHttpMethod": [ "post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/user/getloggedinuser",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7059
+        }
+      ],
+      "UpstreamPathTemplate": "/getloggedinuser",
+      "UpstreamHttpMethod": [ "get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/user/changeprofile",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7059
+        }
+      ],
+      "UpstreamPathTemplate": "/changeprofile",
+      "UpstreamHttpMethod": [ "put" ]
     }
   ]
 }

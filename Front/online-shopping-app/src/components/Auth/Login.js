@@ -16,7 +16,9 @@ import { LoginSocialFacebook } from 'reactjs-social-login';
 import { FacebookLoginButton } from 'react-social-login-buttons';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import Nav from '../UI/Nav'
+import Nav from '../UI/Nav';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const defaultTheme = createTheme();
 
@@ -31,7 +33,16 @@ export default function Login() {
       navigate('/');
     })
     .catch(function(error){
-      document.getElementById('error').innerHTML = error.response.data;
+      toast.error(error.response.data, {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        });
     });
   };
 

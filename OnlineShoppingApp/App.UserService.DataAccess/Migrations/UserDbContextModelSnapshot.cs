@@ -57,6 +57,9 @@ namespace App.UserService.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserType")
                         .HasColumnType("int");
 

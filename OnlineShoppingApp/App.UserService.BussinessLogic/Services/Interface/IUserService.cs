@@ -1,4 +1,6 @@
-﻿using System;
+﻿using App.UserService.Models.DTOs;
+using App.UserService.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +10,7 @@ namespace App.UserService.BussinessLogic.Services.Interface
 {
     public interface IUserService
     {
+        ReturnValue<LoggedInDto> GetLoggedInUser(string email);
+        ReturnValue<LoggedInDto> ChangeUserData(LoggedInDto loggedInDto);
     }
 }

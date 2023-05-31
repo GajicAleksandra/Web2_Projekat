@@ -10,10 +10,7 @@ export const LoginUser = (data) => {
 }
 
 export const RegisterUser = (data) => {
-    return axios.post(`https://localhost:7066/register`, data)
-    .then(function(response){
-        localStorage.setItem('token', response.data)
-    })
+    return axios.post(`https://localhost:7066/register`, data);
 }
 
 export const getCurrentUser = () => {

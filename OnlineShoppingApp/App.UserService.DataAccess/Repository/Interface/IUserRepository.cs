@@ -12,6 +12,7 @@ namespace App.UserService.DataAccess.Repository.Interface
     {
         void AddUser(UserDto userDto);
         bool CheckIfUserExists(string email);
-        UserDto FindUser(string email);
+        T FindUser<T>(string email);
+        LoggedInDto UpdateUser(LoggedInDto loggedInDto);
     }
 }

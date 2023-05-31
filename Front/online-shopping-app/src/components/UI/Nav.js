@@ -11,11 +11,9 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { getCurrentUser, logout } from '../../services/AuthService';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export default function Nav() {
 
-  const navigate = useNavigate();
   const [user, setUser] = useState("");
 
     useEffect(() => {
