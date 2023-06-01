@@ -72,7 +72,7 @@ namespace App.UserService.BussinessLogic.Services
             if(salesmen == null || salesmen.Count == 0)
             {
                 returnValue.Success = false;
-                returnValue.Message = "Desila se greška.";
+                returnValue.Message = "Ne postoje prodavci koji čekaju verifikaciju.";
                 returnValue.Object = null;
 
                 return returnValue;
@@ -81,6 +81,32 @@ namespace App.UserService.BussinessLogic.Services
             returnValue.Success = true;
             returnValue.Message = string.Empty;
             returnValue.Object = salesmen;
+
+            return returnValue;
+        }
+
+        public ReturnValue<string> AcceptSalesman(string action, string salesman)
+        {
+            ReturnValue<string> returnValue = new ReturnValue<string>();
+            if (!_userRepository.ChangeSalesmanStatus(action, salesman))
+            {
+                returnValue.Success = false;
+                returnValue.Message = "Desila se greška. Pokušajte ponovo.";
+                returnValue.Object = null;
+
+                return returnValue;
+            }
+
+            returnValue.Success = true;
+            returnValue.Message = "";
+
+            if(action == "accept")
+                returnValue.Object = $"Uspešno ste prihvatili prodavca {salesman}.";
+            else if(action == "reject")
+                returnValue.Object = $"Uspešno ste odbili prodavca {salesman}.";
+
+
+            //poslati mejl ovom prodavcu
 
             return returnValue;
         }

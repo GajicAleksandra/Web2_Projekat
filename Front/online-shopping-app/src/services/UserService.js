@@ -19,7 +19,18 @@ export const getAllSalesmen = () => {
         headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
     }
     return axios.get(`https://localhost:7066/getsalesmen`, config)
-    .then(function(response){
-        console.log(response.data);
-    });
+}
+
+export const acceptOrRejectSalesman = (action, email) => {
+
+    console.log(email);
+    const config = {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
+    }
+    return axios.put(`https://localhost:7066/acceptorrejectsalesman`, 
+    {
+        action: action, 
+        email: email
+    },
+    config);
 }

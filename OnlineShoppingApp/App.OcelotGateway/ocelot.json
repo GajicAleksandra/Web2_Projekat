@@ -83,6 +83,18 @@
       ],
       "UpstreamPathTemplate": "/getsalesmen",
       "UpstreamHttpMethod": [ "get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/user/acceptorrejectsalesman",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7059
+        }
+      ],
+      "UpstreamPathTemplate": "/acceptorrejectsalesman",
+      "UpstreamHttpMethod": [ "put" ]
     }
   ]
 }

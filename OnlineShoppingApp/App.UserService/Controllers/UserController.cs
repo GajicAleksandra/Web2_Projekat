@@ -74,5 +74,13 @@ namespace App.UserService.Controllers
 
             return Ok(returnValue.Object);
         }
+
+        [Authorize(Roles = "0")]
+        [Route("acceptorrejectsalesman")]
+        [HttpPut]
+        public IActionResult AcceptOrRejectSalesman(string action, string email)
+        {
+            return Ok();
+        }
     }
 }

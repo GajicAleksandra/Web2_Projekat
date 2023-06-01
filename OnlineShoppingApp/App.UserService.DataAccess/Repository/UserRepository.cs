@@ -65,8 +65,27 @@ namespace App.UserService.DataAccess.Repository
 
         public List<LoggedInDto> GetAllSalesmen()
         {
-            List<User> salesmen = _db.Users.Where(u => u.UserType == UserType.Salesman).ToList();
+            List<User> salesmen = _db.Users.Where(u => u.UserType == UserType.Salesman && u.Status == SalesmanStatus.Pending).ToList();
             return _mapper.Map<List<LoggedInDto>>(salesmen) ?? new List<LoggedInDto>();
+        }
+
+        public bool ChangeSalesmanStatus(string action, string email)
+        {
+            User salesman = _db.Users.Where(u => u.Email == email).FirstOrDefault();
+            if(salesman == null) 
+            { 
+                return false; 
+            }
+
+            if (action == "accept")
+                salesman.Status = SalesmanStatus.Accepted;
+            else if(action == "reject")
+                salesman.Status = SalesmanStatus.Rejected;
+
+            _db.Users.Update(salesman);
+            _db.SaveChanges();
+
+            return true;
         }
     }
 }
