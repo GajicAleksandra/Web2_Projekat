@@ -19,17 +19,20 @@ import { getAllSalesmen, acceptOrRejectSalesman } from "../../services/UserServi
 import Button from '@mui/material/Button';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
 
-  const handleClick = (e) => {
+  const navigate = useNavigate();
+
+  const handleClick = async (e) => {
     var id = (e.currentTarget.id);
     var action = id.split('-')[0];
     var email = id.split('-')[1];
 
-    acceptOrRejectSalesman(action, email)
+    await acceptOrRejectSalesman(action, email)
     .then(function(response){
       toast.success(response.data, {
         position: "top-right",
@@ -41,7 +44,7 @@ function Row(props) {
         progress: undefined,
         theme: "colored",
         });
-      window.location.reload();
+        navigate('/verifysalesmen');
     })
     .catch(function(error){
 

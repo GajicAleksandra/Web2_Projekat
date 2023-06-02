@@ -69,7 +69,7 @@ namespace App.UserService.DataAccess.Repository
             return _mapper.Map<List<LoggedInDto>>(salesmen) ?? new List<LoggedInDto>();
         }
 
-        public bool ChangeSalesmanStatus(string action, string email)
+        public bool ChangeSalesmanStatus(string email, string action)
         {
             User salesman = _db.Users.Where(u => u.Email == email).FirstOrDefault();
             if(salesman == null) 

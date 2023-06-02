@@ -10,11 +10,15 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using AutoMapper;
 using App.Mapper;
+using App.UserService.Models.Models;
+using MailKit;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<UserDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 // Add services to the container.
 
@@ -58,6 +62,7 @@ var mapperConfig = new MapperConfiguration(cfg =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services.AddAuthentication(opt =>
 {

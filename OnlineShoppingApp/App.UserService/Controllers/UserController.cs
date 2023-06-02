@@ -2,6 +2,7 @@
 using App.UserService.Models;
 using App.UserService.Models.DTOs;
 using App.UserService.Models.Enums;
+using App.UserService.Models.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -14,10 +15,12 @@ namespace App.UserService.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IEmailService _emailService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IEmailService emailService)
         {
             _userService = userService;
+            _emailService = emailService;
         }
 
         [Route("getloggedinuser")]
@@ -78,9 +81,36 @@ namespace App.UserService.Controllers
         [Authorize(Roles = "0")]
         [Route("acceptorrejectsalesman")]
         [HttpPut]
-        public IActionResult AcceptOrRejectSalesman(string action, string email)
+        public async Task<IActionResult> AcceptOrRejectSalesman(VerifySalesmanDto verifySalesmanDto)
         {
-            return Ok();
+            ReturnValue<string> returnValue = _userService.AcceptSalesman(verifySalesmanDto.Email, verifySalesmanDto.Action);
+
+            if (!returnValue.Success)
+            {
+                return BadRequest(returnValue.Message);
+            }
+
+            string body = "";
+
+            if (verifySalesmanDto.Action == "accept")
+            {
+                body = "Vaš nalog je verifikovan. Možete se prijaviti koristeći ovaj email i svoju lozinku.";
+            }
+            else if (verifySalesmanDto.Action == "reject")
+            {
+                body = "Verifikacija vašeg naloga je odbijena.";
+            }
+
+            MailData mailData = new MailData
+            {
+                EmailToId = verifySalesmanDto.Email,
+                EmailSubject = "Verifikacija naloga",
+                EmailBody = body
+            };
+
+            bool success = _emailService.SendEmail(mailData);
+            
+            return Ok(returnValue.Object);
         }
     }
 }

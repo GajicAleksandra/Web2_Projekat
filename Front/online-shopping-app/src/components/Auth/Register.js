@@ -75,7 +75,6 @@ export default function Register() {
   const navigate = useNavigate();
     
   const onSubmit = async (data) => {
-    console.log(data);
     data.image = "";
     await RegisterUser(data)
     .then(function(response){

@@ -85,10 +85,10 @@ namespace App.UserService.BussinessLogic.Services
             return returnValue;
         }
 
-        public ReturnValue<string> AcceptSalesman(string action, string salesman)
+        public ReturnValue<string> AcceptSalesman(string salesman, string action)
         {
             ReturnValue<string> returnValue = new ReturnValue<string>();
-            if (!_userRepository.ChangeSalesmanStatus(action, salesman))
+            if (!_userRepository.ChangeSalesmanStatus(salesman, action))
             {
                 returnValue.Success = false;
                 returnValue.Message = "Desila se greška. Pokušajte ponovo.";
@@ -101,12 +101,9 @@ namespace App.UserService.BussinessLogic.Services
             returnValue.Message = "";
 
             if(action == "accept")
-                returnValue.Object = $"Uspešno ste prihvatili prodavca {salesman}.";
+                returnValue.Object = $"Uspešno ste verifikovali prodavca {salesman}.";
             else if(action == "reject")
                 returnValue.Object = $"Uspešno ste odbili prodavca {salesman}.";
-
-
-            //poslati mejl ovom prodavcu
 
             return returnValue;
         }
