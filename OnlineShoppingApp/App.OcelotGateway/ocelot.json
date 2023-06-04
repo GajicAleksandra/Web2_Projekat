@@ -73,7 +73,7 @@
       "UpstreamHttpMethod": [ "put" ]
     },
     {
-      "DownstreamPathTemplate": "/api/user/getallsalesmen",
+      "DownstreamPathTemplate": "/api/user/getallsalesmen/{status}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -81,7 +81,7 @@
           "Port": 7059
         }
       ],
-      "UpstreamPathTemplate": "/getsalesmen",
+      "UpstreamPathTemplate": "/getsalesmen/{status}",
       "UpstreamHttpMethod": [ "get" ]
     },
     {

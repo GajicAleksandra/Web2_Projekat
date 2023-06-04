@@ -44,7 +44,7 @@ function Row(props) {
         progress: undefined,
         theme: "colored",
         });
-        navigate('/verifysalesmen');
+        navigate('/pendingrequests');
     })
     .catch(function(error){
 
@@ -67,6 +67,7 @@ function Row(props) {
           {row.name}
         </TableCell>
         <TableCell>{row.lastName}</TableCell>
+        {props.status == 'Pending' &&
         <TableCell align='center'>
           <Button
             id={"accept-"+row.email}
@@ -84,7 +85,17 @@ function Row(props) {
           >
             Odbij
           </Button>
-        </TableCell>
+        </TableCell>}
+        
+        {props.status == 'Accepted' && 
+        <TableCell align='center' sx={{ color: 'green' }}>
+          Prihvaćen
+        </TableCell>}
+
+        {props.status == 'Rejected' && 
+        <TableCell align='center' sx={{ color: 'red' }}>
+          Odbijen
+        </TableCell>}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -132,14 +143,15 @@ Row.propTypes = {
   }).isRequired,
 };
 
-export default function VerifySalesmen() {
+export default function VerifySalesmen(props) {
   const [rows, setRows] = useState([]);
   useEffect(() => {
     getSalesmen();
   }, []);  
 
   const getSalesmen = async () => {
-    await getAllSalesmen()
+    console.log(props.additionalProp);
+    await getAllSalesmen(props.additionalProp)
     .then(function(response){
       setRows(response.data);
     })
@@ -151,7 +163,9 @@ export default function VerifySalesmen() {
   return (
     <>
       <Nav></Nav>
-      <h1 style={{ textAlign:'center' }}>Verifikacija prodavaca</h1>
+      {props.additionalProp == 'Pending' && <h1 style={{ textAlign:'center' }}>Zahtevi za verifikaciju</h1>}
+      {props.additionalProp == 'Accepted' && <h1 style={{ textAlign:'center' }}>Prihvaćeni zahtevi</h1>}
+      {props.additionalProp == 'Rejected' && <h1 style={{ textAlign:'center' }}>Odbijeni zahtevi</h1>}
       <TableContainer component={Paper} sx={{ width:1100, margin:'auto' }}>
       <Table aria-label="collapsible table">
         <TableHead>
@@ -159,12 +173,12 @@ export default function VerifySalesmen() {
             <TableCell />
             <TableCell sx={{ width:200 }}>Ime</TableCell>
             <TableCell sx={{ width:200 }}>Prezime</TableCell>
-            <TableCell align='center' sx={{ width:400 }}>Verifikacija</TableCell>
+            <TableCell align='center' sx={{ width:400 }}>Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <Row key={row.name} row={row} />
+            <Row key={row.name} row={row} status={props.additionalProp} />
           ))}
         </TableBody>
       </Table>

@@ -14,7 +14,7 @@ const ProtectedRoute = (props) => {
     return <Navigate to="/accessdenied" />
   }
 
-  return <props.Component />
+  return <props.Component additionalProp={props.additionalProp} />
 }
 
 export default ProtectedRoute;

@@ -13,7 +13,7 @@ namespace App.UserService.BussinessLogic.Services.Interface
     {
         ReturnValue<LoggedInDto> GetLoggedInUser(string email);
         ReturnValue<LoggedInDto> UpdateUserData(LoggedInDto loggedInDto);
-        ReturnValue<List<LoggedInDto>> GetSalesmen();
+        ReturnValue<List<LoggedInDto>> GetSalesmen(SalesmanStatus status);
         ReturnValue<string> AcceptSalesman(string salesman, string action);
         ReturnValue<SalesmanStatus> GetSalesmanStatus(string email);
     }

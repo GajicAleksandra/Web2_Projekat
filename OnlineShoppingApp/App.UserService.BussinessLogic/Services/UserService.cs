@@ -65,10 +65,10 @@ namespace App.UserService.BussinessLogic.Services
             return returnValue;
         }
 
-        public ReturnValue<List<LoggedInDto>> GetSalesmen()
+        public ReturnValue<List<LoggedInDto>> GetSalesmen(SalesmanStatus status)
         {
             ReturnValue<List<LoggedInDto>> returnValue = new ReturnValue<List<LoggedInDto>>();
-            List<LoggedInDto> salesmen = _userRepository.GetAllSalesmen();
+            List<LoggedInDto> salesmen = _userRepository.GetAllSalesmen(status);
 
             if(salesmen == null || salesmen.Count == 0)
             {

@@ -63,9 +63,9 @@ namespace App.UserService.DataAccess.Repository
             return loggedInDto;
         }
 
-        public List<LoggedInDto> GetAllSalesmen()
+        public List<LoggedInDto> GetAllSalesmen(SalesmanStatus status)
         {
-            List<User> salesmen = _db.Users.Where(u => u.UserType == UserType.Salesman && u.Status == SalesmanStatus.Pending).ToList();
+            List<User> salesmen = _db.Users.Where(u => u.UserType == UserType.Salesman && u.Status == status).ToList();
             return _mapper.Map<List<LoggedInDto>>(salesmen) ?? new List<LoggedInDto>();
         }
 

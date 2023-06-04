@@ -16,7 +16,9 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path='/accessdenied' element={<AccessDenied />} />
         <Route path="/profile" element={<ProtectedRoute Component={Profile} />} />
-        <Route path="/verifysalesmen" element={<ProtectedRoute Component={VerifySalesmen} role="0" />} />
+        <Route path="/pendingrequests" element={<ProtectedRoute Component={VerifySalesmen} role="0" additionalProp="Pending" />} />
+        <Route path="/acceptedrequests" element={<ProtectedRoute Component={VerifySalesmen} role="0" additionalProp="Accepted" />} />
+        <Route path="/rejectedrequests" element={<ProtectedRoute Component={VerifySalesmen} role="0" additionalProp="Rejected" />} />
       </Routes>
     </Router>
   );

@@ -30,8 +30,8 @@ export default function TransitionsModal({ open, setOpen }) {
     fetchData();
   }, []);
 
-  const fetchData = () => {
-    getSalesmanStatus()
+  const fetchData = async () => {
+    await getSalesmanStatus()
     .then(function(response){
         if(response.data === 1){
             setMessage("Zahtev je prihvaćen.");

@@ -64,11 +64,11 @@ namespace App.UserService.Controllers
         }
 
         [Authorize(Roles = "0")]
-        [Route("getallsalesmen")]
+        [Route("getallsalesmen/{status}")]
         [HttpGet]
-        public IActionResult GetAllSalesmen()
+        public IActionResult GetAllSalesmen(string status)
         {
-            ReturnValue<List<LoggedInDto>> returnValue = _userService.GetSalesmen();
+            ReturnValue<List<LoggedInDto>> returnValue = _userService.GetSalesmen((SalesmanStatus)Enum.Parse(typeof(SalesmanStatus), status));
 
             if (!returnValue.Success)
             {

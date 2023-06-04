@@ -18,18 +18,19 @@ export default function Nav() {
   const [user, setUser] = useState("");
   const [role, setRole] = useState(-1);
   const [modalOpen, setModalOpen] = React.useState(false);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
 
   const handleOpenModal = () => {
     setAnchorElUser(null);
     setModalOpen(true);
   };
 
-    useEffect(() => {
-        setUser(getCurrentUser());
-        setRole(getUserRole());
-    }, []);
-
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  useEffect(() => {
+    setUser(getCurrentUser());
+    setRole(getUserRole());
+  }, []);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -42,7 +43,20 @@ export default function Nav() {
   const handleLogout = () => {
     logout();
     setAnchorElUser(null);
-  }
+  };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const getRequests = (e) => {
+    var status = (e.currentTarget.id);
+    
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -52,9 +66,37 @@ export default function Nav() {
             <Button component={Link} href="/" color="inherit">Pocetna strana</Button>
           </Typography>
           {user && role == 0 &&  
-          <Typography variant="h6" component="div" sx={{ mr: 2}}>
-              <Button component={Link} href="/verifysalesmen" color="inherit">Zahtevi za verifikaciju</Button>
-          </Typography>}
+          <div>
+            <Button
+              id="basic-button"
+              aria-controls={open ? 'basic-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? 'true' : undefined}
+              onClick={handleClick}
+              color='inherit'
+              sx={{ mr: 2}}
+            >
+              Zahtevi za verifikaciju
+            </Button>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+            >
+              <MenuItem component={Link} href='/pendingrequests' id='pending' onClick={getRequests}>Na čekanju</MenuItem>
+              <MenuItem component={Link} href='/acceptedrequests' id='accepted' onClick={getRequests}>Prihvaćeni</MenuItem>
+              <MenuItem component={Link} href='/rejectedrequests' id='rejected' onClick={getRequests}>Odbijeni</MenuItem>
+            </Menu>
+          </div>
+          
+          // <Typography variant="h6" component="div" sx={{ mr: 2}}>
+          //     <Button component={Link} href="/verifysalesmen" color="inherit">Zahtevi za verifikaciju</Button>
+          // </Typography>
+          }
           {!user && <>
             <Button component={Link} href="/register" color="inherit">Registrujte se</Button>
             <Button component={Link} href='/login' color="inherit">Ulogujte se</Button>
@@ -84,10 +126,11 @@ export default function Nav() {
               <MenuItem key="profil" component={Link} href='/profile' onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">Profil</Typography>
                 </MenuItem>
-                {role == 2 && <MenuItem key="verifikacija" onClick={handleOpenModal}>
+                {role == 2 && <><MenuItem key="verifikacija" onClick={handleOpenModal}>
                   <Typography textAlign="center">Status verifikacije</Typography>
-                </MenuItem>}
-                <TransitionsModal open={modalOpen} setOpen={setModalOpen}/>
+                </MenuItem>
+                <TransitionsModal open={modalOpen} setOpen={setModalOpen}/></>}
+                
                 <MenuItem key="logout" component={Link} href='/' onClick={handleLogout}>
                   <Typography textAlign="center">Izlogujte se</Typography>
                 </MenuItem>

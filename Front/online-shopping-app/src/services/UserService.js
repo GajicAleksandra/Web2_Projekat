@@ -14,11 +14,11 @@ export const ChangeProfile = (data) => {
     return axios.put(`https://localhost:7066/changeprofile`, data, config);
 }
 
-export const getAllSalesmen = () => {
+export const getAllSalesmen = (status) => {
     const config = {
         headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
     }
-    return axios.get(`https://localhost:7066/getsalesmen`, config)
+    return axios.get(`https://localhost:7066/getsalesmen/${status}`, config)
 }
 
 export const acceptOrRejectSalesman = (action, email) => {
