@@ -1,4 +1,5 @@
 ﻿using App.UserService.Models.DTOs;
+using App.UserService.Models.Enums;
 using App.UserService.Models.Models;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,6 @@ namespace App.UserService.DataAccess.Repository.Interface
         LoggedInDto UpdateUser(LoggedInDto loggedInDto);
         List<LoggedInDto> GetAllSalesmen();
         bool ChangeSalesmanStatus(string action, string email);
+        SalesmanStatus GetSalesmanStatus(string email);
     }
 }

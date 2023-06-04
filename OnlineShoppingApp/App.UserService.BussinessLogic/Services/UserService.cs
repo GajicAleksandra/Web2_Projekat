@@ -2,6 +2,7 @@
 using App.UserService.DataAccess.Repository.Interface;
 using App.UserService.Models;
 using App.UserService.Models.DTOs;
+using App.UserService.Models.Enums;
 using App.UserService.Models.Models;
 using System;
 using System.Collections.Generic;
@@ -105,6 +106,18 @@ namespace App.UserService.BussinessLogic.Services
             else if(action == "reject")
                 returnValue.Object = $"Uspešno ste odbili prodavca {salesman}.";
 
+            return returnValue;
+        }
+
+        public ReturnValue<SalesmanStatus> GetSalesmanStatus(string email)
+        {
+            ReturnValue<SalesmanStatus> returnValue = new ReturnValue<SalesmanStatus>();
+            SalesmanStatus status = _userRepository.GetSalesmanStatus(email);
+
+            returnValue.Success = true;
+            returnValue.Message = "";
+            returnValue.Object = status;
+            
             return returnValue;
         }
     }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using App.UserService.Models.Enums;
 
 namespace App.UserService.BussinessLogic.Services.Interface
 {
@@ -14,5 +15,6 @@ namespace App.UserService.BussinessLogic.Services.Interface
         ReturnValue<LoggedInDto> UpdateUserData(LoggedInDto loggedInDto);
         ReturnValue<List<LoggedInDto>> GetSalesmen();
         ReturnValue<string> AcceptSalesman(string salesman, string action);
+        ReturnValue<SalesmanStatus> GetSalesmanStatus(string email);
     }
 }

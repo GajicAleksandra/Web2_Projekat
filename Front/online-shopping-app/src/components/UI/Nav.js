@@ -9,15 +9,24 @@ import Avatar from '@mui/material/Avatar';
 import { Link } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { getCurrentUser, logout } from '../../services/AuthService';
+import { getCurrentUser, logout, getUserRole } from '../../services/AuthService';
 import { useState, useEffect } from 'react';
+import TransitionsModal from './Modal';
 
 export default function Nav() {
 
   const [user, setUser] = useState("");
+  const [role, setRole] = useState(-1);
+  const [modalOpen, setModalOpen] = React.useState(false);
+
+  const handleOpenModal = () => {
+    setAnchorElUser(null);
+    setModalOpen(true);
+  };
 
     useEffect(() => {
         setUser(getCurrentUser());
+        setRole(getUserRole());
     }, []);
 
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -42,7 +51,7 @@ export default function Nav() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <Button component={Link} href="/" color="inherit">Pocetna strana</Button>
           </Typography>
-          {user && 
+          {user && role == 0 &&  
           <Typography variant="h6" component="div" sx={{ mr: 2}}>
               <Button component={Link} href="/verifysalesmen" color="inherit">Zahtevi za verifikaciju</Button>
           </Typography>}
@@ -75,6 +84,10 @@ export default function Nav() {
               <MenuItem key="profil" component={Link} href='/profile' onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">Profil</Typography>
                 </MenuItem>
+                {role == 2 && <MenuItem key="verifikacija" onClick={handleOpenModal}>
+                  <Typography textAlign="center">Status verifikacije</Typography>
+                </MenuItem>}
+                <TransitionsModal open={modalOpen} setOpen={setModalOpen}/>
                 <MenuItem key="logout" component={Link} href='/' onClick={handleLogout}>
                   <Typography textAlign="center">Izlogujte se</Typography>
                 </MenuItem>

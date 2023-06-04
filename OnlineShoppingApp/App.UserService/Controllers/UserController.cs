@@ -112,5 +112,20 @@ namespace App.UserService.Controllers
             
             return Ok(returnValue.Object);
         }
+
+        [Authorize(Roles = "2")]
+        [Route("salesmanstatus")]
+        [HttpGet]
+        public IActionResult GetStatus()
+        {
+            string email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest();
+            }
+
+            ReturnValue<SalesmanStatus> returnValue = _userService.GetSalesmanStatus(email);
+            return Ok(returnValue.Object);
+        }
     }
 }

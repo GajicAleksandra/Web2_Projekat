@@ -87,5 +87,11 @@ namespace App.UserService.DataAccess.Repository
 
             return true;
         }
+
+        public SalesmanStatus GetSalesmanStatus(string email)
+        {
+            User userFormDb = _db.Users.Where(u => u.Email == email).FirstOrDefault();
+            return (SalesmanStatus)userFormDb.Status;
+        }
     }
 }

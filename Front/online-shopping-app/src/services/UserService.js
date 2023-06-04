@@ -22,8 +22,6 @@ export const getAllSalesmen = () => {
 }
 
 export const acceptOrRejectSalesman = (action, email) => {
-
-    console.log(email);
     const config = {
         headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
     }
@@ -33,4 +31,11 @@ export const acceptOrRejectSalesman = (action, email) => {
         email: email
     },
     config);
+}
+
+export const getSalesmanStatus = () => {
+    const config = {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
+    }
+    return axios.get(`https://localhost:7066/getsalesmanstatus`, config);
 }
