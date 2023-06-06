@@ -12,6 +12,8 @@ using AutoMapper;
 using App.Mapper;
 using App.UserService.Models.Models;
 using MailKit;
+using App.Common.Services.Interfaces;
+using App.Common.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,6 +65,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddTransient<IBlobService, BlobService>();
 
 builder.Services.AddAuthentication(opt =>
 {

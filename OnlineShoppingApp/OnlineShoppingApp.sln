@@ -17,15 +17,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Mapper", "App.Mapper\Ap
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShopService", "ShopService", "{EAD188C0-61E6-4A6B-A7AF-1CBE78E2C9AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.ShopService", "App.ShopService\App.ShopService.csproj", "{82DC11F5-18CE-44B0-A0C8-5906B00F093F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.ShopService", "App.ShopService\App.ShopService.csproj", "{82DC11F5-18CE-44B0-A0C8-5906B00F093F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.ShopService.DataAccess", "App.ShopService.DataAccess\App.ShopService.DataAccess.csproj", "{0F85F959-BA39-4536-A3B3-F7A0B7D04932}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.ShopService.DataAccess", "App.ShopService.DataAccess\App.ShopService.DataAccess.csproj", "{0F85F959-BA39-4536-A3B3-F7A0B7D04932}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.ShopService.Models", "App.ShopService.Models\App.ShopService.Models.csproj", "{73649F2E-FD53-4053-AD39-1BD97ED2D98B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.ShopService.Models", "App.ShopService.Models\App.ShopService.Models.csproj", "{73649F2E-FD53-4053-AD39-1BD97ED2D98B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.ShopService.BussinessLogic", "App.ShopService.BussinessLogic\App.ShopService.BussinessLogic.csproj", "{A272DD23-19EE-475A-833C-85FEECF365FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.ShopService.BussinessLogic", "App.ShopService.BussinessLogic\App.ShopService.BussinessLogic.csproj", "{A272DD23-19EE-475A-833C-85FEECF365FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.OcelotGateway", "App.OcelotGateway\App.OcelotGateway.csproj", "{08383B0D-DBCC-42D5-B3C9-D9B781E37431}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.OcelotGateway", "App.OcelotGateway\App.OcelotGateway.csproj", "{08383B0D-DBCC-42D5-B3C9-D9B781E37431}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Common", "App.Common\App.Common.csproj", "{F2163DDD-45A8-4105-8844-5AA25035A4AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,10 @@ Global
 		{08383B0D-DBCC-42D5-B3C9-D9B781E37431}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08383B0D-DBCC-42D5-B3C9-D9B781E37431}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08383B0D-DBCC-42D5-B3C9-D9B781E37431}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2163DDD-45A8-4105-8844-5AA25035A4AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2163DDD-45A8-4105-8844-5AA25035A4AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2163DDD-45A8-4105-8844-5AA25035A4AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2163DDD-45A8-4105-8844-5AA25035A4AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

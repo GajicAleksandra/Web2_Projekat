@@ -1,4 +1,6 @@
-﻿using App.UserService.BussinessLogic.Services.Interface;
+﻿using App.Common.Services;
+using App.Common.Services.Interfaces;
+using App.UserService.BussinessLogic.Services.Interface;
 using App.UserService.DataAccess.Repository.Interface;
 using App.UserService.Models;
 using App.UserService.Models.DTOs;
@@ -20,14 +22,36 @@ namespace App.UserService.BussinessLogic.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _config;
+        private readonly IBlobService _blobService;
 
         private string TokenSecretKey { get; set; }
 
-        public AuthService(IUserRepository userRepository, IConfiguration configuration)
+        public AuthService(IUserRepository userRepository, IConfiguration configuration, IBlobService blobService)
         {
             _userRepository = userRepository;
             _config = configuration;
+            _blobService = blobService;
+
             TokenSecretKey = _config.GetSection("Authentication:SecretKey").Value;
+        }
+
+        public async Task<string> SayHello(string image64)
+        {
+            string userImage = await UploadImage(image64) ?? string.Empty;
+
+            return userImage;
+        }
+
+        private async Task<string> UploadImage(string image64)
+        {
+            Guid g = Guid.NewGuid();
+            string guidString = Convert.ToBase64String(g.ToByteArray());
+            guidString = guidString.Replace("=", "");
+            guidString = guidString.Replace("+", "");
+            var response = await _blobService.UploadImage(image64, guidString);
+
+            return response.Message;
+
         }
 
         public ReturnValue<string> Register(UserDto userDto)
