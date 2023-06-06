@@ -4,28 +4,28 @@ export const GetLoggedInUser = () => {
     const config = {
         headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
     }
-    return axios.get(`https://localhost:7066/getloggedinuser`, config);
+    return axios.get(`${process.env.REACT_APP_API_URL}/getloggedinuser`, config);
 }
 
 export const ChangeProfile = (data) => {
     const config = {
         headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
     }
-    return axios.put(`https://localhost:7066/changeprofile`, data, config);
+    return axios.put(`${process.env.REACT_APP_API_URL}/changeprofile`, data, config);
 }
 
 export const getAllSalesmen = (status) => {
     const config = {
         headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
     }
-    return axios.get(`https://localhost:7066/getsalesmen/${status}`, config)
+    return axios.get(`${process.env.REACT_APP_API_URL}/getsalesmen/${status}`, config)
 }
 
 export const acceptOrRejectSalesman = (action, email) => {
     const config = {
         headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
     }
-    return axios.put(`https://localhost:7066/acceptorrejectsalesman`, 
+    return axios.put(`${process.env.REACT_APP_API_URL}/acceptorrejectsalesman`, 
     {
         action: action, 
         email: email
@@ -37,5 +37,5 @@ export const getSalesmanStatus = () => {
     const config = {
         headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
     }
-    return axios.get(`https://localhost:7066/getsalesmanstatus`, config);
+    return axios.get(`${process.env.REACT_APP_API_URL}/getsalesmanstatus`, config);
 }

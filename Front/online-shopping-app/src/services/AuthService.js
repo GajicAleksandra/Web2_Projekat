@@ -2,7 +2,7 @@ import axios from 'axios'
 import jwtDecode from 'jwt-decode'
 
 export const LoginUser = (data) => {
-    return axios.post(`https://localhost:7066/login`, data)
+    return axios.post(`${process.env.REACT_APP_API_URL}/login`, data)
     .then(function(response){
         localStorage.setItem('token', response.data)
         var token = jwtDecode(response.data);
@@ -11,7 +11,7 @@ export const LoginUser = (data) => {
 }
 
 export const RegisterUser = (data) => {
-    return axios.post(`https://localhost:7066/register`, data);
+    return axios.post(`${process.env.REACT_APP_API_URL}/register`, data);
 }
 
 export const getCurrentUser = () => {
