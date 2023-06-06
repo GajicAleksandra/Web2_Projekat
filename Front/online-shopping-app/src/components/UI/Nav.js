@@ -13,6 +13,7 @@ import {
   getCurrentUser,
   logout,
   getUserRole,
+  getImage
 } from "../../services/AuthService";
 import { useState, useEffect } from "react";
 import TransitionsModal from "./Modal";
@@ -23,6 +24,7 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 export default function Nav() {
   const [user, setUser] = useState("");
   const [role, setRole] = useState(-1);
+  const [image, setImage] = useState("");
   const [modalOpen, setModalOpen] = React.useState(false);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -36,6 +38,7 @@ export default function Nav() {
   useEffect(() => {
     setUser(getCurrentUser());
     setRole(getUserRole());
+    setImage(getImage());
   }, []);
 
   const handleOpenUserMenu = (event) => {
@@ -135,8 +138,7 @@ export default function Nav() {
           {user && (
             <Box sx={{ flexGrow: 0 }}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color: 'black' }}>
-                {/* <Avatar alt="Remy Sharp" src="/images/user-placeholder.jpg" /> */}
-                <AccountCircleOutlinedIcon fontSize="large"/>
+                {image != "" ? <Avatar alt="Remy Sharp" src={image} /> : <AccountCircleOutlinedIcon fontSize="large"/>}
               </IconButton>
               <Menu
                 sx={{ mt: "45px" }}

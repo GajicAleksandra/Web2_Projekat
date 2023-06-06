@@ -7,6 +7,7 @@ export const LoginUser = (data) => {
         localStorage.setItem('token', response.data)
         var token = jwtDecode(response.data);
         localStorage.setItem('role', token['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']);
+        localStorage.setItem('image', token["Image"]);
     })
 }
 
@@ -22,6 +23,12 @@ export const getUserRole = () => {
     return localStorage.getItem('role');
 }
 
+export const getImage = () => {
+    return localStorage.getItem('image');
+}
+
 export const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('image');
+    localStorage.removeItem('role');
 }

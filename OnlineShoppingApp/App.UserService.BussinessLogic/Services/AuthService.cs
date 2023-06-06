@@ -15,6 +15,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace App.UserService.BussinessLogic.Services
 {
@@ -35,26 +36,7 @@ namespace App.UserService.BussinessLogic.Services
             TokenSecretKey = _config.GetSection("Authentication:SecretKey").Value;
         }
 
-        public async Task<string> SayHello(string image64)
-        {
-            string userImage = await UploadImage(image64) ?? string.Empty;
-
-            return userImage;
-        }
-
-        private async Task<string> UploadImage(string image64)
-        {
-            Guid g = Guid.NewGuid();
-            string guidString = Convert.ToBase64String(g.ToByteArray());
-            guidString = guidString.Replace("=", "");
-            guidString = guidString.Replace("+", "");
-            var response = await _blobService.UploadImage(image64, guidString);
-
-            return response.Message;
-
-        }
-
-        public ReturnValue<string> Register(UserDto userDto)
+        public async Task<ReturnValue<string>> Register(UserDto userDto)
         {
             ReturnValue<string> returnValue = new ReturnValue<string>();
 
@@ -73,6 +55,7 @@ namespace App.UserService.BussinessLogic.Services
             }
 
             userDto.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
+            userDto.Image = await UploadImage(userDto.Image) ?? string.Empty;
             returnValue.Success = true;
             returnValue.Message = "";
             returnValue.Object = "Uspesna registracija.";
@@ -169,7 +152,8 @@ namespace App.UserService.BussinessLogic.Services
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Role, userDto.UserType.ToString()),
-                new Claim(ClaimTypes.Email, userDto.Email)
+                new Claim(ClaimTypes.Email, userDto.Email),
+                new Claim("Image", userDto.Image)
             };
 
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(TokenSecretKey));
@@ -182,6 +166,18 @@ namespace App.UserService.BussinessLogic.Services
                 signingCredentials: signinCredentials
             );
             return new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+        }
+
+        private async Task<string> UploadImage(string image64)
+        {
+            Guid g = Guid.NewGuid();
+            string guidString = Convert.ToBase64String(g.ToByteArray());
+            guidString = guidString.Replace("=", "");
+            guidString = guidString.Replace("+", "");
+            var response = await _blobService.UploadImage(image64, guidString);
+
+            return response.Message;
+
         }
 
     }

@@ -5,6 +5,7 @@ class LoggedInUser {
     lastName = "";
     birthDate = "";
     address = "";
+    image = "";
 }
 
 export default LoggedInUser;

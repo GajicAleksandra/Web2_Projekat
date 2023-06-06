@@ -195,6 +195,7 @@ const Profile = () => {
                   </Grid>
                 </Grid>
                 <span style={{ color: "red" }} id="registerError"></span>
+                {userData.image != "" ? <img src={userData.image} style={{ width: 100 }}/> : <img src="/images/user-placeholder.jpg" style={{ width: 100 }}/>}
                 <Button
                   type="submit"
                   fullWidth

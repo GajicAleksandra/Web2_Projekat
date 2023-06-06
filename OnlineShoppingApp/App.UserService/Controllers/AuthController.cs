@@ -20,9 +20,9 @@ namespace App.UserService.Controllers
 
         [Route("register")]
         [HttpPost]
-        public ActionResult<string> Register(UserDto user)
+        public async Task<ActionResult<string>> Register(UserDto user)
         {
-            ReturnValue<string> returnValue = _authService.Register(user);
+            ReturnValue<string> returnValue = await _authService.Register(user);
 
             if (!returnValue.Success)
             {
@@ -30,14 +30,6 @@ namespace App.UserService.Controllers
             }
 
             return Ok(returnValue.Object);
-        }
-
-        [Route("say-hello")]
-        [HttpPost]
-        public async Task<ActionResult<string>> SayHello(string image64)
-        {
-            string retVal = await _authService.SayHello(image64);
-            return Ok(retVal);
         }
 
         [Route("login")]

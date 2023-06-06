@@ -10,8 +10,7 @@ namespace App.UserService.BussinessLogic.Services.Interface
 {
     public interface IAuthService
     {
-        ReturnValue<string> Register(UserDto userDto);
+        Task<ReturnValue<string>> Register(UserDto userDto);
         ReturnValue<string> Login(LoginDto loginDto);
-        Task<string> SayHello(string image64);
     }
 }
