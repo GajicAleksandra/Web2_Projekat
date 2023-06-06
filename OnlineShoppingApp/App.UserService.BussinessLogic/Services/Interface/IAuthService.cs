@@ -12,5 +12,6 @@ namespace App.UserService.BussinessLogic.Services.Interface
     {
         ReturnValue<string> Register(UserDto userDto);
         ReturnValue<string> Login(LoginDto loginDto);
+        Task<string> SayHello(string image64);
     }
 }

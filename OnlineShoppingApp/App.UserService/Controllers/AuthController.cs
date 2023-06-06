@@ -32,6 +32,14 @@ namespace App.UserService.Controllers
             return Ok(returnValue.Object);
         }
 
+        [Route("say-hello")]
+        [HttpPost]
+        public async Task<ActionResult<string>> SayHello(string image64)
+        {
+            string retVal = await _authService.SayHello(image64);
+            return Ok(retVal);
+        }
+
         [Route("login")]
         [HttpPost]
         public ActionResult<string> Login(LoginDto loginDto)
