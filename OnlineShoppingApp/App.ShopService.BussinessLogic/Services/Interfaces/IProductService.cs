@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace App.ShopService.BussinessLogic.Services.Interfaces
 {
-    public interface IOrderService
+    public interface IProductService
     {
-        
+        Task<ReturnValue<string>> AddProduct(ProductDto productDto, string email);
     }
 }

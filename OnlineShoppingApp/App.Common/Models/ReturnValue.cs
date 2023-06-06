@@ -6,6 +6,8 @@
         public string Message { get; set; }
         public T? Object { get; set; }
 
+        public ReturnValue() { }
+
         public ReturnValue(bool status, string message)
         {
             Success = status;

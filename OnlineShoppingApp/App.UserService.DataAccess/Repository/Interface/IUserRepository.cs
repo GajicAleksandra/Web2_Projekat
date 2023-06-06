@@ -18,5 +18,6 @@ namespace App.UserService.DataAccess.Repository.Interface
         List<LoggedInDto> GetAllSalesmen(SalesmanStatus status);
         bool ChangeSalesmanStatus(string action, string email);
         SalesmanStatus GetSalesmanStatus(string email);
+        int GetUserId(string email);
     }
 }

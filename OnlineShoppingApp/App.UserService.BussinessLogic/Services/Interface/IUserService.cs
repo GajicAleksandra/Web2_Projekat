@@ -16,5 +16,6 @@ namespace App.UserService.BussinessLogic.Services.Interface
         ReturnValue<List<LoggedInDto>> GetSalesmen(SalesmanStatus status);
         ReturnValue<string> AcceptSalesman(string salesman, string action);
         ReturnValue<SalesmanStatus> GetSalesmanStatus(string email);
+        ReturnValue<int> GetUserId(string email);
     }
 }

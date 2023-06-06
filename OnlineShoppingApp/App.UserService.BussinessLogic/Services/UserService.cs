@@ -120,5 +120,27 @@ namespace App.UserService.BussinessLogic.Services
             
             return returnValue;
         }
+
+        public ReturnValue<int> GetUserId(string email)
+        {
+            ReturnValue<int> returnValue = new ReturnValue<int>();
+
+            int id = _userRepository.GetUserId(email);
+
+            if(id == -1)
+            {
+                returnValue.Success = false;
+                returnValue.Message = $"Korisnik {email} ne postoji.";
+                returnValue.Object = -1;
+
+                return returnValue;
+            }
+
+            returnValue.Success = true;
+            returnValue.Message = "";
+            returnValue.Object = id;
+
+            return returnValue;
+        }
     }
 }

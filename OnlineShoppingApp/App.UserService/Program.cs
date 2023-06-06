@@ -88,7 +88,7 @@ builder.Services.AddAuthentication(opt =>
 builder.Services.AddCors(options =>
 { 
     options.AddPolicy(name: "cors", builder => {
-        builder.WithOrigins("http://localhost:3000")//Ovde navodimo koje sve aplikacije smeju kontaktirati nasu,u ovom slucaju nas Angular front
+        builder.WithOrigins("https://localhost:7032")//Ovde navodimo koje sve aplikacije smeju kontaktirati nasu,u ovom slucaju nas Angular front
                .AllowAnyHeader()
                .AllowAnyMethod()
                .AllowCredentials();

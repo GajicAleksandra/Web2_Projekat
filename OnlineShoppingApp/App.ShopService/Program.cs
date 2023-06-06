@@ -1,3 +1,5 @@
+using App.Common.Services.Interfaces;
+using App.Common.Services;
 using App.Mapper;
 using App.ShopService.BussinessLogic.Services;
 using App.ShopService.BussinessLogic.Services.Interfaces;
@@ -56,7 +58,10 @@ var mapperConfig = new MapperConfiguration(cfg =>
 });
 
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddTransient<IBlobService, BlobService>();
 
 builder.Services.AddAuthentication(opt =>
 {

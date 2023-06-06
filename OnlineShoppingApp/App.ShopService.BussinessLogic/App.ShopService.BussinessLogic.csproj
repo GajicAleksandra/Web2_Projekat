@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\App.Common\App.Common.csproj" />
+    <ProjectReference Include="..\App.ShopService.DataAccess\App.ShopService.DataAccess.csproj" />
+    <ProjectReference Include="..\App.ShopService.Models\App.ShopService.Models.csproj" />
+  </ItemGroup>
+
 </Project>

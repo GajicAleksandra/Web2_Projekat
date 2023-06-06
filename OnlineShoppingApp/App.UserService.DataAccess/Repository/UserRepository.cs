@@ -93,5 +93,17 @@ namespace App.UserService.DataAccess.Repository
             User userFormDb = _db.Users.Where(u => u.Email == email).FirstOrDefault();
             return (SalesmanStatus)userFormDb.Status;
         }
+
+        public int GetUserId(string email)
+        {
+            User user = _db.Users.FirstOrDefault(u => u.Email == email);
+
+            if(user == null)
+            {
+                return -1;
+            }
+
+            return user.Id;
+        }
     }
 }
