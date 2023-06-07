@@ -1,0 +1,34 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  position: relative;
+}
+
+.cardMedia {
+  height: 200px;
+  object-fit: cover;
+}
+
+.productInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.price {
+  font-size: 1rem;
+}
+
+.addButton {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}

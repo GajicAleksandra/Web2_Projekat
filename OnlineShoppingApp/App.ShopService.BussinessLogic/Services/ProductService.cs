@@ -60,11 +60,22 @@ namespace App.ShopService.BussinessLogic.Services
 
             productDto.Image = ""; //await UploadImage(productDto.Image) ?? string.Empty;
 
+            _productRepository.AddProduct(productDto);
+
             returnValue.Success = true;
             returnValue.Message = "";
             returnValue.Object = "Uspešno dodat proizvod.";
 
-            _productRepository.AddProduct(productDto);
+            return returnValue;
+        }
+
+        public ReturnValue<List<ProductDto>> GetProducts()
+        {
+            ReturnValue<List<ProductDto>> returnValue = new ReturnValue<List<ProductDto>>();
+
+            returnValue.Success = true;
+            returnValue.Message = string.Empty;
+            returnValue.Object = _productRepository.GetProducts();
 
             return returnValue;
         }

@@ -6,20 +6,21 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
-import { Link } from "@mui/material";
+import { Link, Drawer, Badge } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import {
   getCurrentUser,
   logout,
   getUserRole,
-  getImage
+  getImage,
 } from "../../services/AuthService";
 import { useState, useEffect } from "react";
 import TransitionsModal from "./Modal";
-import HomeIcon from "@mui/icons-material/Home";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import Cart from "../Shop/Cart/Cart";
 
 export default function Nav() {
   const [user, setUser] = useState("");
@@ -29,6 +30,17 @@ export default function Nav() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
+  const [isCartOpen, setCartOpen] = useState(false);
+  const [cartItemCount, setCartItemCount] = useState(0);
+
+  const handleCartOpen = () => {
+    setCartOpen(true);
+  };
+
+  const handleCartClose = () => {
+    setCartOpen(false);
+  };
 
   const handleOpenModal = () => {
     setAnchorElUser(null);
@@ -67,16 +79,16 @@ export default function Nav() {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ bgcolor: "#FFCCCC" }}>
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <IconButton sx={{ color: "black" }} component={Link} href="/">
-              <HomeOutlinedIcon fontSize="large" />
-            </IconButton>
-          </Typography>
-          {
-            user && role == 0 && (
+    <div>
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static" sx={{ bgcolor: "#FFCCCC" }}>
+          <Toolbar>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              <IconButton sx={{ color: "black" }} component={Link} href="/">
+                <HomeOutlinedIcon fontSize="large" />
+              </IconButton>
+            </Typography>
+            {user && role == 0 && (
               <div>
                 <Button
                   id="basic-button"
@@ -123,71 +135,97 @@ export default function Nav() {
                   </MenuItem>
                 </Menu>
               </div>
-            )
-          }
-          {!user && (
-            <>
-              <Button component={Link} href="/register" sx={{ color: "black" }}>
-                Registrujte se
-              </Button>
-              <Button component={Link} href="/login" sx={{ color: "black" }}>
-                Ulogujte se
-              </Button>
-            </>
-          )}
-          {user && (
-            <Box sx={{ flexGrow: 0 }}>
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color: 'black' }}>
-                {image != "" ? <Avatar alt="Remy Sharp" src={image} /> : <AccountCircleOutlinedIcon fontSize="large"/>}
-              </IconButton>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                <MenuItem
-                  key="profil"
+            )}
+            {!user && (
+              <>
+                <Button
                   component={Link}
-                  href="/profile"
-                  onClick={handleCloseUserMenu}
+                  href="/register"
+                  sx={{ color: "black" }}
                 >
-                  <Typography textAlign="center">Profil</Typography>
-                </MenuItem>
-                {role == 2 && (
-                  <>
-                    <MenuItem key="verifikacija" onClick={handleOpenModal}>
-                      <Typography textAlign="center">
-                        Status verifikacije
-                      </Typography>
-                    </MenuItem>
-                    <TransitionsModal open={modalOpen} setOpen={setModalOpen} />
-                  </>
-                )}
+                  Registrujte se
+                </Button>
+                <Button component={Link} href="/login" sx={{ color: "black" }}>
+                  Ulogujte se
+                </Button>
+              </>
+            )}
+            {user && (
+              <Box sx={{ flexGrow: 0 }}>
+                <IconButton
+                  aria-label="Korpa"
+                  onClick={handleCartOpen}
+                  sx={{ color: "black", paddingRight:3 }}
+                >
+                  <Badge badgeContent={0} color="secondary" showZero>
+                    <ShoppingCartIcon />
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  onClick={handleOpenUserMenu}
+                  sx={{ p: 0, color: "black" }}
+                >
+                  {image != "" ? (
+                    <Avatar alt="Remy Sharp" src={image} />
+                  ) : (
+                    <AccountCircleOutlinedIcon fontSize="large" />
+                  )}
+                </IconButton>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <MenuItem
+                    key="profil"
+                    component={Link}
+                    href="/profile"
+                    onClick={handleCloseUserMenu}
+                  >
+                    <Typography textAlign="center">Profil</Typography>
+                  </MenuItem>
+                  {role == 2 && (
+                    <>
+                      <MenuItem key="verifikacija" onClick={handleOpenModal}>
+                        <Typography textAlign="center">
+                          Status verifikacije
+                        </Typography>
+                      </MenuItem>
+                      <TransitionsModal
+                        open={modalOpen}
+                        setOpen={setModalOpen}
+                      />
+                    </>
+                  )}
 
-                <MenuItem
-                  key="logout"
-                  component={Link}
-                  href="/"
-                  onClick={handleLogout}
-                >
-                  <Typography textAlign="center">Izlogujte se</Typography>
-                </MenuItem>
-              </Menu>
-            </Box>
-          )}
-        </Toolbar>
-      </AppBar>
-    </Box>
+                  <MenuItem
+                    key="logout"
+                    component={Link}
+                    href="/"
+                    onClick={handleLogout}
+                  >
+                    <Typography textAlign="center">Izlogujte se</Typography>
+                  </MenuItem>
+                </Menu>
+              </Box>
+            )}
+          </Toolbar>
+        </AppBar>
+      </Box>
+      <Drawer anchor="right" open={isCartOpen} onClose={handleCartClose}>
+        <Cart isOpen={isCartOpen} onClose={handleCartClose} />
+      </Drawer>
+    </div>
   );
 }

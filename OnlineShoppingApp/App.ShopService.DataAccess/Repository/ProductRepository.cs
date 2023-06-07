@@ -28,5 +28,10 @@ namespace App.ShopService.DataAccess.Repository
             _db.Products.Add(product);
             _db.SaveChanges();
         }
+
+        public List<ProductDto> GetProducts()
+        {
+            return _mapper.Map<List<ProductDto>>(_db.Products.ToList());
+        }
     }
 }

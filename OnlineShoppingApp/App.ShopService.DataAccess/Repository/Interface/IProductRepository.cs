@@ -10,5 +10,6 @@ namespace App.ShopService.DataAccess.Repository.Interface
     public interface IProductRepository
     {
         void AddProduct(ProductDto productDto);
+        List<ProductDto> GetProducts();
     }
 }

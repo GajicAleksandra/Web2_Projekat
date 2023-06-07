@@ -13,18 +13,6 @@
       "UpstreamHttpMethod": [ "get" ]
     },
     {
-      "DownstreamPathTemplate": "/api/order/index",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 7032
-        }
-      ],
-      "UpstreamPathTemplate": "/pocetna",
-      "UpstreamHttpMethod": [ "get" ]
-    },
-    {
       "DownstreamPathTemplate": "/api/auth/login",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -106,6 +94,30 @@
         }
       ],
       "UpstreamPathTemplate": "/getsalesmanstatus",
+      "UpstreamHttpMethod": [ "get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/product/addproduct",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7032
+        }
+      ],
+      "UpstreamPathTemplate": "/addproduct",
+      "UpstreamHttpMethod": [ "post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/product/getproducts",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7032
+        }
+      ],
+      "UpstreamPathTemplate": "/getproducts",
       "UpstreamHttpMethod": [ "get" ]
     }
   ]

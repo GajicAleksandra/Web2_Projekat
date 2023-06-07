@@ -39,5 +39,13 @@ namespace App.ShopService.Controllers
 
             return Ok(returnValue.Object);
         }
+
+        [Authorize]
+        [Route("getproducts")]
+        [HttpGet]
+        public ActionResult GetProducts()
+        {
+            return Ok(_productService.GetProducts().Object);
+        }
     }
 }

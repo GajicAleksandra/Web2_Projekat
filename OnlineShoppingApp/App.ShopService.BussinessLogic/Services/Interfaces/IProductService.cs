@@ -11,5 +11,6 @@ namespace App.ShopService.BussinessLogic.Services.Interfaces
     public interface IProductService
     {
         Task<ReturnValue<string>> AddProduct(ProductDto productDto, string email);
+        ReturnValue<List<ProductDto>> GetProducts();
     }
 }

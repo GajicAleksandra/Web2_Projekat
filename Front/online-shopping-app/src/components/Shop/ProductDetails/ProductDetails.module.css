@@ -1,0 +1,52 @@
+.container {
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  margin-bottom: 1rem;
+}
+
+.title {
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  margin-bottom: 0.5rem;
+}
+
+.price {
+  font-weight: bold;
+}
+
+.quantity {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.quantityLabel {
+  margin-right: 0.5rem;
+}
+
+.quantityControls {
+  display: flex;
+  align-items: center;
+}
+
+.quantityButton {
+  padding: 0.2rem;
+}
+
+.quantityValue {
+  margin: 0 0.5rem;
+}
+
+.addButton {
+  margin-top: 1rem;
+}
