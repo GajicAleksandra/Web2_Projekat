@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
-import { Typography, Grid, Button, IconButton } from '@mui/material';
-import { Add, Remove } from '@mui/icons-material';
-import styles from './ProductDetails.module.css';
+import React, { useState } from "react";
+import { Typography, Grid, Button, IconButton, Link } from "@mui/material";
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
+import styles from "./ProductDetails.module.css";
+import ProductList from "../ProductList/ProductList";
 
 const ProductDetails = ({ product }) => {
   //useParams i sa servera dobavim taj proizvod
@@ -22,52 +25,45 @@ const ProductDetails = ({ product }) => {
   };
 
   return (
-    <Grid container spacing={2} className={styles.container}>
-      <Grid item xs={12} sm={6}>
-        <img className={styles.image} src={product.image} alt={product.name} />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <Typography variant="h5" className={styles.title}>
-          {product.name}
-        </Typography>
-        <Typography variant="body1" className={styles.description}>
-          Opis: {product.description}
-        </Typography>
-        <Typography variant="body1" className={styles.price}>
-          Cijena: {product.price} rsd
-        </Typography>
-        {/* Ostali detalji proizvoda */}
-        <div className={styles.quantity}>
-          <Typography variant="body1" className={styles.quantityLabel}>
-            Količina:
-          </Typography>
-          <div className={styles.quantityControls}>
-            <IconButton
-              aria-label="Smanji količinu"
-              color="primary"
-              onClick={handleDecreaseQuantity}
-              className={styles.quantityButton}
-            >
-              <Remove />
-            </IconButton>
-            <Typography variant="body1" className={styles.quantityValue}>
-              {quantity}
-            </Typography>
-            <IconButton
-              aria-label="Povećaj količinu"
-              color="primary"
-              onClick={handleIncreaseQuantity}
-              className={styles.quantityButton}
-            >
-              <Add />
-            </IconButton>
-          </div>
+    <div className={styles.card}>
+      <nav>
+        <Link className={styles.link} to={ProductList}>
+          <svg
+            className={styles.arrow}
+            version="1.1"
+            viewBox="0 0 512 512"
+            width="512px"
+          >
+            <polygon
+              points="352,115.4 331.3,96 160,256 331.3,416 352,396.7 201.5,256"
+              stroke="#727272"
+            />
+          </svg>
+          Nazad
+        </Link>
+      </nav>
+      <div className={styles.photo}>
+        <img src="/images/register.jpg" />
+      </div>
+      <div className={styles.description}>
+        <h2>{product.name}</h2>
+        <h1>{product.price} RSD</h1>
+        <p>
+          Classic Peace Lily is a spathiphyllum floor plant arranged in a bamboo
+          planter with a blue & red ribbom and butterfly pick.
+        </p>
+        <div className={styles.plusMinusDiv}>
+          <IconButton onClick={handleDecreaseQuantity} className={styles.minus}>
+            <RemoveOutlinedIcon />
+          </IconButton>
+          <span className={styles.plusMinus}>{quantity}</span>
+          <IconButton onClick={handleIncreaseQuantity} className={styles.plus}>
+            <AddOutlinedIcon />
+          </IconButton>
         </div>
-        <Button variant="contained" color="primary" className={styles.addButton}>
-          Dodaj u korpu
-        </Button>
-      </Grid>
-    </Grid>
+        <button className={styles.addToCartbutton}>Dodaj u korpu</button>
+      </div>
+    </div>
   );
 };
 

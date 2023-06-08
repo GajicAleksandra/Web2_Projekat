@@ -335,7 +335,11 @@ export default function Register() {
                     {errors.userType?.message}
                   </span>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12}>
+                  <img
+                    src={userData.image}
+                    style={{ width: 100, marginTop: 8, float: 'left' }}
+                  />
                   <input
                     {...register("image")}
                     id="image"
@@ -344,10 +348,7 @@ export default function Register() {
                     accept="image/*"
                     className="form-control-file"
                     onChange={showPreview}
-                  />
-                  <img
-                    src={userData.image}
-                    style={{ width: 130, marginTop: 10 }}
+                    style={{ marginTop: 8, float: 'left', marginLeft: 15, color: 'black' }}
                   />
                 </Grid>
               </Grid>

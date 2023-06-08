@@ -6,4 +6,31 @@
   .title {
     margin-bottom: 3rem;
   }
+
+  .image{
+    width: 120rem;
+    height: 20rem;
+  }
+
+  .addProduct{
+    height: 40px;
+    position: absolute;
+    margin-top: 23%;
+    right: 10%;
+    display: flex;
+    cursor: pointer;
+    color: black;
+    border: #FFCCCC;
+  }
+
+  .addProductText{
+    font-size: 17px;
+    text-transform: uppercase;
+  }
+
+  .addProduct:hover{
+    border: 1px solid #FFCCCC;
+	 color: #FFCCCC;
+	 cursor: pointer;
+  }
   

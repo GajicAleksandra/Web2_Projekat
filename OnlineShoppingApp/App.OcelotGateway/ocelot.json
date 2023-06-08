@@ -61,6 +61,18 @@
       "UpstreamHttpMethod": [ "put" ]
     },
     {
+      "DownstreamPathTemplate": "/api/user/changepassword",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7059
+        }
+      ],
+      "UpstreamPathTemplate": "/changepassword",
+      "UpstreamHttpMethod": [ "put" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/user/getallsalesmen/{status}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
@@ -120,5 +132,6 @@
       "UpstreamPathTemplate": "/getproducts",
       "UpstreamHttpMethod": [ "get" ]
     }
+    
   ]
 }

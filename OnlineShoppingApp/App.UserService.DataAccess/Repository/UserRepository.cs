@@ -56,11 +56,20 @@ namespace App.UserService.DataAccess.Repository
             userFromDb.LastName = loggedInDto.LastName;
             userFromDb.Address = loggedInDto.Address;
             userFromDb.BirthDate = loggedInDto.BirthDate;
+            userFromDb.Image = loggedInDto.Image;
 
             _db.Users.Update(userFromDb);
             _db.SaveChanges();
 
             return loggedInDto;
+        }
+
+        public void UpdatePassword(string email, string password)
+        {
+            User user = _db.Users.FirstOrDefault(u => u.Email == email);
+            user.Password = password;
+            _db.Update(user);
+            _db.SaveChanges();
         }
 
         public List<LoggedInDto> GetAllSalesmen(SalesmanStatus status)

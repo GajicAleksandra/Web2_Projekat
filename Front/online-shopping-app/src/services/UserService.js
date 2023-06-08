@@ -39,3 +39,10 @@ export const getSalesmanStatus = () => {
     }
     return axios.get(`${process.env.REACT_APP_API_URL}/getsalesmanstatus`, config);
 }
+
+export const changePassword = (data) => {
+    const config = {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
+    }
+    return axios.put(`${process.env.REACT_APP_API_URL}/changepassword`, data, config);
+}

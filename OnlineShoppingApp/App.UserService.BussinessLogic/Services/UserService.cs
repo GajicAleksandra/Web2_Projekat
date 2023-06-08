@@ -1,9 +1,11 @@
-﻿using App.UserService.BussinessLogic.Services.Interface;
+﻿using App.Common.Services.Interfaces;
+using App.UserService.BussinessLogic.Services.Interface;
 using App.UserService.DataAccess.Repository.Interface;
 using App.UserService.Models;
 using App.UserService.Models.DTOs;
 using App.UserService.Models.Enums;
 using App.UserService.Models.Models;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +17,12 @@ namespace App.UserService.BussinessLogic.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IBlobService _blobService;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IBlobService blobService)
         {
             _userRepository = userRepository;
+            _blobService = blobService;
         }
 
         public ReturnValue<LoggedInDto> GetLoggedInUser(string email)
@@ -43,12 +47,24 @@ namespace App.UserService.BussinessLogic.Services
             return returnValue;
         }
 
-        public ReturnValue<LoggedInDto> UpdateUserData(LoggedInDto loggedInDto)
+        public async Task<ReturnValue<LoggedInDto>> UpdateUserData(LoggedInDto loggedInDto)
         {
-            //validacija
             ReturnValue<LoggedInDto> returnValue = new ReturnValue<LoggedInDto>();
 
+            if(!ValidateEditData(loggedInDto, out string message))
+            {
+                returnValue.Success = false;
+                returnValue.Message = message;
+                returnValue.Object = null;
+            }
+
+            if (!string.IsNullOrEmpty(loggedInDto.Image))
+            {
+                loggedInDto.Image = await UploadImage(loggedInDto.Image) ?? string.Empty;
+            }
+
             LoggedInDto editedUser = _userRepository.UpdateUser(loggedInDto);
+
             if (editedUser == null)
             {
                 returnValue.Success = false;
@@ -61,6 +77,28 @@ namespace App.UserService.BussinessLogic.Services
             returnValue.Success = true;
             returnValue.Message = string.Empty;
             returnValue.Object = editedUser;
+
+            return returnValue;
+        }
+
+        public ReturnValue<string> UpdatePassword(ChangePasswordDto passwordDto, string email)
+        {
+            ReturnValue<string> returnValue = new ReturnValue<string>();
+
+            if(!ValidatePassword(passwordDto, email, out string message))
+            {
+                returnValue.Success = false;
+                returnValue.Message = message;
+                returnValue.Object = ""; 
+                
+                return returnValue;
+            }
+
+            _userRepository.UpdatePassword(email, BCrypt.Net.BCrypt.HashPassword(passwordDto.CpNewPassword));
+
+            returnValue.Success = true;
+            returnValue.Message = "";
+            returnValue.Object = "Uspešno ste promenili lozinku.";
 
             return returnValue;
         }
@@ -141,6 +179,63 @@ namespace App.UserService.BussinessLogic.Services
             returnValue.Object = id;
 
             return returnValue;
+        }
+
+        private bool ValidateEditData(LoggedInDto userDto, out string message)
+        {
+            if (string.IsNullOrEmpty(userDto.Username) ||
+               string.IsNullOrEmpty(userDto.Email) ||
+               string.IsNullOrEmpty(userDto.Name) ||
+               string.IsNullOrEmpty(userDto.LastName) ||
+               string.IsNullOrEmpty(userDto.Address) ||
+               string.IsNullOrEmpty(userDto.BirthDate.ToString()))
+            {
+                message = "Popunite sva obavezna polja.";
+                return false;
+            }
+
+            message = string.Empty;
+            return true;
+        }
+
+        private bool ValidatePassword(ChangePasswordDto passwordDto, string email, out string message)
+        {
+            if (string.IsNullOrEmpty(passwordDto.CpPassword) ||
+               string.IsNullOrEmpty(passwordDto.CpNewPassword) ||
+               string.IsNullOrEmpty(passwordDto.CpConfirmPassword))
+            {
+                message = "Popunite sva obavezna polja.";
+                return false;
+            }
+
+            if(passwordDto.CpNewPassword != passwordDto.CpConfirmPassword)
+            {
+                message = "Lozinke se ne poklapaju.";
+                return false;
+            }
+
+            UserDto userFromDb = _userRepository.FindUser<UserDto>(email);
+
+            if (!BCrypt.Net.BCrypt.Verify(passwordDto.CpPassword, userFromDb.Password))
+            {
+                message = "Neispravna trenutna lozinka.";
+                return false;
+            }
+
+            message = string.Empty;
+            return true;
+        }
+
+        private async Task<string> UploadImage(string image64)
+        {
+            Guid g = Guid.NewGuid();
+            string guidString = Convert.ToBase64String(g.ToByteArray());
+            guidString = guidString.Replace("=", "");
+            guidString = guidString.Replace("+", "");
+            var response = await _blobService.UploadImage(image64, guidString);
+
+            return response.Message;
+
         }
     }
 }

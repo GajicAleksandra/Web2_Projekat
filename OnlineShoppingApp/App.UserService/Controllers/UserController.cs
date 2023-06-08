@@ -45,7 +45,7 @@ namespace App.UserService.Controllers
 
         [Route("changeprofile")]
         [HttpPut]
-        public IActionResult ChangeProfile(LoggedInDto loggedInUser)
+        public async Task<IActionResult> ChangeProfile(LoggedInDto loggedInUser)
         {
             string email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
             if(string.IsNullOrEmpty(email) || email != loggedInUser.Email)
@@ -53,9 +53,29 @@ namespace App.UserService.Controllers
                 return BadRequest();
             }
 
-            ReturnValue<LoggedInDto> returnValue = _userService.UpdateUserData(loggedInUser);
+            ReturnValue<LoggedInDto> returnValue = await _userService.UpdateUserData(loggedInUser);
 
             if(!returnValue.Success)
+            {
+                return BadRequest(returnValue.Message);
+            }
+
+            return Ok(returnValue.Object);
+        }
+
+        [Route("changepassword")]
+        [HttpPut]
+        public IActionResult ChangePassword(ChangePasswordDto passwordDto)
+        {
+            string email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest();
+            }
+
+            ReturnValue<string> returnValue = _userService.UpdatePassword(passwordDto, email);
+
+            if (!returnValue.Success)
             {
                 return BadRequest(returnValue.Message);
             }
@@ -81,7 +101,7 @@ namespace App.UserService.Controllers
         [Authorize(Roles = "0")]
         [Route("acceptorrejectsalesman")]
         [HttpPut]
-        public async Task<IActionResult> AcceptOrRejectSalesman(VerifySalesmanDto verifySalesmanDto)
+        public IActionResult AcceptOrRejectSalesman(VerifySalesmanDto verifySalesmanDto)
         {
             ReturnValue<string> returnValue = _userService.AcceptSalesman(verifySalesmanDto.Email, verifySalesmanDto.Action);
 

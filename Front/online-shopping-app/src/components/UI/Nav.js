@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
-import { Link, Drawer, Badge } from "@mui/material";
+import { Link, Drawer, Badge, Divider } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import {
@@ -21,15 +21,19 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Cart from "../Shop/Cart/Cart";
+import EditIcon from "@mui/icons-material/Edit";
+import LogoutIcon from "@mui/icons-material/Logout";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 export default function Nav() {
   const [user, setUser] = useState("");
   const [role, setRole] = useState(-1);
   const [image, setImage] = useState("");
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const openUser = Boolean(anchorElUser);
 
   const [isCartOpen, setCartOpen] = useState(false);
   const [cartItemCount, setCartItemCount] = useState(0);
@@ -83,20 +87,20 @@ export default function Nav() {
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static" sx={{ bgcolor: "#FFCCCC" }}>
           <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              <IconButton sx={{ color: "black" }} component={Link} href="/">
+            <Typography variant="h6" component="div">
+              <IconButton sx={{ color: "black", marginRight: 1 }} component={Link} href="/">
                 <HomeOutlinedIcon fontSize="large" />
               </IconButton>
             </Typography>
             {user && role == 0 && (
-              <div>
+              <div style={{ flexGrow: 1 }}>
                 <Button
                   id="basic-button"
                   aria-controls={open ? "basic-menu" : undefined}
                   aria-haspopup="true"
                   aria-expanded={open ? "true" : undefined}
                   onClick={handleClick}
-                  sx={{ mr: 2, color: "black" }}
+                  sx={{ mr: 2, color: "black", float: 'left' }}
                 >
                   Zahtevi za verifikaciju
                 </Button>
@@ -113,7 +117,6 @@ export default function Nav() {
                     component={Link}
                     href="/pendingrequests"
                     id="pending"
-                    onClick={getRequests}
                   >
                     Na čekanju
                   </MenuItem>
@@ -121,7 +124,6 @@ export default function Nav() {
                     component={Link}
                     href="/acceptedrequests"
                     id="accepted"
-                    onClick={getRequests}
                   >
                     Prihvaćeni
                   </MenuItem>
@@ -129,7 +131,6 @@ export default function Nav() {
                     component={Link}
                     href="/rejectedrequests"
                     id="rejected"
-                    onClick={getRequests}
                   >
                     Odbijeni
                   </MenuItem>
@@ -155,7 +156,7 @@ export default function Nav() {
                 <IconButton
                   aria-label="Korpa"
                   onClick={handleCartOpen}
-                  sx={{ color: "black", paddingRight:3 }}
+                  sx={{ color: "black", paddingRight: 3 }}
                 >
                   <Badge badgeContent={0} color="secondary" showZero>
                     <ShoppingCartIcon />
@@ -192,32 +193,44 @@ export default function Nav() {
                     component={Link}
                     href="/profile"
                     onClick={handleCloseUserMenu}
+                    sx={{ height: "40px" }}
                   >
-                    <Typography textAlign="center">Profil</Typography>
+                    <AccountCircleOutlinedIcon style={{ marginRight: 10 }} />
+                    Profil
+                  </MenuItem>
+                  <MenuItem
+                    key="changepassword"
+                    component={Link}
+                    href="/changepassword"
+                    onClick={handleCloseUserMenu}
+                    sx={{ height: "40px" }}
+                  >
+                    <EditIcon style={{ marginRight: 10 }} />
+                    Izmeni lozinku
                   </MenuItem>
                   {role == 2 && (
-                    <>
-                      <MenuItem key="verifikacija" onClick={handleOpenModal}>
-                        <Typography textAlign="center">
-                          Status verifikacije
-                        </Typography>
-                      </MenuItem>
-                      <TransitionsModal
-                        open={modalOpen}
-                        setOpen={setModalOpen}
-                      />
-                    </>
+                    <MenuItem
+                      key="verifikacija"
+                      onClick={handleOpenModal}
+                      sx={{ height: "40px" }}
+                    >
+                      <InfoOutlinedIcon style={{ marginRight: 10 }} />
+                      Status verifikacije
+                    </MenuItem>
                   )}
-
+                  <Divider sx={{ mt: 1, mb: 1 }} />
                   <MenuItem
                     key="logout"
                     component={Link}
                     href="/"
                     onClick={handleLogout}
+                    sx={{ height: "35px" }}
                   >
-                    <Typography textAlign="center">Izlogujte se</Typography>
+                    <LogoutIcon style={{ marginRight: 10 }} />
+                    Izloguj se
                   </MenuItem>
                 </Menu>
+                <TransitionsModal open={modalOpen} setOpen={setModalOpen} />
               </Box>
             )}
           </Toolbar>

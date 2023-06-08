@@ -8,6 +8,7 @@ import ProtectedRoute from './components/UI/ProtectedRoute';
 import AccessDenied from './components/Auth/AccessDenied';
 import ProductList from './components/Shop/ProductList/ProductList';
 import ProductDetails from './components/Shop/ProductDetails/ProductDetails';
+import ChangePassword from './components/User/ChangePassword'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path='/accessdenied' element={<AccessDenied />} />
         <Route path="/profile" element={<ProtectedRoute Component={Profile} />} />
+        <Route path="/changepassword" element={<ProtectedRoute Component={ChangePassword}/>} />
         <Route path="/pendingrequests" element={<ProtectedRoute Component={VerifySalesmen} role="0" additionalProp="Pending" />} />
         <Route path="/acceptedrequests" element={<ProtectedRoute Component={VerifySalesmen} role="0" additionalProp="Accepted" />} />
         <Route path="/rejectedrequests" element={<ProtectedRoute Component={VerifySalesmen} role="0" additionalProp="Rejected" />} />

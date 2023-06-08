@@ -12,7 +12,8 @@ namespace App.UserService.BussinessLogic.Services.Interface
     public interface IUserService
     {
         ReturnValue<LoggedInDto> GetLoggedInUser(string email);
-        ReturnValue<LoggedInDto> UpdateUserData(LoggedInDto loggedInDto);
+        Task<ReturnValue<LoggedInDto>> UpdateUserData(LoggedInDto loggedInDto);
+        ReturnValue<string> UpdatePassword(ChangePasswordDto passwordDto, string email);
         ReturnValue<List<LoggedInDto>> GetSalesmen(SalesmanStatus status);
         ReturnValue<string> AcceptSalesman(string salesman, string action);
         ReturnValue<SalesmanStatus> GetSalesmanStatus(string email);
