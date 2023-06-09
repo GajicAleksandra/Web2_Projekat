@@ -11,8 +11,9 @@ namespace App.ShopService.DataAccess.Repository.Interface
     {
         void AddProduct(ProductDto productDto);
         List<ProductDto> GetProducts();
+        List<ProductDto> GetProducts(int salesman);
         ProductDto GetProduct(int id);
-        void UpdateProduct(ProductDto productDto);
+        bool UpdateProduct(ProductDto productDto);
         bool DeleteProduct(int id);
     }
 }

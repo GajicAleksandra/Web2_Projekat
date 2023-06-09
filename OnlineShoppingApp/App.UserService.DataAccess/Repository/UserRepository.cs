@@ -64,12 +64,19 @@ namespace App.UserService.DataAccess.Repository
             return loggedInDto;
         }
 
-        public void UpdatePassword(string email, string password)
+        public bool UpdatePassword(string email, string password)
         {
             User user = _db.Users.FirstOrDefault(u => u.Email == email);
+            if(user == null)
+            {
+                return false;
+            }
+
             user.Password = password;
             _db.Update(user);
             _db.SaveChanges();
+
+            return true;
         }
 
         public List<LoggedInDto> GetAllSalesmen(SalesmanStatus status)

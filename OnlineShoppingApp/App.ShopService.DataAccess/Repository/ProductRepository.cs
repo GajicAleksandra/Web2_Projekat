@@ -34,6 +34,19 @@ namespace App.ShopService.DataAccess.Repository
             return _mapper.Map<List<ProductDto>>(_db.Products.ToList());
         }
 
+        public List<ProductDto> GetProducts(int salesman)
+        {
+            List<Product> products = _db.Products.ToList();
+
+            products = products.FindAll(p => p.SalesmanId == salesman);
+            if(products == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<List<ProductDto>>(products);
+        }
+
         public ProductDto GetProduct(int id)
         {
             Product product = _db.Products.FirstOrDefault(p => p.Id == id);
@@ -45,9 +58,12 @@ namespace App.ShopService.DataAccess.Repository
             return _mapper.Map<ProductDto>(product);
         }
 
-        public void UpdateProduct(ProductDto productDto)
+        public bool UpdateProduct(ProductDto productDto)
         {
             Product product = _db.Products.FirstOrDefault(p => p.Id == productDto.Id);
+
+            if (product == null)
+                return false;
 
             product.Name = productDto.Name;
             product.Description = productDto.Description;
@@ -57,6 +73,8 @@ namespace App.ShopService.DataAccess.Repository
 
             _db.Products.Update(product);
             _db.SaveChanges();
+
+            return true;
         }
 
         public bool DeleteProduct(int id) 

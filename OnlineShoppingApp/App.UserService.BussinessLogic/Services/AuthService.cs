@@ -55,10 +55,15 @@ namespace App.UserService.BussinessLogic.Services
             }
 
             userDto.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
-            userDto.Image = await UploadImage(userDto.Image) ?? string.Empty;
+
+            if (!string.IsNullOrEmpty(userDto.Image))
+            {
+                userDto.Image = await UploadImage(userDto.Image) ?? string.Empty;
+            }
+
             returnValue.Success = true;
             returnValue.Message = "";
-            returnValue.Object = "Uspesna registracija.";
+            returnValue.Object = "Uspešna registracija.";
 
             _userRepository.AddUser(userDto);
 

@@ -96,7 +96,12 @@ namespace App.UserService.BussinessLogic.Services
                 return returnValue;
             }
 
-            _userRepository.UpdatePassword(email, BCrypt.Net.BCrypt.HashPassword(passwordDto.CpNewPassword));
+            if(!_userRepository.UpdatePassword(email, BCrypt.Net.BCrypt.HashPassword(passwordDto.CpNewPassword)))
+            {
+                returnValue.Success = false;
+                returnValue.Message = $"Korisnik {email} ne postoji.";
+                returnValue.Object = string.Empty;
+            }
 
             returnValue.Success = true;
             returnValue.Message = "";

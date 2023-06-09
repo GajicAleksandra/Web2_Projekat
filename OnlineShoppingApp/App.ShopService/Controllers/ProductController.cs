@@ -4,6 +4,7 @@ using App.ShopService.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Ocsp;
 using System.Security.Claims;
 
 namespace App.ShopService.Controllers
@@ -43,16 +44,42 @@ namespace App.ShopService.Controllers
         [Authorize]
         [Route("getproducts")]
         [HttpGet]
-        public ActionResult GetProducts()
+        public async Task<ActionResult> GetProducts()
         {
+            string role = HttpContext.User.FindFirstValue(ClaimTypes.Role);
+            if(role == "2")
+            {
+                string email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+                
+                ReturnValue<List<ProductDto>> returnValue = await _productService.GetProducts(email);
+
+                if (!returnValue.Success)
+                {
+                    return BadRequest(returnValue.Message);
+                }
+
+                return Ok(returnValue.Object);
+            }
+
             return Ok(_productService.GetProducts().Object);
         }
 
         [Authorize]
         [Route("get/{id}")]
         [HttpGet]
-        public ActionResult GetProduct(int id)
+        public async Task<ActionResult> GetProduct(int id)
         {
+            string role = HttpContext.User.FindFirstValue(ClaimTypes.Role);
+            if (role == "2")
+            {
+                string email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+                ReturnValue<bool> ret = await _productService.CheckSalesman(email, id);
+                if (!ret.Success)
+                {
+                    return BadRequest(ret.Message);
+                }
+            }
+
             ReturnValue<ProductDto> returnValue = _productService.GetProduct(id);
 
             if(!returnValue.Success)
@@ -68,11 +95,21 @@ namespace App.ShopService.Controllers
         [HttpPut]
         public async Task<ActionResult> EditProduct(ProductDto productDto)
         {
+            string email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            ReturnValue<bool> ret = await _productService.CheckSalesman(email, productDto.Id);
+            if (!ret.Success)
+            {
+                return BadRequest(ret.Message);
+            }
+
             ReturnValue<string> returnValue = await _productService.UpdateProduct(productDto);
 
             if(!returnValue.Success)
             {
-                return BadRequest(returnValue.Message);
+                if(returnValue.Object == "NotFound")
+                    return NotFound(returnValue.Message);
+                else
+                    return BadRequest(returnValue.Message);
             }
 
             return Ok(returnValue.Object);
@@ -81,8 +118,15 @@ namespace App.ShopService.Controllers
         [Authorize(Roles = "2")]
         [Route("delete/{id}")]
         [HttpDelete]
-        public ActionResult DeleteProduct(int id)
+        public async Task<ActionResult> DeleteProduct(int id)
         {
+            string email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            ReturnValue<bool> ret = await _productService.CheckSalesman(email, id);
+            if (!ret.Success)
+            {
+                return BadRequest(ret.Message);
+            }            
+
             ReturnValue<string> returnValue = _productService.DeleteProduct(id);
 
             if (!returnValue.Success)

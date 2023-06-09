@@ -8,6 +8,8 @@ import { getProducts } from "../../../services/ProductService";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { getUserRole } from "../../../services/AuthService";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const defaultTheme = createTheme({
   palette: {
@@ -35,7 +37,16 @@ const ProductList = () => {
         setProducts(response.data);
       })
       .catch(function (error) {
-        console.log(error);
+        toast.error(error.response.data, {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       });
   };
 

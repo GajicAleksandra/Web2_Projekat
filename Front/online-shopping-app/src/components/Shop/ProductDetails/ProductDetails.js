@@ -8,6 +8,8 @@ import { useParams } from "react-router-dom";
 import ProductModel from "../../../models/ProductModel";
 import { getProduct } from "../../../services/ProductService";
 import Nav from "../../UI/Nav";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProductDetails = () => {
 
@@ -30,7 +32,16 @@ const ProductDetails = () => {
         setProductData(JSON.parse(JSON.stringify(response.data)));
       })
       .catch(function (error) {
-        console.log(error);
+        toast.error(error.response.data, {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       });
   };
 
