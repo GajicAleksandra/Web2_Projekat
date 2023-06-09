@@ -16,7 +16,6 @@ import { editProduct, getProduct } from "../../../services/ProductService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EditIcon from "@mui/icons-material/Edit";
-import { useForm } from "react-hook-form";
 
 const defaultTheme = createTheme({
   palette: {
@@ -32,11 +31,6 @@ const defaultTheme = createTheme({
 const EditProduct = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
 
   const product = new ProductModel();
   const [productData, setProductData] = useState(
@@ -72,9 +66,9 @@ const EditProduct = () => {
   const onSubmit = async () => {
     if (productData.image == "") {
       document.getElementById("imageError").innerHTML = "Izaberite sliku.";
-      console.log(productData)
       return;
     }
+
     await editProduct(productData)
       .then(function (response) {
         toast.success(response.data, {
@@ -196,13 +190,12 @@ const EditProduct = () => {
                   <Box
                     component="form"
                     noValidate
-                    onSubmit={handleSubmit(onSubmit)}
+                    onSubmit={onSubmit}
                     sx={{ height: "300px" }}
                   >
                     <Grid container spacing={2}>
                       <Grid item xs={12}>
                         <TextField
-                          {...register("name", { required: "Unesite naziv." })}
                           autoComplete="name"
                           name="name"
                           required
@@ -218,12 +211,10 @@ const EditProduct = () => {
                           style={{ color: "red", float: "left" }}
                           id="nameError"
                         >
-                          {errors.name?.message}
                         </span>
                       </Grid>
                       <Grid item xs={12} sm={6}>
                         <TextField
-                          {...register("price", { required: "Unesite cenu." })}
                           fullWidth
                           required
                           id="price"
@@ -236,15 +227,11 @@ const EditProduct = () => {
                           style={{ color: "red", float: "left" }}
                           id="priceError"
                         >
-                          {errors.price?.message}
                         </span>
                       </Grid>
 
                       <Grid item xs={12} sm={6}>
                         <TextField
-                          {...register("quantity", {
-                            required: "Unesite količinu.",
-                          })}
                           name="quantity"
                           required
                           fullWidth
@@ -254,14 +241,10 @@ const EditProduct = () => {
                           value={productData.quantity}
                         />
                         <span style={{ color: "red" }} id="quantityError">
-                          {errors.quantity?.message}
                         </span>
                       </Grid>
                       <Grid item xs={12}>
                         <TextField
-                          {...register("description", {
-                            required: "Unesite opis.",
-                          })}
                           multiline
                           rows={6}
                           required
@@ -276,7 +259,6 @@ const EditProduct = () => {
                           style={{ color: "red", float: "left" }}
                           id="descriptionError"
                         >
-                          {errors.description?.message}
                         </span>
                       </Grid>
                     </Grid>

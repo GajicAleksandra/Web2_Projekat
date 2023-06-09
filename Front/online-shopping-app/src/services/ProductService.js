@@ -27,3 +27,10 @@ export const editProduct = (data) => {
     }
     return axios.put(`${process.env.REACT_APP_API_URL}/editproduct`, data, config);
 }
+
+export const deleteProduct = (id) => {
+    const config = {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
+    }
+    return axios.delete(`${process.env.REACT_APP_API_URL}/deleteproduct/${id}`, config);
+}

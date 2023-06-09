@@ -58,5 +58,17 @@ namespace App.ShopService.DataAccess.Repository
             _db.Products.Update(product);
             _db.SaveChanges();
         }
+
+        public bool DeleteProduct(int id) 
+        {
+            Product product = _db.Products.FirstOrDefault(p => p.Id == id);
+            if (product == null)
+                return false;
+
+            _db.Products.Remove(product); 
+            _db.SaveChanges();
+
+            return true;
+        }
     }
 }

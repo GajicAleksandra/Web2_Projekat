@@ -56,6 +56,8 @@ namespace App.UserService.BussinessLogic.Services
                 returnValue.Success = false;
                 returnValue.Message = message;
                 returnValue.Object = null;
+
+                return returnValue;
             }
 
             if (!string.IsNullOrEmpty(loggedInDto.Image))

@@ -10,6 +10,9 @@ import MenuItem from "@mui/material/MenuItem";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { getUserRole } from '../../../services/AuthService'
+import { deleteProduct } from '../../../services/ProductService'
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -54,12 +57,17 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-const Product = ({ product }) => {
+const Product = ({ product, onDeleteProduct }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [role, setRole] = useState(""); 
   const navigate = useNavigate();
 
   const open = Boolean(anchorEl);
+
+  useEffect(() => {
+    setRole(getUserRole());
+  }, []);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -71,9 +79,34 @@ const Product = ({ product }) => {
     navigate('/editproduct/' + product.id);
   };
 
-  useEffect(() => {
-    setRole(getUserRole());
-  }, []);
+  const handleDeleteClick = async () => {
+    await deleteProduct(product.id)
+    .then(function(response){
+      toast.success(response.data, {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      onDeleteProduct(product.id);
+    })
+    .catch(function(error){
+      toast.error(error.response.data, {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    });
+  }
 
   return (
     <div className={styles.productCard}>
@@ -101,7 +134,7 @@ const Product = ({ product }) => {
             <EditIcon />
             Izmeni
           </MenuItem>
-          <MenuItem onClick={handleClose} disableRipple>
+          <MenuItem onClick={handleDeleteClick} disableRipple>
             <DeleteIcon />
             Obriši
           </MenuItem>

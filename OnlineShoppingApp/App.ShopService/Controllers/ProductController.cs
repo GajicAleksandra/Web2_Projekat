@@ -20,7 +20,7 @@ namespace App.ShopService.Controllers
         }
 
         [Authorize(Roles = "2")]
-        [Route("addproduct")]
+        [Route("add")]
         [HttpPost]
         public async Task<ActionResult> AddProduct(ProductDto productDto)
         {
@@ -49,7 +49,7 @@ namespace App.ShopService.Controllers
         }
 
         [Authorize]
-        [Route("getproduct/{id}")]
+        [Route("get/{id}")]
         [HttpGet]
         public ActionResult GetProduct(int id)
         {
@@ -64,7 +64,7 @@ namespace App.ShopService.Controllers
         }
 
         [Authorize(Roles = "2")]
-        [Route("editproduct")]
+        [Route("edit")]
         [HttpPut]
         public async Task<ActionResult> EditProduct(ProductDto productDto)
         {
@@ -73,6 +73,21 @@ namespace App.ShopService.Controllers
             if(!returnValue.Success)
             {
                 return BadRequest(returnValue.Message);
+            }
+
+            return Ok(returnValue.Object);
+        }
+
+        [Authorize(Roles = "2")]
+        [Route("delete/{id}")]
+        [HttpDelete]
+        public ActionResult DeleteProduct(int id)
+        {
+            ReturnValue<string> returnValue = _productService.DeleteProduct(id);
+
+            if (!returnValue.Success)
+            {
+                return NotFound(returnValue.Message);
             }
 
             return Ok(returnValue.Object);

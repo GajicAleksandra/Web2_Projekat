@@ -111,6 +111,8 @@ namespace App.ShopService.BussinessLogic.Services
                 returnValue.Success = false;
                 returnValue.Message = message;
                 returnValue.Object = null;
+
+                return returnValue;
             }
 
             if (!productDto.Image.Contains("http"))
@@ -123,6 +125,25 @@ namespace App.ShopService.BussinessLogic.Services
             returnValue.Success = true;
             returnValue.Message = string.Empty;
             returnValue.Object = "Uspešno ste izmenili proizvod.";
+
+            return returnValue;
+        }
+
+        public ReturnValue<string> DeleteProduct(int id)
+        {
+            ReturnValue<string> returnValue = new ReturnValue<string>();
+            if (!_productRepository.DeleteProduct(id))
+            {
+                returnValue.Success = false;
+                returnValue.Message = "Desila se greška, pokušajte ponovo.";
+                returnValue.Object = string.Empty;
+
+                return returnValue;
+            }
+
+            returnValue.Success = true;
+            returnValue.Message = string.Empty;
+            returnValue.Object = "Uspešno ste obrisali proizvod.";
 
             return returnValue;
         }

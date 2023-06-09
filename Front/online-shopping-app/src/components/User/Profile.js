@@ -16,6 +16,8 @@ import { GetLoggedInUser, ChangeProfile } from "../../services/UserService";
 import LoggedInUser from "../../models/LoggedInUser";
 import { Card } from "@mui/material";
 import "./Profile.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const defaultTheme = createTheme({
   palette: {
@@ -60,6 +62,7 @@ const Profile = () => {
   };
 
   const onSubmit = async (e) => {
+    e.preventDefault();
     if(userData.image == "/images/user-placeholder.jpg"){
       setUserData({
         ...userData,
@@ -68,12 +71,30 @@ const Profile = () => {
     }
 
     await ChangeProfile(userData)
-      .then(function () {
-        navigate("/");
+      .then(function (response) {
+        toast.success("Uspešno ste izmenili profil.", {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        setUserData(JSON.parse(JSON.stringify(response.data)));
       })
       .catch(function (error) {
-        document.getElementById("registerError").innerHTML =
-          error.response.data;
+        toast.error(error.response.data, {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       });
   };
 
