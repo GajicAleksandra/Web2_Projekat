@@ -24,6 +24,7 @@ import Cart from "../Shop/Cart/Cart";
 import EditIcon from "@mui/icons-material/Edit";
 import LogoutIcon from "@mui/icons-material/Logout";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import SideMenu from "./SideMenu";
 
 export default function Nav() {
   const [user, setUser] = useState("");
@@ -87,12 +88,17 @@ export default function Nav() {
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static" sx={{ bgcolor: "#FFCCCC" }}>
           <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            {user && (
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                <SideMenu />
+              </Typography>
+            )}
+            <Typography variant="h6" component="div" sx={{ flexGrow: 150 }}>
               <IconButton sx={{ color: "black" }} component={Link} href="/">
                 <HomeOutlinedIcon fontSize="large" />
               </IconButton>
             </Typography>
-            {user && role == 0 && (
+            {/* {user && role == 0 && (
               <div style={{ flexGrow: 100 }}>
                 <Button
                   id="basic-button"
@@ -100,7 +106,7 @@ export default function Nav() {
                   aria-haspopup="true"
                   aria-expanded={open ? "true" : undefined}
                   onClick={handleClick}
-                  sx={{ mr: 2, color: "black", float: 'left' }}
+                  sx={{ mr: 2, color: "black", float: "left" }}
                 >
                   Zahtevi za verifikaciju
                 </Button>
@@ -136,7 +142,7 @@ export default function Nav() {
                   </MenuItem>
                 </Menu>
               </div>
-            )}
+            )} */}
             {!user && (
               <>
                 <Button
@@ -153,7 +159,7 @@ export default function Nav() {
             )}
             {user && (
               <Box sx={{ flexGrow: 0 }}>
-                <IconButton
+                {role == 1 && <IconButton
                   aria-label="Korpa"
                   onClick={handleCartOpen}
                   sx={{ color: "black", marginRight: 2 }}
@@ -161,7 +167,7 @@ export default function Nav() {
                   <Badge badgeContent={0} color="secondary" showZero>
                     <ShoppingCartIcon />
                   </Badge>
-                </IconButton>
+                </IconButton>}
                 <IconButton
                   onClick={handleOpenUserMenu}
                   sx={{ p: 0, color: "black" }}

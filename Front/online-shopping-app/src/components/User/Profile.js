@@ -83,6 +83,7 @@ const Profile = () => {
           theme: "colored",
         });
         setUserData(JSON.parse(JSON.stringify(response.data)));
+        localStorage.setItem('image', userData.image);
       })
       .catch(function (error) {
         toast.error(error.response.data, {

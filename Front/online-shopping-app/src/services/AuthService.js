@@ -8,6 +8,9 @@ export const LoginUser = (data) => {
         var token = jwtDecode(response.data);
         localStorage.setItem('role', token['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']);
         localStorage.setItem('image', token["Image"]);
+
+        var isVerified = token["IsVerified"];
+        localStorage.setItem('isVerified', isVerified != 1 ? false : true);
     })
 }
 
@@ -27,8 +30,13 @@ export const getImage = () => {
     return localStorage.getItem('image');
 }
 
+export const isVerified = () => {
+    return localStorage.getItem('isVerified');
+}
+
 export const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('image');
     localStorage.removeItem('role');
+    localStorage.removeItem('isVerified');
 }

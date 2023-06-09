@@ -25,11 +25,11 @@ function App() {
         <Route path="/pendingrequests" element={<ProtectedRoute Component={VerifySalesmen} role="0" additionalProp="Pending" />} />
         <Route path="/acceptedrequests" element={<ProtectedRoute Component={VerifySalesmen} role="0" additionalProp="Accepted" />} />
         <Route path="/rejectedrequests" element={<ProtectedRoute Component={VerifySalesmen} role="0" additionalProp="Rejected" />} />
-        <Route path="/products" element={<ProtectedRoute Component={ProductList}/>} />
-        <Route path="/details" element={<ProtectedRoute Component={ProductDetails}/>} />
-        <Route path="/details/:id" element={<ProtectedRoute Component={ProductDetails}/>} />
-        <Route path="/addproduct" element={<ProtectedRoute Component={AddProduct} role="2" />} />
-        <Route path="/editproduct/:id" element={<ProtectedRoute Component={EditProduct} role="2" />} />
+        <Route path="/products" element={<ProtectedRoute Component={ProductList} additionalProp="verificationRequired"/>} />
+        <Route path="/details" element={<ProtectedRoute Component={ProductDetails} additionalProp="verificationRequired"/>} />
+        <Route path="/details/:id" element={<ProtectedRoute Component={ProductDetails} additionalProp="verificationRequired"/>} />
+        <Route path="/addproduct" element={<ProtectedRoute Component={AddProduct} role="2" additionalProp="verificationRequired" />} />
+        <Route path="/editproduct/:id" element={<ProtectedRoute Component={EditProduct} role="2" additionalProp="verificationRequired" />} />
       </Routes>
     </Router>
   );

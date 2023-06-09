@@ -158,7 +158,8 @@ namespace App.UserService.BussinessLogic.Services
             {
                 new Claim(ClaimTypes.Role, userDto.UserType.ToString()),
                 new Claim(ClaimTypes.Email, userDto.Email),
-                new Claim("Image", userDto.Image)
+                new Claim("Image", userDto.Image),
+                new Claim("IsVerified", userDto.Status.ToString())
             };
 
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(TokenSecretKey));
