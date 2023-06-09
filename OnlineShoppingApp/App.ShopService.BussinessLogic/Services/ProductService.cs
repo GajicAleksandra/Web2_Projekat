@@ -80,6 +80,53 @@ namespace App.ShopService.BussinessLogic.Services
             return returnValue;
         }
 
+        public ReturnValue<ProductDto> GetProduct(int id)
+        {
+            ReturnValue<ProductDto> returnValue = new ReturnValue<ProductDto>();
+
+            ProductDto product = _productRepository.GetProduct(id);
+
+            if(product == null)
+            {
+                returnValue.Success = false;
+                returnValue.Message = "Proizvod nije pronađen.";
+                returnValue.Object = null;
+
+                return returnValue;
+            }
+
+            returnValue.Success = true;
+            returnValue.Message = string.Empty;
+            returnValue.Object = product;
+
+            return returnValue;
+        }
+
+        public async Task<ReturnValue<string>> UpdateProduct(ProductDto productDto)
+        {
+            ReturnValue<string> returnValue = new ReturnValue<string>();
+
+            if(!ValidateProduct(productDto, out string message))
+            {
+                returnValue.Success = false;
+                returnValue.Message = message;
+                returnValue.Object = null;
+            }
+
+            if (!productDto.Image.Contains("http"))
+            {
+                productDto.Image = await UploadImage(productDto.Image) ?? string.Empty;
+            }
+           
+            _productRepository.UpdateProduct(productDto);
+
+            returnValue.Success = true;
+            returnValue.Message = string.Empty;
+            returnValue.Object = "Uspešno ste izmenili proizvod.";
+
+            return returnValue;
+        }
+
         private bool ValidateProduct(ProductDto productDto, out string message)
         {
             if(string.IsNullOrEmpty(productDto.Name) || 

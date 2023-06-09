@@ -1,9 +1,10 @@
 class ProductModel {
+    id = "";
     name = "";
     price = "";
     quantity = "";
     description = "";
-    image = "";
+    image = "/images/product-placeholder.png";
 }
 
 export default ProductModel;

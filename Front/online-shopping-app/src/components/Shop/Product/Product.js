@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IconButton } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./Product.module.css";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -57,6 +57,7 @@ const StyledMenu = styled((props) => (
 const Product = ({ product }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [role, setRole] = useState(""); 
+  const navigate = useNavigate();
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -64,6 +65,10 @@ const Product = ({ product }) => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleEditClick = () => {
+    navigate('/editproduct/' + product.id);
   };
 
   useEffect(() => {
@@ -92,7 +97,7 @@ const Product = ({ product }) => {
           open={open}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleClose} disableRipple>
+          <MenuItem onClick={handleEditClick} disableRipple>
             <EditIcon />
             Izmeni
           </MenuItem>
@@ -104,12 +109,12 @@ const Product = ({ product }) => {
       </div>}
 
       <div className={styles.productTumb}>
-        <img src="/images/login.jpg" alt="" />
+        <a href={'/details/' + product.id}><img src={product.image} alt="" /></a>
       </div>
       <div className={styles.productDetails}>
-        <span class={styles.productCatagory}>Ženski</span>
+        <span className={styles.productCatagory}>Ženski</span>
         <h4>
-          <a href="">{product.name}</a>
+          <a href={'/details/' + product.id}>{product.name}</a>
         </h4>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero,

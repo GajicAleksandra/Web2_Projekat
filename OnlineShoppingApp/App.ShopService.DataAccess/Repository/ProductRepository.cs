@@ -33,5 +33,30 @@ namespace App.ShopService.DataAccess.Repository
         {
             return _mapper.Map<List<ProductDto>>(_db.Products.ToList());
         }
+
+        public ProductDto GetProduct(int id)
+        {
+            Product product = _db.Products.FirstOrDefault(p => p.Id == id);
+            if(product == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<ProductDto>(product);
+        }
+
+        public void UpdateProduct(ProductDto productDto)
+        {
+            Product product = _db.Products.FirstOrDefault(p => p.Id == productDto.Id);
+
+            product.Name = productDto.Name;
+            product.Description = productDto.Description;
+            product.Price = productDto.Price;
+            product.Quantity = productDto.Quantity;
+            product.Image = productDto.Image;
+
+            _db.Products.Update(product);
+            _db.SaveChanges();
+        }
     }
 }

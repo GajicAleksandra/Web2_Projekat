@@ -12,5 +12,7 @@ namespace App.ShopService.BussinessLogic.Services.Interfaces
     {
         Task<ReturnValue<string>> AddProduct(ProductDto productDto, string email);
         ReturnValue<List<ProductDto>> GetProducts();
+        ReturnValue<ProductDto> GetProduct(int id);
+        Task<ReturnValue<string>> UpdateProduct(ProductDto productDto);
     }
 }

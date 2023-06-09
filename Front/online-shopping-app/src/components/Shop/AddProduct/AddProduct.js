@@ -16,6 +16,7 @@ import ProductModel from "../../../models/ProductModel";
 import { addProduct } from "../../../services/ProductService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useForm } from "react-hook-form";
 
 const defaultTheme = createTheme({
   palette: {
@@ -30,6 +31,11 @@ const defaultTheme = createTheme({
 
 const AddProduct = () => {
   const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const product = new ProductModel();
   const [productData, setProductData] = useState(
@@ -47,8 +53,12 @@ const AddProduct = () => {
     setProductData({ ...productData, [name]: value });
   };
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async () => {
+    if(productData.image == "/images/product-placeholder.png"){
+      document.getElementById("imageError").innerHTML = "Izaberite sliku.";
+      return;
+    }
+
     await addProduct(productData)
       .then(function (response) {
         toast.success(response.data, {
@@ -91,7 +101,7 @@ const AddProduct = () => {
     } else {
       setProductData({
         ...productData,
-        image: "/images/user-placeholder.jpg",
+        image: "/images/product-placeholder.png",
       });
     }
   };
@@ -112,29 +122,47 @@ const AddProduct = () => {
             }}
             className="text"
           ></Card>
-          <div className="text">
+          <div className="text" style={{ marginLeft: -20 }}>
             <Grid container>
-              <Grid item xs={12} className={styles.icons}>
-                <Avatar sx={{ m: 1, color: "#FFCCCC", bgcolor: "black" }}>
-                  <AddCircleOutlineIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5" sx={{ color: "black" }}>
-                  Dodajte proizvod
-                </Typography>
+              <Grid item xs={12} className={styles.heading}>
+                <div className={styles.icon}>
+                  <Avatar sx={{ m: 1, color: "#FFCCCC", bgcolor: "black" }}>
+                    <AddCircleOutlineIcon />
+                  </Avatar>
+                  <Typography
+                    component="h1"
+                    variant="h5"
+                    sx={{ color: "black" }}
+                  >
+                    Dodaj proizvod
+                  </Typography>
+                </div>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <div className={styles.imageContainer}>
-                  <img
-                    className={styles.image}
-                    src={productData.image}
-                    alt="Selected Product"
-                  />
+                  {productData.image == "" ? (
+                    <img
+                      className={styles.image}
+                      src="/images/product-placeholder.png"
+                      alt="Selected Product"
+                    />
+                  ) : (
+                    <img
+                      className={styles.image}
+                      src={productData.image}
+                      alt="Selected Product"
+                    />
+                  )}
                   <input
                     className={styles.chooseImage}
                     type="file"
                     onChange={showPreview}
                   />
                 </div>
+                <span
+                  style={{ color: "red", float: "left", marginLeft: 40 }}
+                  id="imageError"
+                ></span>
               </Grid>
               <Grid item xs={12} sm={6} sx={{ marginRight: "0%" }}>
                 <Box
@@ -149,12 +177,13 @@ const AddProduct = () => {
                   <Box
                     component="form"
                     noValidate
-                    onSubmit={onSubmit}
+                    onSubmit={handleSubmit(onSubmit)}
                     sx={{ height: "300px" }}
                   >
                     <Grid container spacing={2}>
                       <Grid item xs={12}>
                         <TextField
+                          {...register("name", { required: "Unesite naziv." })}
                           autoComplete="name"
                           name="name"
                           required
@@ -168,10 +197,13 @@ const AddProduct = () => {
                         <span
                           style={{ color: "red", float: "left" }}
                           id="nameError"
-                        ></span>
+                        >
+                          {errors.name?.message}
+                        </span>
                       </Grid>
                       <Grid item xs={12} sm={6}>
                         <TextField
+                          {...register("price", { required: "Unesite cenu." })}
                           fullWidth
                           required
                           id="price"
@@ -182,11 +214,16 @@ const AddProduct = () => {
                         <span
                           style={{ color: "red", float: "left" }}
                           id="priceError"
-                        ></span>
+                        >
+                          {errors.price?.message}
+                        </span>
                       </Grid>
 
                       <Grid item xs={12} sm={6}>
                         <TextField
+                          {...register("quantity", {
+                            required: "Unesite količinu.",
+                          })}
                           name="quantity"
                           required
                           fullWidth
@@ -194,13 +231,15 @@ const AddProduct = () => {
                           label="Količina"
                           onChange={(e) => handleChange(e)}
                         />
-                        <span
-                          style={{ color: "red" }}
-                          id="quantityError"
-                        ></span>
+                        <span style={{ color: "red" }} id="quantityError">
+                          {errors.quantity?.message}
+                        </span>
                       </Grid>
                       <Grid item xs={12}>
                         <TextField
+                          {...register("description", {
+                            required: "Unesite opis.",
+                          })}
                           multiline
                           rows={6}
                           required
@@ -213,10 +252,12 @@ const AddProduct = () => {
                         <span
                           style={{ color: "red", float: "left" }}
                           id="descriptionError"
-                        ></span>
+                        >
+                          {errors.description?.message}
+                        </span>
                       </Grid>
                     </Grid>
-                    <span style={{ color: "red" }} id="addProductError"></span>
+                    <span style={{ color: "red" }} id="editProductError"></span>
                     <Grid item xs={12}>
                       <Button
                         type="submit"
@@ -224,7 +265,7 @@ const AddProduct = () => {
                         variant="contained"
                         sx={{ mt: 6, mb: 1 }}
                       >
-                        Dodaj proizvod
+                        Dodaj
                       </Button>
                     </Grid>
                   </Box>

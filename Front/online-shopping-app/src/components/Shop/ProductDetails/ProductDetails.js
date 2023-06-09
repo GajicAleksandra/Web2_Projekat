@@ -1,14 +1,38 @@
-import React, { useState } from "react";
-import { Typography, Grid, Button, IconButton, Link } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { IconButton, Link } from "@mui/material";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
 import styles from "./ProductDetails.module.css";
 import ProductList from "../ProductList/ProductList";
+import { useParams } from "react-router-dom";
+import ProductModel from "../../../models/ProductModel";
+import { getProduct } from "../../../services/ProductService";
+import Nav from "../../UI/Nav";
 
-const ProductDetails = ({ product }) => {
-  //useParams i sa servera dobavim taj proizvod
+const ProductDetails = () => {
+
+  const product = new ProductModel();
+
+  const { id } = useParams();
   const [quantity, setQuantity] = useState(1);
+  const [productData, setProductData] = useState(
+    JSON.parse(JSON.stringify(product))
+  );
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    await getProduct(id)
+      .then(function (response) {
+        console.log(response.data);
+        setProductData(JSON.parse(JSON.stringify(response.data)));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   const handleQuantityChange = (newQuantity) => {
     setQuantity(newQuantity);
@@ -25,9 +49,11 @@ const ProductDetails = ({ product }) => {
   };
 
   return (
+    <>
+    <Nav></Nav>
     <div className={styles.card}>
       <nav>
-        <Link className={styles.link} to={ProductList}>
+        <a className={styles.link} href="/products">
           <svg
             className={styles.arrow}
             version="1.1"
@@ -40,14 +66,14 @@ const ProductDetails = ({ product }) => {
             />
           </svg>
           Nazad
-        </Link>
+        </a>
       </nav>
       <div className={styles.photo}>
-        <img src="/images/register.jpg" />
+        <img src={productData.image} />
       </div>
       <div className={styles.description}>
-        <h2>{product.name}</h2>
-        <h1>{product.price} RSD</h1>
+        <h2>{productData.name}</h2>
+        <h1>{productData.price.toLocaleString("en-US")}.00 RSD</h1>
         <p>
           Classic Peace Lily is a spathiphyllum floor plant arranged in a bamboo
           planter with a blue & red ribbom and butterfly pick.
@@ -64,6 +90,8 @@ const ProductDetails = ({ product }) => {
         <button className={styles.addToCartbutton}>Dodaj u korpu</button>
       </div>
     </div>
+    </>
+    
   );
 };
 

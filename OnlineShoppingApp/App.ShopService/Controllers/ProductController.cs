@@ -47,5 +47,35 @@ namespace App.ShopService.Controllers
         {
             return Ok(_productService.GetProducts().Object);
         }
+
+        [Authorize]
+        [Route("getproduct/{id}")]
+        [HttpGet]
+        public ActionResult GetProduct(int id)
+        {
+            ReturnValue<ProductDto> returnValue = _productService.GetProduct(id);
+
+            if(!returnValue.Success)
+            {
+                return NotFound(returnValue.Message);
+            }
+
+            return Ok(returnValue.Object);
+        }
+
+        [Authorize(Roles = "2")]
+        [Route("editproduct")]
+        [HttpPut]
+        public async Task<ActionResult> EditProduct(ProductDto productDto)
+        {
+            ReturnValue<string> returnValue = await _productService.UpdateProduct(productDto);
+
+            if(!returnValue.Success)
+            {
+                return BadRequest(returnValue.Message);
+            }
+
+            return Ok(returnValue.Object);
+        }
     }
 }
