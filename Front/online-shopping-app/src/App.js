@@ -9,6 +9,8 @@ import AccessDenied from './components/Auth/AccessDenied';
 import ProductList from './components/Shop/ProductList/ProductList';
 import ProductDetails from './components/Shop/ProductDetails/ProductDetails';
 import ChangePassword from './components/User/ChangePassword'
+import AddProduct from './components/Shop/AddProduct/AddProduct';
+import EditProduct from './components/Shop/EditProduct/EditProduct';
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
         <Route path="/products" element={<ProtectedRoute Component={ProductList}/>} />
         <Route path="/details" element={<ProtectedRoute Component={ProductDetails}/>} />
         <Route path="/details/:id" element={<ProtectedRoute Component={ProductDetails}/>} />
+        <Route path="/addproduct" element={<ProtectedRoute Component={AddProduct} role="2" />} />
+        <Route path="/editproduct/:id" element={<ProtectedRoute Component={EditProduct} role="2" />} />
       </Routes>
     </Router>
   );

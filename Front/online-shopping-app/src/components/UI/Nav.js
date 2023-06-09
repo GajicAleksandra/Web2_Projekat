@@ -87,13 +87,13 @@ export default function Nav() {
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static" sx={{ bgcolor: "#FFCCCC" }}>
           <Toolbar>
-            <Typography variant="h6" component="div">
-              <IconButton sx={{ color: "black", marginRight: 1 }} component={Link} href="/">
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              <IconButton sx={{ color: "black" }} component={Link} href="/">
                 <HomeOutlinedIcon fontSize="large" />
               </IconButton>
             </Typography>
             {user && role == 0 && (
-              <div style={{ flexGrow: 1 }}>
+              <div style={{ flexGrow: 100 }}>
                 <Button
                   id="basic-button"
                   aria-controls={open ? "basic-menu" : undefined}
@@ -156,7 +156,7 @@ export default function Nav() {
                 <IconButton
                   aria-label="Korpa"
                   onClick={handleCartOpen}
-                  sx={{ color: "black", paddingRight: 3 }}
+                  sx={{ color: "black", marginRight: 2 }}
                 >
                   <Badge badgeContent={0} color="secondary" showZero>
                     <ShoppingCartIcon />

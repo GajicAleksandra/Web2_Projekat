@@ -1,0 +1,55 @@
+.addProductContainer {
+    display: flex;
+    align-items: center;
+    height: 20rem;
+  }
+  
+  .imageContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px dashed black;
+    margin-left: 10%;
+    width: 255px;
+  }
+  
+  .image {
+    width: 250px;
+    height: 300px;
+    object-fit: cover;
+  }
+
+  .chooseImage{
+    margin-top: 10px;
+    color: black;
+  }
+  
+  .formContainer h1 {
+    text-align: center;
+  }
+  
+  .formContainer form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .formContainer label {
+    margin-top: 10px;
+  }
+  
+  .formContainer input,
+  .formContainer textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .icons{
+    text-align: center;
+    width: 100;
+    margin-bottom: 4%;
+    display: block;
+  }
+  

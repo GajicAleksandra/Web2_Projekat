@@ -8,28 +8,29 @@
   }
 
   .image{
-    width: 120rem;
+    width: 75rem;
     height: 20rem;
   }
 
   .addProduct{
     height: 40px;
     position: absolute;
-    margin-top: 23%;
-    right: 10%;
+    top: 10%;
+    right: 0%;
     display: flex;
     cursor: pointer;
     color: black;
     border: #FFCCCC;
+    float: right;
   }
 
   .addProductText{
-    font-size: 17px;
+    font-size: 15px;
     text-transform: uppercase;
   }
 
   .addProduct:hover{
-    border: 1px solid #FFCCCC;
+   border: 1px solid #FFCCCC;
 	 color: #FFCCCC;
 	 cursor: pointer;
   }

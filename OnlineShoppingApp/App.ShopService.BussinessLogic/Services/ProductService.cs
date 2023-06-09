@@ -33,7 +33,7 @@ namespace App.ShopService.BussinessLogic.Services
             {
                 returnValue.Success = false;
                 returnValue.Message = message;
-                returnValue.Object = "Popunite obavezna polja.";
+                returnValue.Object = "";
 
                 return returnValue;
             }
@@ -58,7 +58,7 @@ namespace App.ShopService.BussinessLogic.Services
                 }
             }
 
-            productDto.Image = ""; //await UploadImage(productDto.Image) ?? string.Empty;
+            productDto.Image = await UploadImage(productDto.Image) ?? string.Empty;
 
             _productRepository.AddProduct(productDto);
 
@@ -82,6 +82,15 @@ namespace App.ShopService.BussinessLogic.Services
 
         private bool ValidateProduct(ProductDto productDto, out string message)
         {
+            if(string.IsNullOrEmpty(productDto.Name) || 
+                string.IsNullOrEmpty(productDto.Description) ||
+                string.IsNullOrEmpty(productDto.Image) ||
+                productDto.Price == 0 || productDto.Quantity == 0)
+            {
+                message = "Popunite sva obavezna polja.";
+                return false;
+            }
+
             message = string.Empty;
             return true;
         }
