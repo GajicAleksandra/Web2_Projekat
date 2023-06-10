@@ -147,5 +147,14 @@ namespace App.UserService.Controllers
             ReturnValue<SalesmanStatus> returnValue = _userService.GetSalesmanStatus(email);
             return Ok(returnValue.Object);
         }
+
+        [Authorize(Roles = "0")]
+        [Route("getusers/{type}")]
+        [HttpGet]
+        public IActionResult GetUsers(string type)
+        {
+            ReturnValue<List<UserDto>> returnValue = _userService.GetUsers(type);
+            return Ok(returnValue.Object);
+        }
     }
 }

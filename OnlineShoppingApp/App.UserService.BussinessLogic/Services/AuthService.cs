@@ -53,6 +53,10 @@ namespace App.UserService.BussinessLogic.Services
             {
                 userDto.Status = 0;
             }
+            else
+            {
+                userDto.Status = 1;
+            }
 
             userDto.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
 

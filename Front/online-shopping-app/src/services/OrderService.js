@@ -6,3 +6,7 @@ export const placeOrder = (data) => {
     }
     return axios.post(`${process.env.REACT_APP_API_URL}/placeorder`, data, config);
 }
+
+export const getOrders = () => {
+    
+}

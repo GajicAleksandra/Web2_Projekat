@@ -165,9 +165,9 @@ const Product = ({ product, onDeleteProduct }) => {
             {product.price.toLocaleString("en-US")}.00 RSD
           </div>
           <div className={styles.productLinks}>
-            <IconButton sx={{ color: "black" }} onClick={addOneToCart}>
+            {role == "1" && <IconButton sx={{ color: "black" }} onClick={addOneToCart}>
               <ShoppingCartIcon />
-            </IconButton>
+            </IconButton>}
           </div>
         </div>
       </div>

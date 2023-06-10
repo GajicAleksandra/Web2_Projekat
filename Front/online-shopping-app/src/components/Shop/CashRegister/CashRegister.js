@@ -29,6 +29,7 @@ const CashRegister = () => {
   const cashRegister = new CashRegisterModel();
   const [products, setProducts] = useState([]);
   const [summary, setSummary] = useState(0);
+  const [summarySummary, setSummarySummary] = useState(0);
   const [userData, setUserData] = useState(JSON.parse(JSON.stringify(user)));
   const [crData, setCrData] = useState(JSON.parse(JSON.stringify(cashRegister)))
   const navigate = useNavigate();
@@ -51,6 +52,7 @@ const CashRegister = () => {
     });
 
     setSummary(s);
+    setSummarySummary(s + 200);
   };
 
   useEffect(() => {
@@ -177,6 +179,13 @@ const CashRegister = () => {
               <Divider sx={{ mt: 1, mb: 1 }} />
               <p className={styles.summary}>
                 Ukupno: {summary.toLocaleString("en-US")}.00 RSD
+              </p>
+              <p className={styles.summary}>
+                Dostava: 200.00 RSD
+              </p>
+              <Divider sx={{ mt: 1, mb: 1 }} />
+              <p className={styles.summary}>
+                Za plaćanje: {summarySummary.toLocaleString("en-US")}.00 RSD
               </p>
             </>
           </Grid>

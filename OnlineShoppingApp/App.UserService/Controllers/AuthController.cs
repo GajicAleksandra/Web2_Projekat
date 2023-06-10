@@ -22,6 +22,9 @@ namespace App.UserService.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> Register(UserDto user)
         {
+            if (user.Image.Contains("placeholder"))
+                user.Image = "";
+
             ReturnValue<string> returnValue = await _authService.Register(user);
 
             if (!returnValue.Success)

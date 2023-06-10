@@ -121,5 +121,10 @@ namespace App.UserService.DataAccess.Repository
 
             return user.Id;
         }
+
+        public List<UserDto> GetUsers(UserType type)
+        {
+            return _mapper.Map<List<UserDto>>(_db.Users.Where(u => u.UserType == type));
+        }
     }
 }

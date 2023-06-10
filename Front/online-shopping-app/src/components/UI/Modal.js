@@ -36,6 +36,7 @@ export default function TransitionsModal({ open, setOpen }) {
         if(response.data === 1){
             setMessage("Zahtev je prihvaćen.");
             setColor("green");
+            localStorage.setItem('isVerified', true);
         }
         else if(response.data === 2){
             setMessage("Zahtev je odbijen.");

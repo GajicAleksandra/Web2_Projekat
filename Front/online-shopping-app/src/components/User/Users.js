@@ -13,60 +13,26 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Nav from "../UI/Nav";
 import { useEffect, useState } from "react";
-import {
-  getAllSalesmen,
-  acceptOrRejectSalesman,
-} from "../../services/UserService";
-import Button from "@mui/material/Button";
-import { toast } from "react-toastify";
+import { getUsers } from "../../services/UserService";
 import "react-toastify/dist/ReactToastify.css";
-import { Divider } from "@mui/material";
+import { Divider, Avatar } from "@mui/material";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import PendingActionsIcon from "@mui/icons-material/PendingActions";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import BlockIcon from "@mui/icons-material/Block";
 
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
 
   const getFormattedDate = (birthDate) => {
-    var date = birthDate.split("T");
-    var s = date[0].split("-");
+    var date = birthDate.split('T');
+    var s = date[0].split('-');
     var year = s[0];
     var month = s[1];
     var day = s[2];
 
     return `${day}.${month}.${year}.`;
-  };
-
-  const handleClick = async (e) => {
-    var id = e.currentTarget.id;
-    var action = id.split("-")[0];
-    var email = id.split("-")[1];
-
-    await acceptOrRejectSalesman(action, email)
-      .then(function (response) {
-        toast.success(response.data, {
-          position: "top-right",
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-        props.refreshTable();
-      })
-      .catch(function (error) {
-        toast.error(error.response.data, {
-          position: "top-right",
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-      });
   };
 
   return (
@@ -82,32 +48,32 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
+          <IconButton sx={{ p: 0, color: "black" }}>
+            {row.image != "" ? (
+              <Avatar alt="Remy Sharp" src={row.image} />
+            ) : (
+              <AccountCircleOutlinedIcon fontSize="large" />
+            )}
+          </IconButton>
+        </TableCell>
+        <TableCell component="th" scope="row">
           {row.name}
         </TableCell>
         <TableCell>{row.lastName}</TableCell>
-        <TableCell align="center">
-          <Button
-            id={"accept-" + row.email}
-            variant="contained"
-            sx={{ mt: 2, mb: 2, mr: 2, width: 100, bgcolor: "green" }}
-            onClick={handleClick}
-          >
-            Prihvati
-          </Button>
-          <Button
-            id={"reject-" + row.email}
-            variant="contained"
-            sx={{ mt: 2, mb: 2, width: 100, bgcolor: "red" }}
-            onClick={handleClick}
-          >
-            Odbij
-          </Button>
-        </TableCell>
+        {props.type == "salesmen" && (
+          <TableCell>
+            {row.status == "0" && (
+              <PendingActionsIcon style={{ color: "gray" }} />
+            )}
+            {row.status == "1" && <VerifiedIcon style={{ color: "green" }} />}
+            {row.status == "2" && <BlockIcon style={{ color: "red" }} />}
+          </TableCell>
+        )}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Paper sx={{ margin: 1, backgroundColor: "beige" }}>
+            <Paper sx={{ margin: 1, backgroundColor: 'beige' }}>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
@@ -189,67 +155,41 @@ Row.propTypes = {
   }).isRequired,
 };
 
-export default function VerifySalesmen(props) {
+export function Customers(props) {
   const [rows, setRows] = useState([]);
-  useEffect(() => {
-    getSalesmen();
-  }, []);
 
-  const getSalesmen = async () => {
-    console.log(props.additionalProp);
-    await getAllSalesmen(props.additionalProp)
+  const fetchData = async () => {
+    await getUsers(props.additionalProp)
       .then(function (response) {
         setRows(response.data);
       })
       .catch(function (error) {
-        toast.error(error.response.data, {
-          position: "top-right",
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+        console.log(error.response.data);
       });
   };
 
-  const refreshTable = async () => {
-    await getSalesmen();
-  };
+  useEffect(() => {
+    fetchData();
+    console.log(rows);
+  }, []);
 
   return (
     <>
       <Nav></Nav>
-      <div style={{ position: "absolute", marginBottom: 10 }}>
+      <div style={{ position: "absolute" }}>
         <TableContainer
           component={Paper}
           sx={{ width: 1100, marginTop: 15, marginLeft: 25 }}
         >
-          {props.additionalProp == "Pending" && (
-            <h1
-              style={{ textAlign: "center", marginTop: 15, marginBottom: 10 }}
-            >
-              Zahtevi za verifikaciju
-            </h1>
-          )}
-          {props.additionalProp == "Accepted" && (
-            <h1 style={{ textAlign: "center" }}>Prihvaćeni zahtevi</h1>
-          )}
-          {props.additionalProp == "Rejected" && (
-            <h1 style={{ textAlign: "center" }}>Odbijeni zahtevi</h1>
-          )}
+          <h1 style={{ textAlign: "center", marginTop: 15, marginBottom: 15 }}>
+            {props.additionalProp == "customers" && "Kupci"}
+            {props.additionalProp == "salesmen" && "Prodavci"}
+          </h1>
           <Divider />
           <Table aria-label="collapsible table">
             <TableBody>
               {rows.map((row) => (
-                <Row
-                  key={row.name}
-                  row={row}
-                  status={props.additionalProp}
-                  refreshTable={refreshTable}
-                />
+                <Row key={row.name} row={row} type={props.additionalProp} />
               ))}
             </TableBody>
           </Table>

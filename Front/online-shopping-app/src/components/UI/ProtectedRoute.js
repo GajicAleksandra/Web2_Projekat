@@ -16,7 +16,7 @@ const ProtectedRoute = (props) => {
   }
 
   if(props.additionalProp == "verificationRequired"){
-    if(role == 2 && !verified){
+    if(role == 2 && verified === "false"){
       return <Navigate to="/accessdenied" />
     }
   }

@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/user/index",
+      "DownstreamPathTemplate": "/api/user/getusers/{type}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -9,7 +9,7 @@
           "Port": 7059
         }
       ],
-      "UpstreamPathTemplate": "/index",
+      "UpstreamPathTemplate": "/getusers/{type}",
       "UpstreamHttpMethod": [ "get" ]
     },
     {

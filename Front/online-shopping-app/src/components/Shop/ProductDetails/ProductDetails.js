@@ -10,7 +10,8 @@ import { getProduct } from "../../../services/ProductService";
 import Nav from "../../UI/Nav";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import CartItemModel from '../../../models/CartItemModel'
+import CartItemModel from "../../../models/CartItemModel";
+import { getUserRole } from "../../../services/AuthService";
 
 const ProductDetails = () => {
   const product = new ProductModel();
@@ -21,10 +22,13 @@ const ProductDetails = () => {
     JSON.parse(JSON.stringify(product))
   );
 
+  const [role, setRole] = useState("");
+
   var cartItems = [];
 
   useEffect(() => {
     fetchData();
+    setRole(getUserRole());
   }, []);
 
   const fetchData = async () => {
@@ -101,12 +105,12 @@ const ProductDetails = () => {
         cartItems.push(productData);
         localStorage.setItem("cart", JSON.stringify(cartItems));
       }
-    }    
+    }
   };
 
   return (
     <>
-    <Nav></Nav>
+      <Nav></Nav>
       <div className={styles.card}>
         <nav>
           <a className={styles.link} href="/products">
@@ -130,27 +134,29 @@ const ProductDetails = () => {
         <div className={styles.description}>
           <h2>{productData.name}</h2>
           <h1>{productData.price.toLocaleString("en-US")}.00 RSD</h1>
-          <p>
-            {productData.description}
-          </p>
-          <div className={styles.plusMinusDiv}>
-            <IconButton
-              onClick={handleDecreaseQuantity}
-              className={styles.minus}
-            >
-              <RemoveOutlinedIcon />
-            </IconButton>
-            <span className={styles.plusMinus}>{quantity}</span>
-            <IconButton
-              onClick={handleIncreaseQuantity}
-              className={styles.plus}
-            >
-              <AddOutlinedIcon />
-            </IconButton>
-          </div>
-          <button className={styles.addToCartbutton} onClick={addToCart}>
-            Dodaj u korpu
-          </button>
+          <p>{productData.description}</p>
+          {role == "1" && (
+            <div className={styles.plusMinusDiv}>
+              <IconButton
+                onClick={handleDecreaseQuantity}
+                className={styles.minus}
+              >
+                <RemoveOutlinedIcon />
+              </IconButton>
+              <span className={styles.plusMinus}>{quantity}</span>
+              <IconButton
+                onClick={handleIncreaseQuantity}
+                className={styles.plus}
+              >
+                <AddOutlinedIcon />
+              </IconButton>
+            </div>
+          )}
+          {role == "1" && (
+            <button className={styles.addToCartbutton} onClick={addToCart}>
+              Dodaj u korpu
+            </button>
+          )}
         </div>
       </div>
     </>

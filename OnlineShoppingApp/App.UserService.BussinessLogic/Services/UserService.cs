@@ -188,6 +188,31 @@ namespace App.UserService.BussinessLogic.Services
             return returnValue;
         }
 
+        public ReturnValue<List<UserDto>> GetUsers(string type)
+        {
+            ReturnValue<List<UserDto>> returnValue = new ReturnValue<List<UserDto>>();
+            UserType userType;
+
+            if (type == "customers")
+                userType = UserType.Customer;
+            else if(type == "salesmen")
+                userType = UserType.Salesman;
+            else
+            {
+                returnValue.Success = false;
+                returnValue.Message = "Neispravan zahtev.";
+                returnValue.Object = null;
+
+                return returnValue;
+            }
+
+            returnValue.Success = true;
+            returnValue.Message = string.Empty;
+            returnValue.Object = _userRepository.GetUsers(userType);
+
+            return returnValue;
+        }
+
         private bool ValidateEditData(LoggedInDto userDto, out string message)
         {
             if (string.IsNullOrEmpty(userDto.Username) ||

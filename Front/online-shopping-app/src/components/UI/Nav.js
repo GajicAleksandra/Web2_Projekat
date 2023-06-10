@@ -25,7 +25,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import LogoutIcon from "@mui/icons-material/Logout";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import SideMenu from "./SideMenu";
-import { useCart } from "../Shop/Cart/CartContext";
 
 
 export default function Nav() {

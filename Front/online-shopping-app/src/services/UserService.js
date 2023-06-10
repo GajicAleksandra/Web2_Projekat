@@ -46,3 +46,10 @@ export const changePassword = (data) => {
     }
     return axios.put(`${process.env.REACT_APP_API_URL}/changepassword`, data, config);
 }
+
+export const getUsers = (type) => {
+    const config = {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
+    }
+    return axios.get(`${process.env.REACT_APP_API_URL}/getusers/${type}`, config);
+}

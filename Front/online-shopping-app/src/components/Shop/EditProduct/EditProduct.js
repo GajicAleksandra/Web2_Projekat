@@ -70,6 +70,14 @@ const EditProduct = () => {
       return;
     }
 
+    if(productData.name === "" || 
+    productData.price === "" ||
+    productData.quantity === "" ||
+    productData.description === ""){
+      document.getElementById('editProductError').innerHTML = "Popunite obavezna polja.";
+      return;
+    }
+
     await editProduct(productData)
       .then(function (response) {
         toast.success("Uspešno ste izmenili proizvod.", {

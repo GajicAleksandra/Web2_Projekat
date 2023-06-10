@@ -38,7 +38,7 @@ export default function SideMenu() {
       <Drawer anchor="left" open={isDrawerOpen} onClose={toggleDrawer(false)}>
         {role == 0 && <AdminList/>}
         {role == 1 && <CustomerList/>}
-        {role == 2 && verified && <SalesmanList/>}
+        {role == 2 && verified === "true" && <SalesmanList/>}
       </Drawer>
     </div>
   );

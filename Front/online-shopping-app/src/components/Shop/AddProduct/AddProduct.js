@@ -59,6 +59,14 @@ const AddProduct = () => {
       return;
     }
 
+    if(productData.name === "" || 
+    productData.price === "" ||
+    productData.quantity === "" ||
+    productData.description === ""){
+      document.getElementById('editProductError').innerHTML = "Popunite obavezna polja.";
+      return;
+    }
+
     productData.id = 0;
 
     await addProduct(productData)
@@ -110,6 +118,7 @@ const AddProduct = () => {
 
   return (
     <>
+    <Nav></Nav>
       <div className="container">
         <img src="/images/home.png" alt="Home" className="image" />
         <div className="overlay"></div>
