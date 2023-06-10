@@ -127,15 +127,15 @@ namespace App.ShopService.BussinessLogic.Services
             return returnValue;
         }
 
-        public async Task<ReturnValue<string>> UpdateProduct(ProductDto productDto)
+        public async Task<ReturnValue<ProductDto>> UpdateProduct(ProductDto productDto)
         {
-            ReturnValue<string> returnValue = new ReturnValue<string>();
+            ReturnValue<ProductDto> returnValue = new ReturnValue<ProductDto>();
 
             if(!ValidateProduct(productDto, out string message))
             {
                 returnValue.Success = false;
                 returnValue.Message = message;
-                returnValue.Object = "BadRequest";
+                returnValue.Object = null;
 
                 return returnValue;
             }
@@ -149,14 +149,14 @@ namespace App.ShopService.BussinessLogic.Services
             {
                 returnValue.Success = false;
                 returnValue.Message = "Proizvod ne postoji.";
-                returnValue.Object = "NotFound";
+                returnValue.Object = null;
 
                 return returnValue;
             }
 
             returnValue.Success = true;
             returnValue.Message = string.Empty;
-            returnValue.Object = "Uspešno ste izmenili proizvod.";
+            returnValue.Object = productDto;
 
             return returnValue;
         }

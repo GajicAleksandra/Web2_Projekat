@@ -25,6 +25,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import LogoutIcon from "@mui/icons-material/Logout";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import SideMenu from "./SideMenu";
+import { useCart } from "../Shop/Cart/CartContext";
+
 
 export default function Nav() {
   const [user, setUser] = useState("");
@@ -33,8 +35,10 @@ export default function Nav() {
   const [modalOpen, setModalOpen] = useState(false);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [count, setCount] = useState(0);
   const open = Boolean(anchorEl);
   const openUser = Boolean(anchorElUser);
+  const { cartCount } = useCart();
 
   const [isCartOpen, setCartOpen] = useState(false);
   const [cartItemCount, setCartItemCount] = useState(0);
@@ -56,7 +60,21 @@ export default function Nav() {
     setUser(getCurrentUser());
     setRole(getUserRole());
     setImage(getImage());
+
+    var items = localStorage.getItem('cart');
+    if(items){
+      items = JSON.parse(items);
+      setCount(items.length)
+    }
+    else{
+      setCount(0);
+    }
+
   }, []);
+
+  useEffect(() => {
+    setCount(cartCount);
+  }, [cartCount]);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -79,14 +97,18 @@ export default function Nav() {
     setAnchorEl(null);
   };
 
-  const getRequests = (e) => {
-    var status = e.currentTarget.id;
+  const handleCount = (c) => {
+    setCount(c);
   };
+
+  const updateQuantity = (quantity) => {
+    setCount(quantity);
+  }
 
   return (
     <div>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" sx={{ bgcolor: "#FFCCCC" }}>
+        <AppBar position="static" sx={{ bgcolor: "#FFCCCC", position: 'fixed', zIndex: 999 }}>
           <Toolbar>
             {user && (
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -164,7 +186,7 @@ export default function Nav() {
                   onClick={handleCartOpen}
                   sx={{ color: "black", marginRight: 2 }}
                 >
-                  <Badge badgeContent={0} color="secondary" showZero>
+                  <Badge badgeContent={count} color="secondary" showZero>
                     <ShoppingCartIcon />
                   </Badge>
                 </IconButton>}
@@ -243,7 +265,7 @@ export default function Nav() {
         </AppBar>
       </Box>
       <Drawer anchor="right" open={isCartOpen} onClose={handleCartClose}>
-        <Cart isOpen={isCartOpen} onClose={handleCartClose} />
+        <Cart isOpen={isCartOpen} onClose={handleCartClose} updateQuantity={updateQuantity}/>
       </Drawer>
     </div>
   );

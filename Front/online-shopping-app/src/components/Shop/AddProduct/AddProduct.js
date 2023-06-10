@@ -108,7 +108,6 @@ const AddProduct = () => {
 
   return (
     <>
-      <Nav></Nav>
       <div className="container">
         <img src="/images/home.png" alt="Home" className="image" />
         <div className="overlay"></div>

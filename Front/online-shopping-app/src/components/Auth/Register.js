@@ -141,7 +141,6 @@ export default function Register() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Nav></Nav>
       <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
         <Grid
@@ -163,7 +162,7 @@ export default function Register() {
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <Box
             sx={{
-              mt: 4,
+              mt: 10,
               mb: 3,
               mx: 4,
               display: "flex",

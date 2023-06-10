@@ -1,44 +1,53 @@
-.productActions{
-  margin-left: 10px;
+.productActions {
+  width: 120px;
+  margin-left: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .delete {
-  color: red;
-  margin-left: 30px;
+  color: red !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  background-color: transparent !important;
 }
 
-  .plusMinus {
-    font-size: 16px;
-    margin-left: 9px;
-    margin-right: 9px;
-  }
-  
-  .plus{
-    color: black;
-    margin-left: 5px;
-    width: 40px;
-    height: 40px;
-  }
-  
-  .minus{
-    color: black;
-    margin-left: 50px;
-    width: 40px;
-    height: 40px;
-  }
+.plusMinus {
+  font-size: 16px;
+  margin-left: 9px;
+  margin-right: 9px;
+}
 
-  .productImage {
-    width: 60px;
-    height: 80px;
-    /* Dodajte ostale stilove prema potrebi */
-  }
+.plus {
+  color: black !important;
+  width: 40px;
+  height: 40px;
+}
 
-  .productDetails {
-    display: flex;
-    align-items: center;
-  }
-  
-  .productText {
-    margin-left: 15px;
-    /* Dodajte ostale stilove prema potrebi */
-  }
+.minus {
+  color: black !important;
+  width: 40px;
+  height: 40px;
+}
+
+.productImage {
+  width: 60px;
+  height: 80px;
+}
+
+.productDetails {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.productText {
+  margin-left: 15px;
+  width: 150px;
+}
+
+.productText p{
+  margin-bottom: 10px;
+}

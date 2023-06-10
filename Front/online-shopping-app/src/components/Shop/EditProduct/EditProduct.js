@@ -63,7 +63,8 @@ const EditProduct = () => {
     setProductData({ ...productData, [name]: value });
   };
 
-  const onSubmit = async () => {
+  const onSubmit = async (e) => {
+    e.preventDefault();
     if (productData.image == "") {
       document.getElementById("imageError").innerHTML = "Izaberite sliku.";
       return;
@@ -71,7 +72,7 @@ const EditProduct = () => {
 
     await editProduct(productData)
       .then(function (response) {
-        toast.success(response.data, {
+        toast.success("Uspešno ste izmenili proizvod.", {
           position: "top-right",
           autoClose: 4000,
           hideProgressBar: false,
@@ -121,7 +122,6 @@ const EditProduct = () => {
 
   return (
     <>
-      <Nav></Nav>
       <div className="container">
         <img src="/images/home.png" alt="Home" className="image" />
         <div className="overlay"></div>

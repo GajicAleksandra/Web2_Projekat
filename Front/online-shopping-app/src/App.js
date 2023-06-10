@@ -11,10 +11,15 @@ import ProductDetails from './components/Shop/ProductDetails/ProductDetails';
 import ChangePassword from './components/User/ChangePassword'
 import AddProduct from './components/Shop/AddProduct/AddProduct';
 import EditProduct from './components/Shop/EditProduct/EditProduct';
+import { CartProvider } from './components/Shop/Cart/CartContext';
+import Nav from './components/UI/Nav';
+
 
 function App() {
   return (
     <Router>
+      <CartProvider>
+        <Nav />
       <Routes>
         <Route index element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -31,6 +36,7 @@ function App() {
         <Route path="/addproduct" element={<ProtectedRoute Component={AddProduct} role="2" additionalProp="verificationRequired" />} />
         <Route path="/editproduct/:id" element={<ProtectedRoute Component={EditProduct} role="2" additionalProp="verificationRequired" />} />
       </Routes>
+      </CartProvider>
     </Router>
   );
 }

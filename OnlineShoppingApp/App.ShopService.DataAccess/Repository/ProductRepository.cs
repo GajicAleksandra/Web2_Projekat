@@ -31,7 +31,7 @@ namespace App.ShopService.DataAccess.Repository
 
         public List<ProductDto> GetProducts()
         {
-            return _mapper.Map<List<ProductDto>>(_db.Products.ToList());
+            return _mapper.Map<List<ProductDto>>(_db.Products.Where(p => p.Quantity > 0).ToList());
         }
 
         public List<ProductDto> GetProducts(int salesman)
@@ -55,7 +55,12 @@ namespace App.ShopService.DataAccess.Repository
                 return null;
             }
 
-            return _mapper.Map<ProductDto>(product);
+            if(product.Quantity > 0)
+            {
+                return _mapper.Map<ProductDto>(product);
+            }
+
+            return null;
         }
 
         public bool UpdateProduct(ProductDto productDto)

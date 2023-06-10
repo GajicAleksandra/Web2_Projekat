@@ -102,14 +102,11 @@ namespace App.ShopService.Controllers
                 return BadRequest(ret.Message);
             }
 
-            ReturnValue<string> returnValue = await _productService.UpdateProduct(productDto);
+            ReturnValue<ProductDto> returnValue = await _productService.UpdateProduct(productDto);
 
             if(!returnValue.Success)
             {
-                if(returnValue.Object == "NotFound")
-                    return NotFound(returnValue.Message);
-                else
-                    return BadRequest(returnValue.Message);
+                return NotFound(returnValue.Message);
             }
 
             return Ok(returnValue.Object);

@@ -61,7 +61,6 @@ export default function Login() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Nav></Nav>
       <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
         <Grid
@@ -91,7 +90,7 @@ export default function Login() {
               alignItems: "center",
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: "#FFCCCC", color: "black" }}>
+            <Avatar sx={{ m: 5, bgcolor: "#FFCCCC", color: "black" }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">

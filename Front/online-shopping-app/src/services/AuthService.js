@@ -10,7 +10,7 @@ export const LoginUser = (data) => {
         localStorage.setItem('image', token["Image"]);
 
         var isVerified = token["IsVerified"];
-        localStorage.setItem('isVerified', isVerified != 1 ? false : true);
+        localStorage.setItem('isVerified', isVerified !== '1' ? false : true);
     })
 }
 
@@ -35,8 +35,5 @@ export const isVerified = () => {
 }
 
 export const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('image');
-    localStorage.removeItem('role');
-    localStorage.removeItem('isVerified');
+    localStorage.clear();
 }

@@ -57,7 +57,7 @@ const ProductList = () => {
 
   return (
     <>
-      <Nav></Nav>
+      <Nav/>
       <ThemeProvider theme={defaultTheme}>
         <Container maxWidth="lg" className={styles.container}>
           <Grid container spacing={3} sx={{ marginBottom:1 }}>
