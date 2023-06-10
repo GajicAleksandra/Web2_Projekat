@@ -1,3 +1,4 @@
+using NLog.Web;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Serilog;
@@ -28,14 +29,16 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddOcelot();
 
-var _logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration)
-    .Enrich.FromLogContext()
-    .CreateLogger();
+//var _logger = new LoggerConfiguration()
+//    .ReadFrom.Configuration(builder.Configuration)
+//    .Enrich.FromLogContext()
+//    .CreateLogger();
 
-builder.Logging.ClearProviders();
-builder.Logging.AddSerilog(_logger);
-builder.Host.UseSerilog();
+//builder.Logging.ClearProviders();
+//builder.Logging.AddSerilog(_logger);
+//builder.Host.UseSerilog();
+
+builder.Host.UseNLog();
 
 var app = builder.Build();
 
