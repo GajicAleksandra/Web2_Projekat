@@ -15,6 +15,8 @@ namespace App.UserService.DataAccess.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
+
+            builder.HasIndex(x => x.Email).IsUnique();
         }
     }
 }

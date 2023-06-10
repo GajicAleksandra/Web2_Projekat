@@ -18,11 +18,13 @@ namespace App.ShopService.BussinessLogic.Services
     {
         private readonly IProductRepository _productRepository;
         private readonly IBlobService _blobService;
+        private readonly ICommunicationService _communicationService;
 
-        public ProductService(IProductRepository productRepository, IBlobService blobService)
+        public ProductService(IProductRepository productRepository, IBlobService blobService, ICommunicationService communicationService)
         {
             _productRepository = productRepository;
             _blobService = blobService;
+            _communicationService = communicationService;
         }
 
         public async Task<ReturnValue<string>> AddProduct(ProductDto productDto, string email)
@@ -38,7 +40,7 @@ namespace App.ShopService.BussinessLogic.Services
                 return returnValue;
             }
 
-            int id = await GetUserId(email);
+            int id = await _communicationService.GetUserId(email);
 
             if(id == -1)
             {
@@ -76,7 +78,7 @@ namespace App.ShopService.BussinessLogic.Services
         {
             ReturnValue<List<ProductDto>> returnValue = new ReturnValue<List<ProductDto>>();
 
-            int id = await GetUserId(email);
+            int id = await _communicationService.GetUserId(email);
 
             if (id == -1)
             {
@@ -183,7 +185,7 @@ namespace App.ShopService.BussinessLogic.Services
         public async Task<ReturnValue<bool>> CheckSalesman(string email, int productId)
         {
             ReturnValue<bool> returnValue = new ReturnValue<bool>();
-            int id = await GetUserId(email);
+            int id = await _communicationService.GetUserId(email);
 
             if (id == -1)
             {
@@ -243,23 +245,5 @@ namespace App.ShopService.BussinessLogic.Services
             return response.Message;
 
         }
-
-        private async Task<int> GetUserId(string email)
-        {
-            int id = -1;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://localhost:7059/api/communication/");
-                var response = await client.GetAsync($"getuserid/{email}");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    string stringResult = await response.Content.ReadAsStringAsync();
-                    id = JsonConvert.DeserializeObject<int>(stringResult);
-                }
-            }
-            return id;
-        }
-
     }
 }

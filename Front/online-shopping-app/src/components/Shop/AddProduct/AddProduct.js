@@ -59,6 +59,8 @@ const AddProduct = () => {
       return;
     }
 
+    productData.id = 0;
+
     await addProduct(productData)
       .then(function (response) {
         toast.success(response.data, {

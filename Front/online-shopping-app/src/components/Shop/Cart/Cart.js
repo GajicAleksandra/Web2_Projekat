@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Divider } from "@mui/material";
+import { Button, Divider, Link } from "@mui/material";
 import styles from "./Cart.module.css";
 import CloseIcon from "@mui/icons-material/Close";
 import CartItem from "../CartItem/CartItem";
@@ -7,7 +7,7 @@ import ProductModel from "../../../models/ProductModel";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Cart = ({ isOpen, onClose, updateQuantity }) => {
+const Cart = ({ isOpen, onClose }) => {
   const [products, setProducts] = useState([]);
   const [summary, setSummary] = useState(0);
   var cartItems = [];
@@ -15,7 +15,7 @@ const Cart = ({ isOpen, onClose, updateQuantity }) => {
   const updateSummary = (cartItems) => {
     var s = 0;
     cartItems.forEach((element) => {
-      s += element.quantity * element.price;
+      s += element.quantity * element.product.price;
     });
 
     setSummary(s);
@@ -38,7 +38,7 @@ const Cart = ({ isOpen, onClose, updateQuantity }) => {
   };
 
   const deleteItem = (id) => {
-    var newProducts = products.filter((p) => p.id !== id);
+    var newProducts = products.filter((p) => p.product.id !== id);
 
     setProducts(newProducts);
     updateSummary(newProducts);
@@ -46,8 +46,8 @@ const Cart = ({ isOpen, onClose, updateQuantity }) => {
   };
 
   const increaseQuantity = (id) => {
-    var product = products.find((p) => p.id === id);
-    product.quantity++;
+    var cartItem = products.find((p) => p.product.id === id);
+    cartItem.quantity++;
 
     setProducts(products);
     updateSummary(products);
@@ -56,11 +56,11 @@ const Cart = ({ isOpen, onClose, updateQuantity }) => {
   };
 
   const decreaseQuantity = (id) => {
-    var product = products.find((p) => p.id === id);
-    if (product.quantity === 1) {
+    var cartItem = products.find((p) => p.product.id === id);
+    if (cartItem.quantity === 1) {
       deleteItem(id);
     } else {
-      product.quantity--;
+      cartItem.quantity--;
       setProducts(products);
       updateSummary(products);
       localStorage.setItem("cart", JSON.stringify(products));
@@ -81,7 +81,7 @@ const Cart = ({ isOpen, onClose, updateQuantity }) => {
         <>
           <ul className={styles.productList}>
             {products.map((cartItem) => (
-              <li key={cartItem.id} className={styles.productItem}>
+              <li key={cartItem.product.id} className={styles.productItem}>
                 <CartItem
                   cartItem={cartItem}
                   increaseQuantity={increaseQuantity}
@@ -96,7 +96,7 @@ const Cart = ({ isOpen, onClose, updateQuantity }) => {
             <p className={styles.summary}>
               Ukupno: {summary.toLocaleString("en-US")}.00 RSD
             </p>
-            <Button variant="contained" className={styles.checkoutButton}>
+            <Button component={Link} href="/checkout" variant="contained" className={styles.checkoutButton}>
               Idi na kasu
             </Button>
           </div>

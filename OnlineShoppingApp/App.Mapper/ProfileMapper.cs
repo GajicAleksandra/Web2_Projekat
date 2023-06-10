@@ -13,6 +13,8 @@ namespace App.Mapper
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<User, LoggedInDto>().ReverseMap();
             CreateMap<Product, ProductDto>().ReverseMap();
+            CreateMap<Order, OrderDto>().ReverseMap();
+            CreateMap<OrderItem, OrderItemDto>().ReverseMap();
         }
     }
 }

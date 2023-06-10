@@ -141,6 +141,7 @@ export default function Register() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
+      <Nav></Nav>
       <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
         <Grid

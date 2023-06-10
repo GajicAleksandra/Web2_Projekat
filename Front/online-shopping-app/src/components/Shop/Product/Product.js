@@ -12,8 +12,7 @@ import { getUserRole } from "../../../services/AuthService";
 import { deleteProduct } from "../../../services/ProductService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useContext } from "react";
-import { useCart } from "../Cart/CartContext";
+import CartItemModel from '../../../models/CartItemModel'
 
 const Product = ({ product, onDeleteProduct }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -21,7 +20,6 @@ const Product = ({ product, onDeleteProduct }) => {
   const navigate = useNavigate();
   var cartItems = [];
   const open = Boolean(anchorEl);
-  const { increaseCartCount } = useCart();
   const [productData, setProductData] = useState(product);
 
   useEffect(() => {
@@ -96,7 +94,7 @@ const Product = ({ product, onDeleteProduct }) => {
     }
 
     var existingItem = cartItems.find(function (i) {
-      return i.id === product.id;
+      return i.product.id === product.id;
     });
 
     if (existingItem) {
@@ -106,8 +104,10 @@ const Product = ({ product, onDeleteProduct }) => {
       }
     } else {
       if (checkQuantity(1)) {
-        productData.quantity = 1;
-        cartItems.push(productData);
+        var cartItem = new CartItemModel();
+        cartItem.product = productData;
+        cartItem.quantity = 1;
+        cartItems.push(cartItem);
         localStorage.setItem("cart", JSON.stringify(cartItems));
       }
     }
@@ -158,8 +158,7 @@ const Product = ({ product, onDeleteProduct }) => {
           <a href={"/details/" + product.id}>{product.name}</a>
         </h4>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero,
-          possimus nostrum!
+          {product.description.split('.')[0]}.
         </p>
         <div className={styles.productBottomDetails}>
           <div className={styles.productPrice}>

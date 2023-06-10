@@ -167,6 +167,18 @@
       ],
       "UpstreamPathTemplate": "/deleteproduct/{id}",
       "UpstreamHttpMethod": [ "delete" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/order/add",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7032
+        }
+      ],
+      "UpstreamPathTemplate": "/placeorder",
+      "UpstreamHttpMethod": [ "post" ]
     }
   ]
 }

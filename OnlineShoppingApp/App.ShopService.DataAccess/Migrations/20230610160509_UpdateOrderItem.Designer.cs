@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.ShopService.DataAccess.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    [Migration("20230606210113_CreateDb")]
-    partial class CreateDb
+    [Migration("20230610160509_UpdateOrderItem")]
+    partial class UpdateOrderItem
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,20 +36,24 @@ namespace App.ShopService.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Comment")
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("OrderStatus")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductQuantity")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("TimeOfDelivery")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("TimeOfMakingOrder")
                         .HasColumnType("datetime2");
 
                     b.Property<double>("TotalAmount")
@@ -60,6 +64,30 @@ namespace App.ShopService.DataAccess.Migrations
                     b.ToTable("Orders");
                 });
 
+            modelBuilder.Entity("App.ShopService.Models.Models.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItem");
+                });
+
             modelBuilder.Entity("App.ShopService.Models.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -68,8 +96,9 @@ namespace App.ShopService.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("Description")
-                        .HasColumnType("int");
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
                         .IsRequired()
@@ -91,6 +120,18 @@ namespace App.ShopService.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("App.ShopService.Models.Models.OrderItem", b =>
+                {
+                    b.HasOne("App.ShopService.Models.Models.Order", null)
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId");
+                });
+
+            modelBuilder.Entity("App.ShopService.Models.Models.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

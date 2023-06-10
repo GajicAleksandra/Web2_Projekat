@@ -10,6 +10,7 @@ import { getProduct } from "../../../services/ProductService";
 import Nav from "../../UI/Nav";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CartItemModel from '../../../models/CartItemModel'
 
 const ProductDetails = () => {
   const product = new ProductModel();
@@ -84,7 +85,7 @@ const ProductDetails = () => {
     }
 
     var existingItem = cartItems.find(function (i) {
-      return i.id === productData.id;
+      return i.product.id === productData.id;
     });
 
     if (existingItem) {
@@ -94,7 +95,9 @@ const ProductDetails = () => {
       }
     } else {
       if (checkQuantity(quantity)) {
-        productData.quantity = quantity;
+        var cartItem = new CartItemModel();
+        cartItem.product = productData;
+        cartItem.quantity = quantity;
         cartItems.push(productData);
         localStorage.setItem("cart", JSON.stringify(cartItems));
       }
@@ -103,6 +106,7 @@ const ProductDetails = () => {
 
   return (
     <>
+    <Nav></Nav>
       <div className={styles.card}>
         <nav>
           <a className={styles.link} href="/products">
@@ -127,8 +131,7 @@ const ProductDetails = () => {
           <h2>{productData.name}</h2>
           <h1>{productData.price.toLocaleString("en-US")}.00 RSD</h1>
           <p>
-            Classic Peace Lily is a spathiphyllum floor plant arranged in a
-            bamboo planter with a blue & red ribbom and butterfly pick.
+            {productData.description}
           </p>
           <div className={styles.plusMinusDiv}>
             <IconButton

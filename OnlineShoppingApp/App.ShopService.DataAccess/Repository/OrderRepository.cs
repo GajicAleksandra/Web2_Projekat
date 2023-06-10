@@ -1,5 +1,7 @@
 ﻿using App.ShopService.DataAccess.Data;
 using App.ShopService.DataAccess.Repository.Interface;
+using App.ShopService.Models.DTOs;
+using App.ShopService.Models.Models;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -18,6 +20,13 @@ namespace App.ShopService.DataAccess.Repository
         {
             _mapper = mapper;
             _db = db;
+        }
+
+        public void AddOrder(OrderDto orderDto)
+        {
+            Order order = _mapper.Map<Order>(orderDto);
+            _db.Orders.Add(order);
+            _db.SaveChanges();
         }
     }
 }

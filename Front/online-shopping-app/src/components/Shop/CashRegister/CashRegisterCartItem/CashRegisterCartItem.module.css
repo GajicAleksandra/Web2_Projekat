@@ -1,0 +1,52 @@
+.productActions {
+    width: 120px;
+    margin-left: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  
+  .delete {
+    color: red !important;
+    background-color: transparent !important;
+    margin-left: 3rem;
+  }
+  
+  .plusMinus {
+    font-size: 16px;
+    margin-left: 9px;
+    margin-right: 9px;
+  }
+  
+  .plus {
+    color: black !important;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .minus {
+    color: black !important;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .productImage {
+    width: 60px;
+    height: 80px;
+  }
+  
+  .productDetails {
+    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .productText {
+    margin-left: 15px;
+    width: 150px;
+  }
+  
+  .productText p{
+    margin-bottom: 10px;
+  }

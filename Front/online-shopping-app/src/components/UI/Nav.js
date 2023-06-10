@@ -38,7 +38,6 @@ export default function Nav() {
   const [count, setCount] = useState(0);
   const open = Boolean(anchorEl);
   const openUser = Boolean(anchorElUser);
-  const { cartCount } = useCart();
 
   const [isCartOpen, setCartOpen] = useState(false);
   const [cartItemCount, setCartItemCount] = useState(0);
@@ -71,10 +70,6 @@ export default function Nav() {
     }
 
   }, []);
-
-  useEffect(() => {
-    setCount(cartCount);
-  }, [cartCount]);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);

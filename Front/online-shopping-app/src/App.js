@@ -13,13 +13,12 @@ import AddProduct from './components/Shop/AddProduct/AddProduct';
 import EditProduct from './components/Shop/EditProduct/EditProduct';
 import { CartProvider } from './components/Shop/Cart/CartContext';
 import Nav from './components/UI/Nav';
+import CashRegister from './components/Shop/CashRegister/CashRegister';
 
 
 function App() {
   return (
     <Router>
-      <CartProvider>
-        <Nav />
       <Routes>
         <Route index element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -35,8 +34,8 @@ function App() {
         <Route path="/details/:id" element={<ProtectedRoute Component={ProductDetails} additionalProp="verificationRequired"/>} />
         <Route path="/addproduct" element={<ProtectedRoute Component={AddProduct} role="2" additionalProp="verificationRequired" />} />
         <Route path="/editproduct/:id" element={<ProtectedRoute Component={EditProduct} role="2" additionalProp="verificationRequired" />} />
+        <Route path="/checkout" element={<ProtectedRoute Component={CashRegister} role="1" />} />
       </Routes>
-      </CartProvider>
     </Router>
   );
 }

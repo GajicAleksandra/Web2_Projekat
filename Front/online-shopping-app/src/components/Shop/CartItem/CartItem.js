@@ -7,27 +7,27 @@ import { IconButton, Button, Divider } from "@mui/material";
 
 const CartItem = ({ cartItem, increaseQuantity, decreaseQuantity, deleteItem }) => {
   const handleIncreaseQuantity = () => {
-    increaseQuantity(cartItem.id);
+    increaseQuantity(cartItem.product.id);
   };
 
   const handleDecreaseQuantity = () => {
-    decreaseQuantity(cartItem.id);
+    decreaseQuantity(cartItem.product.id);
   };
 
   const handleRemoveItem = () => {
-    deleteItem(cartItem.id);
+    deleteItem(cartItem.product.id);
   };
 
   return (
     <div className={styles.productDetails}>
       <img
-        src={cartItem.image}
-        alt={cartItem.name}
+        src={cartItem.product.image}
+        alt={cartItem.product.name}
         className={styles.productImage}
       />
       <div className={styles.productText}>
-        <p>{cartItem.name}</p>
-        <p>{cartItem.price.toLocaleString("en-US")}.00 RSD</p>
+        <p>{cartItem.product.name}</p>
+        <p>{cartItem.product.price.toLocaleString("en-US")}.00 RSD</p>
       </div>
       <div className={styles.productActions}>
         <IconButton onClick={handleDecreaseQuantity} className={styles.minus}>

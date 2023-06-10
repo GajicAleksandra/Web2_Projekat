@@ -10,6 +10,8 @@ namespace App.ShopService.BussinessLogic.Services.Interfaces
 {
     public interface IOrderService
     {
-        
+        Task<ReturnValue<string>> MakeOrder(OrderDto orderDto, string email);
+
+
     }
 }

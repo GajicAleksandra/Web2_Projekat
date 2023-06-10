@@ -61,6 +61,7 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICommunicationService, CommunicationService>();
 builder.Services.AddTransient<IBlobService, BlobService>();
 
 builder.Services.AddAuthentication(opt =>

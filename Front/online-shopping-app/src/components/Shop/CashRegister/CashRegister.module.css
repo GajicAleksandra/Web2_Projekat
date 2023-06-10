@@ -1,0 +1,70 @@
+.container {
+  position: absolute !important;
+  margin-top: 8rem !important;
+  width: 80rem !important;
+  margin-left: 5.5rem !important;
+}
+
+.cart {
+  background-color: #ffcccc;
+  width: 30rem !important;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  transition: all 0.3s;
+}
+
+.cart:hover {
+  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.info {
+  margin-left: 2rem;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  transition: all 0.3s;
+}
+
+.info:hover {
+  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.order {
+  float: right;
+  color: black !important;
+  background-color: #ffcccc !important;
+  margin: 1.5rem !important;
+  width: 150px !important;
+}
+
+.order:hover {
+  background-color: black !important;
+  color: #ffcccc !important;
+}
+
+.infoInput{
+    margin-top: 1rem !important;
+    width: 547px !important;
+    margin-left: 1rem !important;
+}
+
+.input{
+    margin-bottom: 1rem !important;
+}
+
+.productList {
+    list-style-type: none;
+    
+  }
+
+.productPaper{
+    height: 100px !important;
+    margin-right: 2rem;
+    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+}
+
+.summary{
+    margin-left: 1rem;
+    font-size: 18px;
+}
