@@ -36,9 +36,32 @@ namespace App.ShopService.BussinessLogic.Services
                 return returnValue;
             }
 
+            List<ProductDto> products = new List<ProductDto>();
+
             foreach(OrderItemDto orderItem in orderDto.OrderItems)
             {
                 ProductDto product = _productRepository.GetProduct(orderItem.ProductId);
+
+                if(product == null) 
+                {
+                    returnValue.Success = false;
+                    returnValue.Message = $"Traženi proizvod ne postoji.";
+                    returnValue.Object = string.Empty;
+
+                    return returnValue;
+                }
+
+                if(product.Quantity < orderItem.Quantity)
+                {
+                    returnValue.Success = false;
+                    returnValue.Message = $"Nema dovoljno proizvoda {product.Name} na stanju.";
+                    returnValue.Object = string.Empty;
+
+                    return returnValue;
+                }
+
+                product.Quantity -= orderItem.Quantity;
+                products.Add(product);
                 orderDto.TotalAmount += orderItem.Quantity * product.Price;
             }
 
@@ -60,6 +83,11 @@ namespace App.ShopService.BussinessLogic.Services
             orderDto.TimeOfDelivery = DateTime.Now.AddHours(1).AddHours(random.Next(1, 73));
 
             _orderRepository.AddOrder(orderDto);
+
+            foreach(ProductDto p in products)
+            {
+                _productRepository.UpdateProduct(p);
+            }
 
             returnValue.Success = true;
             returnValue.Message = string.Empty;

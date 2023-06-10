@@ -76,11 +76,9 @@ const CashRegister = () => {
     cashRegister.orderItems = products.map((p) => ({ productId: p.product.id, quantity: p.quantity }));
     cashRegister.comment = '';
 
-    console.log(cashRegister);
-
     setCrData(JSON.parse(JSON.stringify(cashRegister)))
 
-  }, [products, userData]);
+  }, [userData]);
 
   const handleDelete = (id) => {
     deleteItem(id);
@@ -88,7 +86,7 @@ const CashRegister = () => {
 
   const deleteItem = (id) => {
     var newProducts = products.filter((p) => p.product.id !== id);
-
+    setCrData({ ...crData, orderItems: newProducts.map((p) => ({ productId: p.product.id, quantity: p.quantity })) })
     setProducts(newProducts);
     updateSummary(newProducts);
     localStorage.setItem("cart", JSON.stringify(newProducts));
@@ -96,8 +94,24 @@ const CashRegister = () => {
 
   const increaseQuantity = (id) => {
     var cartItem = products.find((p) => p.product.id === id);
+
+    if(cartItem.quantity + 1 > cartItem.product.quantity){
+      toast.error("Nema dovoljno proizvoda na stanju.", {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return;
+    }
+
     cartItem.quantity++;
 
+    setCrData({ ...crData, orderItems: products.map((p) => ({ productId: p.product.id, quantity: p.quantity })) })
     setProducts(products);
     updateSummary(products);
 
@@ -110,6 +124,7 @@ const CashRegister = () => {
       deleteItem(id);
     } else {
       cartItem.quantity--;
+      setCrData({ ...crData, orderItems: products.map((p) => ({ productId: p.product.id, quantity: p.quantity })) })
       setProducts(products);
       updateSummary(products);
       localStorage.setItem("cart", JSON.stringify(products));
@@ -130,12 +145,19 @@ const CashRegister = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
+    if(crData.orderItems.length == 0){
+      document.getElementById('error').innerHTML = "Dodajte proizvode koje želite da poručite.";
+        return;
+    }
+
     if(crData.name === '' || crData.lastName === '' || crData.address === ''){
         document.getElementById('error').innerHTML = "Popunite obavezna polja.";
         return;
     }
 
     crData.comment = document.getElementById('comment').value;
+
+    console.log(crData);
     
     await placeOrder(crData)
     .then(function(response){
@@ -151,7 +173,16 @@ const CashRegister = () => {
           });
     })
     .catch(function(error){
-
+      toast.error(error.response.data, {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     });
   };
 

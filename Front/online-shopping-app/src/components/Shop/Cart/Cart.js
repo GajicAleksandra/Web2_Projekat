@@ -47,6 +47,21 @@ const Cart = ({ isOpen, onClose }) => {
 
   const increaseQuantity = (id) => {
     var cartItem = products.find((p) => p.product.id === id);
+
+    if(cartItem.quantity + 1 > cartItem.product.quantity){
+      toast.error("Nema dovoljno proizvoda na stanju.", {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return;
+    }
+    
     cartItem.quantity++;
 
     setProducts(products);

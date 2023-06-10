@@ -91,7 +91,7 @@ namespace App.ShopService.BussinessLogic.Services
 
             List<ProductDto> products = _productRepository.GetProducts(id);
 
-            if(products == null)
+            if(products == null || products.Count == 0)
             {
                 returnValue.Success = false;
                 returnValue.Message = "Još uvek niste dodali nijedan proizvod.";
@@ -227,6 +227,18 @@ namespace App.ShopService.BussinessLogic.Services
                 productDto.Price == 0 || productDto.Quantity == 0)
             {
                 message = "Popunite sva obavezna polja.";
+                return false;
+            }
+
+            if(productDto.Price < 0)
+            {
+                message = "Cena ne može biti negativan broj.";
+                return false;
+            }
+
+            if(productDto.Quantity < 0)
+            {
+                message = "Količina ne može biti negativan broj.";
                 return false;
             }
 

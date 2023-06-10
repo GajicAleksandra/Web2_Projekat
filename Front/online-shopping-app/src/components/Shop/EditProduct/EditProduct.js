@@ -78,6 +78,8 @@ const EditProduct = () => {
       return;
     }
 
+    productData.id = 0;
+
     await editProduct(productData)
       .then(function (response) {
         toast.success("Uspešno ste izmenili proizvod.", {
