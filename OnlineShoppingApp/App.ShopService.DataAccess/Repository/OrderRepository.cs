@@ -34,5 +34,29 @@ namespace App.ShopService.DataAccess.Repository
         {
             return _mapper.Map<List<OrderDto>>(_db.Orders.Include(o => o.OrderItems).ToList());
         }
+
+        public List<OrderDto> GetAll(int userId)
+        {
+            return _mapper.Map<List<OrderDto>>(_db.Orders.Where(o => o.CustomerId == userId).Include(o => o.OrderItems).ToList());
+        }
+
+        public OrderDto GetOrder(int orderId)
+        {
+            Order order = _db.Orders.FirstOrDefault(o => o.Id == orderId);
+            if(order == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<OrderDto>(order);
+        }
+
+        public void UpdateOrder(OrderDto orderDto)
+        {
+            Order order = _db.Orders.FirstOrDefault(o => o.Id == orderDto.Id);
+            order.OrderStatus = orderDto.OrderStatus;
+            _db.Orders.Update(order);
+            _db.SaveChanges();
+        }
     }
 }

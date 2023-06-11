@@ -118,6 +118,7 @@ const Product = ({ product, onDeleteProduct }) => {
       if (checkQuantity(existingItem.quantity + 1)) {
         existingItem.quantity += 1;
         localStorage.setItem("cart", JSON.stringify(cartItems));
+        var badge = document.getElementById('badge').innerHTML;
       }
     } else {
       if (checkQuantity(1)) {
@@ -126,6 +127,9 @@ const Product = ({ product, onDeleteProduct }) => {
         cartItem.quantity = 1;
         cartItems.push(cartItem);
         localStorage.setItem("cart", JSON.stringify(cartItems));
+        var badge = parseInt(document.querySelector('[data-testid="ShoppingCartIcon"] + span.MuiBadge-badge').innerHTML);
+        badge++;
+        document.querySelector('[data-testid="ShoppingCartIcon"] + span.MuiBadge-badge').innerHTML = badge;
       }
     }
   };

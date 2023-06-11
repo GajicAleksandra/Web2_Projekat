@@ -15,7 +15,7 @@ namespace App.ShopService.Models.ViewModels
         public string LastName { get; set; }
         public string Address { get; set; }
         public List<OrderItemVM> OrderItems { get; set; }
-        public OrderStatus OrderStatus { get; set; }
+        public string OrderStatus { get; set; }
         public double TotalAmount { get; set; }
         public DateTime? TimeOfMakingOrder { get; set; }
         public DateTime TimeOfDelivery { get; set; }

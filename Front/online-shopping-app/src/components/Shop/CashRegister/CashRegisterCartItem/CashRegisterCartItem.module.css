@@ -9,7 +9,7 @@
   .delete {
     color: red !important;
     background-color: transparent !important;
-    margin-left: 3rem;
+    margin-left: 3rem !important;
   }
   
   .plusMinus {

@@ -14,17 +14,18 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Nav from "../../UI/Nav";
 import { useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
-import { Divider } from "@mui/material";
-import VerifiedIcon from "@mui/icons-material/Verified";
-import { getOrders } from "../../../services/OrderService";
+import { Divider, Button } from "@mui/material";
+import { getOrders, getSalesmanOrders, getCustomerOrders, cancelOrder } from "../../../services/OrderService";
 import Order from "../Order/Order";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import styles from './OrderList.module.css';
 
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
 
   const getFormattedDate = (date) => {
     var d = date.split("T");
@@ -39,6 +40,26 @@ function Row(props) {
     var minutes = s[1];
 
     return `${day}.${month}.${year}. ${hours}:${minutes}`;
+  };
+
+  const calculateTime = () => {
+    if(props.type == "new"){
+      var timeOfMakingOrder = new Date(row.timeOfMakingOrder);
+      var now = new Date();
+
+      var timeDiff = now.getTime() - timeOfMakingOrder.getTime();
+      var hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
+
+      if(hoursDiff < 1){
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  const handleCancelOrder = () => {
+    props.onCancelOrder(row.id);
   };
 
   return (
@@ -76,7 +97,12 @@ function Row(props) {
           {getFormattedDate(row.timeOfDelivery)}
         </TableCell>
         <TableCell component="th" scope="row" sx={{ width: 100, textAlign: 'center' }}>
-          <VerifiedIcon sx={{ color: 'green' }}/>
+          {row.orderStatus == "isporuceno" && <p style={{ color: 'green' }}>Isporučeno</p>}
+          {row.orderStatus == "otkazano" && <p style={{ color: 'red' }}>Otkazano</p>}
+          {
+            props.type == "new" && calculateTime() && <Button className={styles.cancel} onClick={handleCancelOrder}>Otkaži</Button>
+          }
+          {row.orderStatus == "u toku" && !calculateTime() && <p style={{ color: 'gray' }}>U toku</p>}
         </TableCell>
         <TableCell component="th" scope="row" sx={{ width: 5, textAlign: 'center' }}>
         </TableCell>
@@ -84,15 +110,15 @@ function Row(props) {
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
           <Collapse in={open} timeout="auto" unmountOnExit>
+          {row.orderItems.map((orderItem) => (
             <Paper sx={{ margin: 1, backgroundColor: "beige" }}>
               <Table size="small" aria-label="purchases">
                 <TableBody>
-                {row.orderItems.map((orderItem) => (
                     <Order orderItem={orderItem} />
-                ))}
                 </TableBody>
               </Table>
             </Paper>
+            ))}
           </Collapse>
         </TableCell>
       </TableRow>
@@ -108,7 +134,7 @@ Row.propTypes = {
     timeOfMakingOrder: PropTypes.string.isRequired,
     timeOfDelivery: PropTypes.string.isRequired,
     orderStatus: PropTypes.number.isRequired,
-    totalAmount: PropTypes.string.isRequired,
+    totalAmount: PropTypes.number.isRequired,
     orderItems: PropTypes.array.isRequired,
   }).isRequired,
 };
@@ -120,7 +146,7 @@ export function AdminOrderList(props) {
   const fetchData = async () => {
     await getOrders()
       .then(function (response) {
-        setRows(response.data);
+        setRows(response.data.reverse());
       })
       .catch(function (error) {
         if(error.response.status === 401){
@@ -155,7 +181,7 @@ export function AdminOrderList(props) {
       <div style={{ position: "absolute" }}>
         <TableContainer
           component={Paper}
-          sx={{ width: 1300, marginTop: 15, marginLeft: 12 }}
+          sx={{ width: 1300, marginTop: 15, marginLeft: 12, marginBottom: 20 }}
         >
           <h1 style={{ textAlign: "center", marginTop: 15, marginBottom: 15 }}>
             Sve porudžbine
@@ -202,3 +228,244 @@ export function AdminOrderList(props) {
     </>
   );
 }
+
+export const SalesmanOrderList = () => {
+  const { type } = useParams();
+  const [rows, setRows] = useState([]);
+  const navigate = useNavigate();
+
+  const fetchData = async () => {
+    await getSalesmanOrders(type)
+      .then(function (response) {
+        setRows(response.data.reverse());
+      })
+      .catch(function (error) {
+        if(error.response.status === 401){
+            localStorage.setItem('returnUrl', window.location.href);
+            navigate('/login');
+        }
+        else if(error.response.status === 403){
+            toast.error("Niste autorizovani za ovu akciju.", {
+                position: "top-right",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        }
+        else{
+          console.log(error.response.data);
+        }
+      });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  return (
+    <>
+      <Nav></Nav>
+      <div style={{ position: "absolute" }}>
+        <TableContainer
+          component={Paper}
+          sx={{ width: 1300, marginTop: 15, marginLeft: 12, marginBottom: 20 }}
+        >
+          <h1 style={{ textAlign: "center", marginTop: 15, marginBottom: 15 }}>
+            {type == "new" && "Nove porudžbine"} 
+            {type == "previous" && "Prethodne porudžbine"} 
+          </h1>
+          <Divider />
+          <Table aria-label="collapsible table">
+            <TableHead sx={{ backgroundColor: 'beige' }}>
+                <TableCell sx={{ width: 80 }}></TableCell>
+                <TableCell sx={{ width: 60, fontWeight: 'bold', fontSize: 18 }}>
+                    Id
+                </TableCell>
+                <TableCell sx={{ width: 130, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
+                    Ime
+                </TableCell>
+                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
+                    Prezime
+                </TableCell>
+                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
+                    Adresa
+                </TableCell>
+                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
+                    Iznos
+                </TableCell>
+                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
+                    Vreme poručivanja
+                </TableCell>
+                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
+                    Vreme dostave
+                </TableCell>
+                <TableCell sx={{ width: 100, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
+                    Status
+                </TableCell>
+                <TableCell component="th" scope="row" sx={{ width: 5, textAlign: 'center' }}>
+                </TableCell>
+            </TableHead>
+            <TableBody>
+              {rows.map((row) => (
+                <Row key={row.id} row={row} />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+    </>
+  );
+};
+
+export const CustomerOrderList = () => {
+  const { type } = useParams();
+  const [rows, setRows] = useState([]);
+  const navigate = useNavigate();
+
+  const fetchData = async () => {
+    await getCustomerOrders(type)
+      .then(function (response) {
+        setRows(response.data.reverse());
+      })
+      .catch(function (error) {
+        if(error.response.status === 401){
+            localStorage.setItem('returnUrl', window.location.href);
+            navigate('/login');
+        }
+        else if(error.response.status === 403){
+            toast.error("Niste autorizovani za ovu akciju.", {
+                position: "top-right",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        }
+        else{
+          toast.error(error.response.data, {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
+      }
+    });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleCancelOrder = async (id) => {
+    await cancelOrder(id)
+    .then(function(response){
+      toast.success(response.data, {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
+      setRows(rows.filter(r => r.id != id));
+    })
+    .catch(function(error){
+      if(error.response.status === 401){
+        localStorage.setItem('returnUrl', window.location.href);
+        navigate('/login');
+      }
+      else if(error.response.status === 403){
+          toast.error("Niste autorizovani za ovu akciju.", {
+              position: "top-right",
+              autoClose: 4000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+          });
+      }
+      else{
+        toast.error(error.response.data, {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+      });
+      }
+    });
+  }
+
+  return (
+    <>
+      <Nav></Nav>
+      <div style={{ position: "absolute" }}>
+        <TableContainer
+          component={Paper}
+          sx={{ width: 1300, marginTop: 15, marginLeft: 12, marginBottom: 20 }}
+        >
+          <h1 style={{ textAlign: "center", marginTop: 15, marginBottom: 15 }}>
+            {type == "new" && "Nove porudžbine"} 
+            {type == "previous" && "Prethodne porudžbine"} 
+          </h1>
+          <Divider />
+          <Table aria-label="collapsible table">
+            <TableHead sx={{ backgroundColor: 'beige' }}>
+                <TableCell sx={{ width: 80 }}></TableCell>
+                <TableCell sx={{ width: 60, fontWeight: 'bold', fontSize: 18 }}>
+                    Id
+                </TableCell>
+                <TableCell sx={{ width: 130, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
+                    Ime
+                </TableCell>
+                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
+                    Prezime
+                </TableCell>
+                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
+                    Adresa
+                </TableCell>
+                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
+                    Iznos
+                </TableCell>
+                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
+                    Vreme poručivanja
+                </TableCell>
+                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
+                    Vreme dostave
+                </TableCell>
+                <TableCell sx={{ width: 100, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
+                    Status
+                </TableCell>
+                <TableCell component="th" scope="row" sx={{ width: 5, textAlign: 'center' }}>
+                </TableCell>
+            </TableHead>
+            <TableBody>
+              {rows.map((row) => (
+                <Row key={row.id} row={row} type={type} onCancelOrder={handleCancelOrder}/>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+    </>
+  );
+};

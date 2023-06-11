@@ -11,5 +11,8 @@ namespace App.ShopService.DataAccess.Repository.Interface
     {
         void AddOrder(OrderDto orderDto);
         List<OrderDto> GetAll();
+        List<OrderDto> GetAll(int userId);
+        OrderDto GetOrder(int orderId);
+        void UpdateOrder(OrderDto orderDto);
     }
 }

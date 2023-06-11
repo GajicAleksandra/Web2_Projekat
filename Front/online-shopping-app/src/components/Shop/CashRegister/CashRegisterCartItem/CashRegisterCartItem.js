@@ -2,7 +2,7 @@ import React from "react";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
-import { IconButton, Button, Divider } from "@mui/material";
+import { IconButton, Button } from "@mui/material";
 import styles from './CashRegisterCartItem.module.css'
 
 const CashRegisterCartItem = ({ cartItem, increaseQuantity, decreaseQuantity, deleteItem }) => {
@@ -15,7 +15,7 @@ const CashRegisterCartItem = ({ cartItem, increaseQuantity, decreaseQuantity, de
   };
 
   const handleRemoveItem = () => {
-    deleteItem(cartItem.productm.id);
+    deleteItem(cartItem.product.id);
   };
 
   return (

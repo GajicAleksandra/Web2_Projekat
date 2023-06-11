@@ -25,9 +25,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import LogoutIcon from "@mui/icons-material/Logout";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import SideMenu from "./SideMenu";
+import StorefrontIcon from '@mui/icons-material/Storefront';
 
 
-export default function Nav() {
+export default function Nav(props) {
   const [user, setUser] = useState("");
   const [role, setRole] = useState(-1);
   const [image, setImage] = useState("");
@@ -109,56 +110,16 @@ export default function Nav() {
                 <SideMenu />
               </Typography>
             )}
-            <Typography variant="h6" component="div" sx={{ flexGrow: 150 }}>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 900 }}>
               <IconButton sx={{ color: "black" }} component={Link} href="/">
-                <HomeOutlinedIcon fontSize="large" />
+                <HomeOutlinedIcon fontSize="medium" />
               </IconButton>
             </Typography>
-            {/* {user && role == 0 && (
-              <div style={{ flexGrow: 100 }}>
-                <Button
-                  id="basic-button"
-                  aria-controls={open ? "basic-menu" : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? "true" : undefined}
-                  onClick={handleClick}
-                  sx={{ mr: 2, color: "black", float: "left" }}
-                >
-                  Zahtevi za verifikaciju
-                </Button>
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  MenuListProps={{
-                    "aria-labelledby": "basic-button",
-                  }}
-                >
-                  <MenuItem
-                    component={Link}
-                    href="/pendingrequests"
-                    id="pending"
-                  >
-                    Na čekanju
-                  </MenuItem>
-                  <MenuItem
-                    component={Link}
-                    href="/acceptedrequests"
-                    id="accepted"
-                  >
-                    Prihvaćeni
-                  </MenuItem>
-                  <MenuItem
-                    component={Link}
-                    href="/rejectedrequests"
-                    id="rejected"
-                  >
-                    Odbijeni
-                  </MenuItem>
-                </Menu>
-              </div>
-            )} */}
+            {role === "1" && <Typography variant="h6" component="div" sx={{ flexGrow: 1000000 }}>
+              <IconButton sx={{ color: "black" }} component={Link} href="/products">
+                <StorefrontIcon fontSize="medium" />
+              </IconButton>
+            </Typography>}
             {!user && (
               <>
                 <Button
@@ -175,12 +136,12 @@ export default function Nav() {
             )}
             {user && (
               <Box sx={{ flexGrow: 0 }}>
-                {role == 1 && <IconButton
+                {role == 1 && props.show != "false" && <IconButton
                   aria-label="Korpa"
                   onClick={handleCartOpen}
                   sx={{ color: "black", marginRight: 2 }}
                 >
-                  <Badge badgeContent={count} color="secondary" showZero>
+                  <Badge id="badge" badgeContent={count} color="secondary" showZero>
                     <ShoppingCartIcon />
                   </Badge>
                 </IconButton>}

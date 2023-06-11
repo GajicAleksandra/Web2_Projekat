@@ -13,7 +13,7 @@ import AddProduct from './components/Shop/AddProduct/AddProduct';
 import EditProduct from './components/Shop/EditProduct/EditProduct';
 import CashRegister from './components/Shop/CashRegister/CashRegister';
 import { Users } from './components/User/Users';
-import { AdminOrderList } from './components/Order/OrderList/OrderList';
+import { AdminOrderList, SalesmanOrderList, CustomerOrderList } from './components/Order/OrderList/OrderList';
 
 
 function App() {
@@ -27,6 +27,8 @@ function App() {
         <Route path="/profile" element={<ProtectedRoute Component={Profile} />} />
         <Route path="/changepassword" element={<ProtectedRoute Component={ChangePassword}/>} />
         <Route path="/adminorders" element={<ProtectedRoute Component={AdminOrderList} role="0" />} />
+        <Route path="/customerorders/:type" element={<ProtectedRoute Component={CustomerOrderList} role="1" />} />
+        <Route path="/salesmanorders/:type" element={<ProtectedRoute Component={CustomerOrderList} role="2" />} />
         <Route path="/pendingrequests" element={<ProtectedRoute Component={VerifySalesmen} role="0" additionalProp="Pending" />} />
         <Route path="/products" element={<ProtectedRoute Component={ProductList} additionalProp="verificationRequired"/>} />
         <Route path="/details" element={<ProtectedRoute Component={ProductDetails} additionalProp="verificationRequired"/>} />

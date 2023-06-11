@@ -95,7 +95,7 @@ const EditProduct = () => {
       return;
     }
 
-    productData.id = 0;
+    productData.id = id;
 
     await editProduct(productData)
       .then(function (response) {

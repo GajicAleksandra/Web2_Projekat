@@ -31,7 +31,10 @@ const CashRegister = () => {
   const [summary, setSummary] = useState(0);
   const [summarySummary, setSummarySummary] = useState(0);
   const [userData, setUserData] = useState(JSON.parse(JSON.stringify(user)));
-  const [crData, setCrData] = useState(JSON.parse(JSON.stringify(cashRegister)))
+  const [crData, setCrData] = useState(
+    JSON.parse(JSON.stringify(cashRegister))
+  );
+  const [salesmenCount, setSalesmenCount] = useState(1);
   const navigate = useNavigate();
   var cartItems = [];
 
@@ -55,11 +58,22 @@ const CashRegister = () => {
             progress: undefined,
             theme: "colored",
           });
-        }
-        else{
+        } else {
           console.log(error.response.data);
         }
       });
+  };
+
+  const updateSalesmenCount = (cartItems) => {
+    var idCount = new Set();
+
+    for (var i = 0; i < cartItems.length; i++) {
+      var obj = cartItems[i];
+      var salesmanId = obj.product.salesmanId;
+      idCount.add(salesmanId);
+    }
+    setSalesmenCount(idCount.size);
+    return idCount.size;
   };
 
   const updateSummary = (cartItems) => {
@@ -68,8 +82,9 @@ const CashRegister = () => {
       s += element.quantity * element.product.price;
     });
 
+    var count = updateSalesmenCount(cartItems);
     setSummary(s);
-    setSummarySummary(s + 200);
+    setSummarySummary(s + (count * 200));
   };
 
   useEffect(() => {
@@ -90,11 +105,13 @@ const CashRegister = () => {
     cashRegister.name = userData.name;
     cashRegister.lastName = userData.lastName;
     cashRegister.address = userData.address;
-    cashRegister.orderItems = products.map((p) => ({ productId: p.product.id, quantity: p.quantity }));
-    cashRegister.comment = '';
+    cashRegister.orderItems = products.map((p) => ({
+      productId: p.product.id,
+      quantity: p.quantity,
+    }));
+    cashRegister.comment = "";
 
-    setCrData(JSON.parse(JSON.stringify(cashRegister)))
-
+    setCrData(JSON.parse(JSON.stringify(cashRegister)));
   }, [userData]);
 
   const handleDelete = (id) => {
@@ -103,16 +120,23 @@ const CashRegister = () => {
 
   const deleteItem = (id) => {
     var newProducts = products.filter((p) => p.product.id !== id);
-    setCrData({ ...crData, orderItems: newProducts.map((p) => ({ productId: p.product.id, quantity: p.quantity })) })
+    setCrData({
+      ...crData,
+      orderItems: newProducts.map((p) => ({
+        productId: p.product.id,
+        quantity: p.quantity,
+      })),
+    });
     setProducts(newProducts);
     updateSummary(newProducts);
+
     localStorage.setItem("cart", JSON.stringify(newProducts));
   };
 
   const increaseQuantity = (id) => {
     var cartItem = products.find((p) => p.product.id === id);
 
-    if(cartItem.quantity + 1 > cartItem.product.quantity){
+    if (cartItem.quantity + 1 > cartItem.product.quantity) {
       toast.error("Nema dovoljno proizvoda na stanju.", {
         position: "top-right",
         autoClose: 4000,
@@ -128,7 +152,13 @@ const CashRegister = () => {
 
     cartItem.quantity++;
 
-    setCrData({ ...crData, orderItems: products.map((p) => ({ productId: p.product.id, quantity: p.quantity })) })
+    setCrData({
+      ...crData,
+      orderItems: products.map((p) => ({
+        productId: p.product.id,
+        quantity: p.quantity,
+      })),
+    });
     setProducts(products);
     updateSummary(products);
 
@@ -141,7 +171,13 @@ const CashRegister = () => {
       deleteItem(id);
     } else {
       cartItem.quantity--;
-      setCrData({ ...crData, orderItems: products.map((p) => ({ productId: p.product.id, quantity: p.quantity })) })
+      setCrData({
+        ...crData,
+        orderItems: products.map((p) => ({
+          productId: p.product.id,
+          quantity: p.quantity,
+        })),
+      });
       setProducts(products);
       updateSummary(products);
       localStorage.setItem("cart", JSON.stringify(products));
@@ -162,23 +198,43 @@ const CashRegister = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    if(crData.orderItems.length == 0){
-      document.getElementById('error').innerHTML = "Dodajte proizvode koje želite da poručite.";
-        return;
+    if (crData.orderItems.length == 0) {
+      document.getElementById("error").innerHTML =
+        "Dodajte proizvode koje želite da poručite.";
+      return;
     }
 
-    if(crData.name === '' || crData.lastName === '' || crData.address === ''){
-        document.getElementById('error').innerHTML = "Popunite obavezna polja.";
-        return;
+    if (crData.name === "" || crData.lastName === "" || crData.address === "") {
+      document.getElementById("error").innerHTML = "Popunite obavezna polja.";
+      return;
     }
 
-    crData.comment = document.getElementById('comment').value;
+    crData.comment = document.getElementById("comment").value;
 
     console.log(crData);
-    
+
     await placeOrder(crData)
-    .then(function(response){
+      .then(function (response) {
         toast.success(response.data, {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+
+        localStorage.removeItem('cart');
+        navigate('/customerorders/new')
+      })
+      .catch(function (error) {
+        if (error.response.status === 401) {
+          localStorage.setItem("returnUrl", window.location.href);
+          navigate("/login");
+        } else if (error.response.status === 403) {
+          toast.error("Niste autorizovani za ovu akciju.", {
             position: "top-right",
             autoClose: 4000,
             hideProgressBar: false,
@@ -188,49 +244,38 @@ const CashRegister = () => {
             progress: undefined,
             theme: "colored",
           });
-    })
-    .catch(function(error){
-      if (error.response.status === 401) {
-        localStorage.setItem("returnUrl", window.location.href);
-        navigate("/login");
-      } else if (error.response.status === 403) {
-        toast.error("Niste autorizovani za ovu akciju.", {
-          position: "top-right",
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-      }
-      else{
-        toast.error(error.response.data, {
-          position: "top-right",
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-      }
-    });
+        } else {
+          toast.error(error.response.data, {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
+      });
   };
 
   return (
     <>
-      <Nav></Nav>
+      <Nav show="false"></Nav>
       <ThemeProvider theme={defaultTheme}>
         <Grid container spacing={2} className={styles.container}>
           <Grid item xs={6} className={styles.cart}>
             <>
               <ul className={styles.productList}>
                 {products.map((cartItem) => (
-                  <Paper key={cartItem.product.id} className={styles.productPaper}>
-                    <li key={cartItem.product.id} className={styles.productItem}>
+                  <Paper
+                    key={cartItem.product.id}
+                    className={styles.productPaper}
+                  >
+                    <li
+                      key={cartItem.product.id}
+                      className={styles.productItem}
+                    >
                       <CashRegisterCartItem
                         cartItem={cartItem}
                         increaseQuantity={increaseQuantity}
@@ -245,12 +290,13 @@ const CashRegister = () => {
               <p className={styles.summary}>
                 Ukupno: {summary.toLocaleString("en-US")}.00 RSD
               </p>
-              <p className={styles.summary}>
-                Dostava: 200.00 RSD
-              </p>
+              <p className={styles.summary}>Dostava: {salesmenCount} x 200.00 RSD</p>
               <Divider sx={{ mt: 1, mb: 1 }} />
               <p className={styles.summary}>
                 Za plaćanje: {summarySummary.toLocaleString("en-US")}.00 RSD
+              </p>
+              <p className={styles.note}>
+                *Cena dostave je srazmerna broju prodavaca od kojih naručujete proizvode
               </p>
             </>
           </Grid>
@@ -285,7 +331,10 @@ const CashRegister = () => {
                             className={styles.input}
                             onChange={(e) => handleChange(e)}
                           />
-                          <span style={{ color: "red" }} id="lastNameError"></span>
+                          <span
+                            style={{ color: "red" }}
+                            id="lastNameError"
+                          ></span>
                         </Grid>
                       </Grid>
                     </Grid>

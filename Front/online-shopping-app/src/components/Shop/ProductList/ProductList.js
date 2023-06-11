@@ -53,8 +53,7 @@ const ProductList = () => {
             progress: undefined,
             theme: "colored",
           });
-        }
-        else{
+        } else {
           toast.error(error.response.data, {
             position: "top-right",
             autoClose: 4000,
@@ -70,16 +69,27 @@ const ProductList = () => {
   };
 
   const handleDeleteProduct = (productId) => {
-    const updatedProducts = products.filter((product) => product.id !== productId);
+    const updatedProducts = products.filter(
+      (product) => product.id !== productId
+    );
+    var badge = parseInt(
+      document.querySelector(
+        '[data-testid="ShoppingCartIcon"] + span.MuiBadge-badge'
+      ).innerHTML
+    );
+    badge--;
+    document.querySelector(
+      '[data-testid="ShoppingCartIcon"] + span.MuiBadge-badge'
+    ).innerHTML = badge;
     setProducts(updatedProducts);
   };
 
   return (
     <>
-      <Nav/>
+      <Nav />
       <ThemeProvider theme={defaultTheme}>
         <Container maxWidth="lg" className={styles.container}>
-          <Grid container spacing={3} sx={{ marginBottom:1 }}>
+          <Grid container spacing={3} sx={{ marginBottom: 1 }}>
             <div>
               <img className={styles.image} src="/images/banner.jpg" />
               {role == 2 && (
@@ -97,7 +107,10 @@ const ProductList = () => {
             </div>
             {products.map((product) => (
               <Grid item xs={12} sm={6} md={4} key={product.id}>
-                <Product product={product} onDeleteProduct={handleDeleteProduct} />
+                <Product
+                  product={product}
+                  onDeleteProduct={handleDeleteProduct}
+                />
               </Grid>
             ))}
           </Grid>

@@ -84,16 +84,34 @@ const ChangePassword = () => {
           navigate("/");
     })
     .catch(function(error){
+      if (error.response.status == 401) {
+        localStorage.setItem("returnUrl", window.location.href);
+        navigate("/login");
+      } else if (error.response.status == 403) {
+        toast.error("Niste autorizovani za ovu akciju.", {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        return;
+      }
+      else{
         toast.error(error.response.data, {
-            position: "top-right",
-            autoClose: 4000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
     });
   };
 

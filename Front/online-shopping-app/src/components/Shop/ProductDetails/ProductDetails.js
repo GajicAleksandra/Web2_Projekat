@@ -34,7 +34,6 @@ const ProductDetails = () => {
   const fetchData = async () => {
     await getProduct(id)
       .then(function (response) {
-        console.log(response.data);
         setProductData(JSON.parse(JSON.stringify(response.data)));
       })
       .catch(function (error) {
@@ -119,8 +118,11 @@ const ProductDetails = () => {
         var cartItem = new CartItemModel();
         cartItem.product = productData;
         cartItem.quantity = quantity;
-        cartItems.push(productData);
+        cartItems.push(cartItem);
         localStorage.setItem("cart", JSON.stringify(cartItems));
+        var badge = parseInt(document.querySelector('[data-testid="ShoppingCartIcon"] + span.MuiBadge-badge').innerHTML);
+        badge++;
+        document.querySelector('[data-testid="ShoppingCartIcon"] + span.MuiBadge-badge').innerHTML = badge;
       }
     }
   };

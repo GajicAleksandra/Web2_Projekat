@@ -20,6 +20,9 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import BlockIcon from "@mui/icons-material/Block";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Row(props) {
   const { row } = props;
@@ -157,6 +160,7 @@ Row.propTypes = {
 
 export function Users(props) {
   const [rows, setRows] = useState([]);
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     await getUsers(props.additionalProp)
@@ -164,13 +168,39 @@ export function Users(props) {
         setRows(response.data);
       })
       .catch(function (error) {
-        console.log(error.response.data);
+        if (error.response.status == 401) {
+          localStorage.setItem("returnUrl", window.location.href);
+          navigate("/login");
+        } else if (error.response.status == 403) {
+          toast.error("Niste autorizovani za ovu akciju.", {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+          return;
+        }
+        else{
+          toast.error(error.response.data, {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
       });
   };
 
   useEffect(() => {
     fetchData();
-    console.log(rows);
   }, []);
 
   return (

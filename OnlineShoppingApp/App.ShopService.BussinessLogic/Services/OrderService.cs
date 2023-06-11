@@ -2,6 +2,7 @@
 using App.ShopService.BussinessLogic.Services.Interfaces;
 using App.ShopService.DataAccess.Repository.Interface;
 using App.ShopService.Models.DTOs;
+using App.ShopService.Models.Enums;
 using App.ShopService.Models.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -38,10 +39,14 @@ namespace App.ShopService.BussinessLogic.Services
             }
 
             List<ProductDto> products = new List<ProductDto>();
+            List<int> salesmanIds = new List<int>();
 
             foreach(OrderItemDto orderItem in orderDto.OrderItems)
             {
                 ProductDto product = _productRepository.GetProduct(orderItem.ProductId);
+
+                if (!salesmanIds.Contains(product.SalesmanId))
+                    salesmanIds.Add(product.SalesmanId);
 
                 if(product == null) 
                 {
@@ -78,7 +83,8 @@ namespace App.ShopService.BussinessLogic.Services
 
             orderDto.CustomerId = customerId;
             orderDto.TimeOfMakingOrder = DateTime.Now;
-            orderDto.TotalAmount = orderDto.TotalAmount + 200; //dostava
+
+            orderDto.TotalAmount = orderDto.TotalAmount + (salesmanIds.Count * 200); //dostava
 
             Random random = new Random();
             orderDto.TimeOfDelivery = DateTime.Now.AddHours(1).AddHours(random.Next(1, 73));
@@ -97,43 +103,151 @@ namespace App.ShopService.BussinessLogic.Services
             return returnValue;
         }
 
-        public async Task<ReturnValue<List<OrderVM>>> GetOrders(string role)
+        public ReturnValue<List<OrderVM>> GetAdminOrders()
         {
             ReturnValue<List<OrderVM>> returnValue = new ReturnValue<List<OrderVM>>();
 
-            if(role == "0")
-            {
-                //admin
-                returnValue.Success = true;
-                returnValue.Message = string.Empty;
-                returnValue.Object = OrdersForAdmin();
-            }
-            else if(role == "1")
-            {
-                //kupac
-                returnValue.Success = true;
-                returnValue.Message = string.Empty;
-                returnValue.Object = OrdersForCustomer();
-            }
-            else
-            {
-                //prodavac
-                returnValue.Success = true;
-                returnValue.Message = string.Empty;
-                returnValue.Object = OrdersForSalesman();
-            }
-
-
-
-            return returnValue;
-        } 
-
-        private List<OrderVM> OrdersForAdmin()
-        {
-            List<OrderVM> orders = new List<OrderVM>();
             List<OrderDto> ordersDto = _orderRepository.GetAll();
 
-            foreach(OrderDto orderDto in ordersDto)
+            returnValue.Success = true;
+            returnValue.Message = string.Empty;
+            returnValue.Object = ConvertInOrderVM(ordersDto);
+
+            return returnValue;
+        }
+
+        public async Task<ReturnValue<List<OrderVM>>> GetSalesmanOrders(string type, string email)
+        {
+            ReturnValue<List<OrderVM>> returnValue = new ReturnValue<List<OrderVM>>();
+
+            int salesmanId = await _communicationService.GetUserId(email);
+            if (salesmanId == -1)
+            {
+                returnValue.Success = false;
+                returnValue.Message = "Desila se greška, pokušajte ponovo.";
+                returnValue.Object = null;
+
+                return returnValue;
+            }
+
+            List<OrderDto> ordersDto = _orderRepository.GetAll(salesmanId);
+
+            if(ordersDto == null || ordersDto.Count == 0)
+            {
+                returnValue.Success = false;
+                returnValue.Message = "Nemate nijednu porudžbinu.";
+                returnValue.Object = null;
+
+                return returnValue;
+            }
+
+            //prodavci
+
+            returnValue.Success = true;
+            returnValue.Message = string.Empty;
+            returnValue.Object = ConvertInOrderVM(ordersDto);
+
+            return returnValue;
+        }
+
+        public async Task<ReturnValue<List<OrderVM>>> GetCustomerOrders(string type, string email)
+        {
+            ReturnValue<List<OrderVM>> returnValue = new ReturnValue<List<OrderVM>>();
+
+            int customerId = await _communicationService.GetUserId(email);
+            if (customerId == -1)
+            {
+                returnValue.Success = false;
+                returnValue.Message = "Desila se greška, pokušajte ponovo.";
+                returnValue.Object = null;
+
+                return returnValue;
+            }
+
+            List<OrderDto> ordersDto = _orderRepository.GetAll(customerId);
+
+            if (ordersDto == null || ordersDto.Count == 0)
+            {
+                returnValue.Success = false;
+                returnValue.Message = "Nemate nijednu porudžbinu.";
+                returnValue.Object = null;
+
+                return returnValue;
+            }
+
+            if (type == "new")
+            {
+                ordersDto = ordersDto.Where(o => o.TimeOfDelivery > DateTime.Now && o.OrderStatus != OrderStatus.Canceled).ToList();
+            }
+            else if(type == "previous")
+            {
+                ordersDto = ordersDto.Where(o => o.TimeOfDelivery < DateTime.Now && o.OrderStatus != OrderStatus.Canceled).ToList();
+            }
+
+            returnValue.Success = true;
+            returnValue.Message = string.Empty;
+            returnValue.Object = ConvertInOrderVM(ordersDto);
+
+            return returnValue;
+        }
+
+        public async Task<ReturnValue<string>> CancelOrder(int orderId, string email)
+        {
+            ReturnValue<string> returnValue = new ReturnValue<string>();
+
+            int customerId = await _communicationService.GetUserId(email);
+            if (customerId == -1)
+            {
+                returnValue.Success = false;
+                returnValue.Message = "Desila se greška, pokušajte ponovo.";
+                returnValue.Object = null;
+
+                return returnValue;
+            }
+
+            OrderDto orderDto = _orderRepository.GetOrder(orderId);
+
+            if(orderDto == null)
+            {
+                returnValue.Success = false;
+                returnValue.Message = "Porudžbina ne postoji.";
+                returnValue.Object = string.Empty;
+
+                return returnValue;
+            }
+
+            if(orderDto.CustomerId != customerId)
+            {
+                returnValue.Success = false;
+                returnValue.Message = "Možete da otkažete samo svoje porudžbine.";
+                returnValue.Object = string.Empty;
+
+                return returnValue;
+            }
+
+            if(orderDto.TimeOfMakingOrder.Value.AddHours(1) < DateTime.Now) 
+            {
+                returnValue.Success = false;
+                returnValue.Message = "Ne možete otkazati porudžbinu, prošlo je sat vremena od poručivanja.";
+                returnValue.Object = string.Empty;
+
+                return returnValue;
+            }
+
+            orderDto.OrderStatus = OrderStatus.Canceled;
+            _orderRepository.UpdateOrder(orderDto);
+
+            returnValue.Success = true;
+            returnValue.Message = string.Empty;
+            returnValue.Object = $"Porudžbina #{orderDto.Id} je uspešno otkazana.";
+
+            return returnValue;
+        }
+
+        private List<OrderVM> ConvertInOrderVM(List<OrderDto> ordersDto)
+        {
+            List<OrderVM> orders = new List<OrderVM>();
+            foreach (OrderDto orderDto in ordersDto)
             {
                 OrderVM orderVM = new OrderVM()
                 {
@@ -143,10 +257,29 @@ namespace App.ShopService.BussinessLogic.Services
                     Address = orderDto.Address,
                     TimeOfMakingOrder = orderDto.TimeOfMakingOrder,
                     TimeOfDelivery = orderDto.TimeOfDelivery,
-                    OrderStatus = orderDto.OrderStatus,
                     TotalAmount = orderDto.TotalAmount,
                     OrderItems = new List<OrderItemVM>()
                 };
+
+                if (orderDto.OrderStatus == OrderStatus.Canceled)
+                {
+                    orderVM.OrderStatus = "otkazano";
+                }
+
+                if (orderDto.TimeOfDelivery < DateTime.Now)
+                {
+                    if (orderDto.OrderStatus != OrderStatus.Canceled)
+                    {
+                        orderVM.OrderStatus = "isporuceno";
+                    }
+                }
+                else
+                {
+                    if (orderDto.OrderStatus != OrderStatus.Canceled)
+                    {
+                        orderVM.OrderStatus = "u toku";
+                    }
+                }
 
                 foreach (OrderItemDto orderItemDto in orderDto.OrderItems)
                 {
@@ -166,20 +299,6 @@ namespace App.ShopService.BussinessLogic.Services
             return orders;
         }
 
-        private List<OrderVM> OrdersForSalesman()
-        {
-            List<OrderVM> orders = new List<OrderVM>();
-
-            return orders;
-        }
-
-        private List<OrderVM> OrdersForCustomer()
-        {
-            List<OrderVM> orders = new List<OrderVM>();
-
-            return orders;
-        }
-
         private bool ValidateOrder(OrderDto orderDto, out string message)
         {
             if(string.IsNullOrEmpty(orderDto.Name) || 
@@ -194,6 +313,15 @@ namespace App.ShopService.BussinessLogic.Services
             {
                 message = "Niste izabrali nijedan proizvod.";
                 return false;
+            }
+
+            foreach(OrderItemDto orderItem in orderDto.OrderItems)
+            {
+                if(orderItem.Quantity <= 0)
+                {
+                    message = "Količina proizvoda ne može biti negativan broj.";
+                    return false;
+                }
             }
 
             message = string.Empty;

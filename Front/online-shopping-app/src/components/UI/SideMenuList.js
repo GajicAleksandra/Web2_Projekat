@@ -50,24 +50,18 @@ export const AdminList = () => {
 
 export const CustomerList = () => {
     return(
-        <List sx={{ width: 200 }}>
-          <ListItem button>
+        <List sx={{ width: 270 }}>
+          <ListItem button component={Link} href="/customerorders/new">
             <ListItemIcon>
                 <ReceiptIcon/>
             </ListItemIcon>
-            <ListItemText primary="Porudžbine" />
+            <ListItemText primary="Nove porudžbine" />
           </ListItem>
-          <ListItem button>
+          <ListItem button component={Link} href="/customerorders/previous">
             <ListItemIcon>
-                <PersonIcon/>
+                <ReceiptOutlinedIcon/>
             </ListItemIcon>
-            <ListItemText primary="Kupci" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-            <PersonOutlineIcon/>
-            </ListItemIcon>
-            <ListItemText primary="Prodavci" />
+            <ListItemText primary="Prethodne porudžbine" />
           </ListItem>
         </List>
     );
@@ -82,13 +76,13 @@ export const SalesmanList = () => {
             </ListItemIcon>
             <ListItemText primary="Moji proizvodi" />
           </ListItem>
-          <ListItem button>
+          <ListItem button component={Link} href="/salesmanorders/new">
             <ListItemIcon>
                 <ReceiptIcon/>
             </ListItemIcon>
             <ListItemText primary="Nove porudžbine" />
           </ListItem>
-          <ListItem button>
+          <ListItem button component={Link} href="/salesmanorders/previous">
             <ListItemIcon>
                 <ReceiptOutlinedIcon/>
             </ListItemIcon>

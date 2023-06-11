@@ -4,7 +4,17 @@
 }
 
 .details{
-    font-size: 20px;
-    width: 700px;
-    text-align: center;
+    font-size: 20px !important;
+    width: 700px !important;
+    text-align: center !important;
 }
+
+.link{
+    text-transform: none;
+    color: black;
+}
+
+.link:hover{
+    color: '#FFCCCC' !important;
+}
+  
