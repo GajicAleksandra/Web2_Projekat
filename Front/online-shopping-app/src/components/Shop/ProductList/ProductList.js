@@ -73,15 +73,15 @@ const ProductList = () => {
     const updatedProducts = products.filter(
       (product) => product.id !== productId
     );
-    var badge = parseInt(
-      document.querySelector(
-        '[data-testid="ShoppingCartIcon"] + span.MuiBadge-badge'
-      ).innerHTML
-    );
-    badge--;
-    document.querySelector(
-      '[data-testid="ShoppingCartIcon"] + span.MuiBadge-badge'
-    ).innerHTML = badge;
+    // var badge = parseInt(
+    //   document.querySelector(
+    //     '[data-testid="ShoppingCartIcon"] + span.MuiBadge-badge'
+    //   ).innerHTML
+    // );
+    // badge--;
+    // document.querySelector(
+    //   '[data-testid="ShoppingCartIcon"] + span.MuiBadge-badge'
+    // ).innerHTML = badge;
     setProducts(updatedProducts);
   };
 

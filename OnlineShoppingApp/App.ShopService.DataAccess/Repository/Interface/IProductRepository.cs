@@ -15,5 +15,6 @@ namespace App.ShopService.DataAccess.Repository.Interface
         ProductDto GetProduct(int id);
         bool UpdateProduct(ProductDto productDto);
         bool DeleteProduct(int id);
+        void UpdateProducts(OrderItemDto orderItemDto);
     }
 }

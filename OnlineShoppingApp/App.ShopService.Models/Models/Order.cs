@@ -20,5 +20,6 @@ namespace App.ShopService.Models.Models
         public DateTime? TimeOfMakingOrder { get; set; }
         public DateTime TimeOfDelivery { get; set; }
         public List<OrderItem> OrderItems { get; set; }
+        public string? Comment { get; set; }
     }
 }

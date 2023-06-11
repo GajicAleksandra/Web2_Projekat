@@ -98,7 +98,8 @@ namespace App.ShopService.BussinessLogic.Services
 
             returnValue.Success = true;
             returnValue.Message = string.Empty;
-            returnValue.Object = $"Uspešno ste poručili proizvode. Očekivano vreme dostave je {orderDto.TimeOfDelivery}.";
+            DateTime date = orderDto.TimeOfMakingOrder.Value;
+            returnValue.Object = $"Uspešno ste poručili proizvode. Očekivano vreme dostave je {date.Day}.{date.Month}.{date.Year}. {date.Hour}h.";
 
             return returnValue;
         }
@@ -136,25 +137,35 @@ namespace App.ShopService.BussinessLogic.Services
 
             foreach(OrderVM order in orders)
             {
-                List<OrderItemVM> items = order.OrderItems.FindAll(i => i.Product.SalesmanId == salesmanId);
-
-                if (items == null || items.Count == 0)
-                    continue;
-
-                OrderVM o = new OrderVM()
+                try
                 {
-                    Id = order.Id,
-                    Name = order.Name,
-                    LastName = order.LastName,
-                    TimeOfMakingOrder = order.TimeOfMakingOrder,
-                    Address = order.Address,
-                    TimeOfDelivery = order.TimeOfDelivery,
-                    OrderStatus = order.OrderStatus,
-                    TotalAmount = order.TotalAmount,
-                    OrderItems = items
-                };
+                    List<OrderItemVM> items = order.OrderItems.FindAll(i => i.Product.SalesmanId == salesmanId);
 
-                salesmanOrders.Add(o);
+                    if(items == null || items.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    OrderVM o = new OrderVM()
+                    {
+                        Id = order.Id,
+                        Name = order.Name,
+                        LastName = order.LastName,
+                        TimeOfMakingOrder = order.TimeOfMakingOrder,
+                        Address = order.Address,
+                        TimeOfDelivery = order.TimeOfDelivery,
+                        OrderStatus = order.OrderStatus,
+                        TotalAmount = order.TotalAmount,
+                        OrderItems = items,
+                        Comment = order.Comment,
+                    };
+
+                    salesmanOrders.Add(o);
+                }
+                catch(Exception ex)
+                {
+                    continue;
+                }
             }
 
             if(salesmanOrders.Count == 0)
@@ -269,6 +280,11 @@ namespace App.ShopService.BussinessLogic.Services
             orderDto.OrderStatus = OrderStatus.Canceled;
             _orderRepository.UpdateOrder(orderDto);
 
+            foreach(OrderItemDto item in orderDto.OrderItems)
+            {
+                 _productRepository.UpdateProducts(item);
+            }
+
             returnValue.Success = true;
             returnValue.Message = string.Empty;
             returnValue.Object = $"Porudžbina #{orderDto.Id} je uspešno otkazana.";
@@ -290,7 +306,8 @@ namespace App.ShopService.BussinessLogic.Services
                     TimeOfMakingOrder = orderDto.TimeOfMakingOrder,
                     TimeOfDelivery = orderDto.TimeOfDelivery,
                     TotalAmount = orderDto.TotalAmount,
-                    OrderItems = new List<OrderItemVM>()
+                    OrderItems = new List<OrderItemVM>(),
+                    Comment = orderDto.Comment,
                 };
 
                 if (orderDto.OrderStatus == OrderStatus.Canceled)
@@ -316,6 +333,8 @@ namespace App.ShopService.BussinessLogic.Services
                 foreach (OrderItemDto orderItemDto in orderDto.OrderItems)
                 {
                     ProductDto productDto = _productRepository.GetProduct(orderItemDto.ProductId);
+                    if (productDto == null)
+                        continue;
                     OrderItemVM orderItemVM = new OrderItemVM()
                     {
                         Product = productDto,

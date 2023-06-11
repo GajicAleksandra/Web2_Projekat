@@ -69,7 +69,7 @@ function Row(props) {
   return (
     <React.Fragment>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-        <TableCell>
+        <TableCell sx={{ width: 50, textAlign: "center" }}>
           <IconButton
             aria-label="expand row"
             size="small"
@@ -82,56 +82,63 @@ function Row(props) {
         <TableCell
           component="th"
           scope="row"
-          sx={{ fontWeight: "bold", width: 60 }}
+          sx={{ fontWeight: "bold", width: 50 }}
         >
           #{row.id}
         </TableCell>
         <TableCell
           component="th"
           scope="row"
-          sx={{ width: 130, textAlign: "center" }}
+          sx={{ width: 100, textAlign: "center" }}
         >
           {row.name}
         </TableCell>
         <TableCell
           component="th"
           scope="row"
-          sx={{ width: 200, textAlign: "center" }}
+          sx={{ width: 100, textAlign: "center" }}
         >
           {row.lastName}
         </TableCell>
         <TableCell
           component="th"
           scope="row"
-          sx={{ width: 200, textAlign: "center" }}
+          sx={{ width: 150, textAlign: "center" }}
         >
           {row.address}
         </TableCell>
         <TableCell
           component="th"
           scope="row"
-          sx={{ width: 200, textAlign: "center" }}
+          sx={{ width: 110, textAlign: "center" }}
         >
           {row.totalAmount.toLocaleString("en-US")}.00 RSD
         </TableCell>
         <TableCell
           component="th"
           scope="row"
-          sx={{ width: 200, textAlign: "center" }}
+          sx={{ width: 150, textAlign: "center" }}
         >
           {getFormattedDate(row.timeOfMakingOrder)}
         </TableCell>
         <TableCell
           component="th"
           scope="row"
-          sx={{ width: 200, textAlign: "center" }}
+          sx={{ width: 130, textAlign: "center" }}
         >
           {getFormattedDate(row.timeOfDelivery)}
         </TableCell>
         <TableCell
           component="th"
           scope="row"
-          sx={{ width: 100, textAlign: "center" }}
+          sx={{ width: 150, textAlign: "center" }}
+        >
+          {row.comment}
+        </TableCell>
+        <TableCell
+          component="th"
+          scope="row"
+          sx={{ width: 70, textAlign: "center" }}
         >
           {row.orderStatus == "isporuceno" && (
             <p style={{ color: "green" }}>Isporučeno</p>
@@ -149,10 +156,14 @@ function Row(props) {
           )}
         </TableCell>
         <TableCell
-          component="th"
-          scope="row"
-          sx={{ width: 5, textAlign: "center" }}
-        ></TableCell>
+                sx={{
+                  width: 70,
+                  textAlign: "center",
+                }}
+              >
+                Preostalo vreme
+              </TableCell>
+        
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
@@ -336,6 +347,8 @@ export const SalesmanOrderList = () => {
     await getSalesmanOrders(type)
       .then(function (response) {
         setRows(response.data.reverse());
+
+        console.log(rows);
       })
       .catch(function (error) {
         if (error.response.status === 401) {
@@ -369,7 +382,7 @@ export const SalesmanOrderList = () => {
       <div style={{ position: "absolute" }}>
         <TableContainer
           component={Paper}
-          sx={{ width: 1300, marginTop: 15, marginLeft: 12, marginBottom: 20 }}
+          sx={{ width: 1470, marginTop: 12, marginLeft: 0, marginBottom: 20 }}
         >
           <h1 style={{ textAlign: "center", marginTop: 15, marginBottom: 15 }}>
             {type == "new" && "Nove porudžbine"}
@@ -378,69 +391,9 @@ export const SalesmanOrderList = () => {
           <Divider />
           <Table aria-label="collapsible table">
             <TableHead sx={{ backgroundColor: "beige" }}>
-              <TableCell sx={{ width: 80 }}></TableCell>
-              <TableCell sx={{ width: 60, fontWeight: "bold", fontSize: 18 }}>
+              <TableCell sx={{ width: 50 }}></TableCell>
+              <TableCell sx={{ width: 50, fontWeight: "bold", fontSize: 18 }}>
                 Id
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 130,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Ime
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 200,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Prezime
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 200,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Adresa
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 200,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Iznos
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 200,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Vreme poručivanja
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 200,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Vreme dostave
               </TableCell>
               <TableCell
                 sx={{
@@ -450,17 +403,95 @@ export const SalesmanOrderList = () => {
                   fontSize: 17,
                 }}
               >
+                Ime
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 100,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Prezime
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 150,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Adresa
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 110,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Iznos
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 150,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Vreme poručivanja
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 130,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Vreme dostave
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 150,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Komentar
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 70,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
                 Status
               </TableCell>
               <TableCell
-                component="th"
-                scope="row"
-                sx={{ width: 5, textAlign: "center" }}
-              ></TableCell>
+                sx={{
+                  width: 70,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Preostalo vreme
+              </TableCell>
             </TableHead>
             <TableBody>
               {rows.map((row) => (
-                <Row key={row.id} row={row} />
+                <Row
+                  key={row.id}
+                  row={row}
+                />
               ))}
             </TableBody>
           </Table>
@@ -568,7 +599,7 @@ export const CustomerOrderList = () => {
       <div style={{ position: "absolute" }}>
         <TableContainer
           component={Paper}
-          sx={{ width: 1300, marginTop: 15, marginLeft: 12, marginBottom: 20 }}
+          sx={{ width: 1470, marginTop: 12, marginLeft: 0, marginBottom: 20 }}
         >
           <h1 style={{ textAlign: "center", marginTop: 15, marginBottom: 15 }}>
             {type == "new" && "Nove porudžbine"}
@@ -577,69 +608,9 @@ export const CustomerOrderList = () => {
           <Divider />
           <Table aria-label="collapsible table">
             <TableHead sx={{ backgroundColor: "beige" }}>
-              <TableCell sx={{ width: 80 }}></TableCell>
-              <TableCell sx={{ width: 60, fontWeight: "bold", fontSize: 18 }}>
+              <TableCell sx={{ width: 50 }}></TableCell>
+              <TableCell sx={{ width: 50, fontWeight: "bold", fontSize: 18 }}>
                 Id
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 130,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Ime
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 200,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Prezime
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 200,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Adresa
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 200,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Iznos
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 200,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Vreme poručivanja
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 200,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Vreme dostave
               </TableCell>
               <TableCell
                 sx={{
@@ -649,13 +620,88 @@ export const CustomerOrderList = () => {
                   fontSize: 17,
                 }}
               >
+                Ime
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 100,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Prezime
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 150,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Adresa
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 110,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Iznos
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 150,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Vreme poručivanja
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 130,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Vreme dostave
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 150,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Komentar
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 70,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
                 Status
               </TableCell>
               <TableCell
-                component="th"
-                scope="row"
-                sx={{ width: 5, textAlign: "center" }}
-              ></TableCell>
+                sx={{
+                  width: 70,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Preostalo vreme
+              </TableCell>
             </TableHead>
             <TableBody>
               {rows.map((row) => (

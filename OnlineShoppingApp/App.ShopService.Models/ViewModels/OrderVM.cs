@@ -19,5 +19,6 @@ namespace App.ShopService.Models.ViewModels
         public double TotalAmount { get; set; }
         public DateTime? TimeOfMakingOrder { get; set; }
         public DateTime TimeOfDelivery { get; set; }
+        public string? Comment { get; set; }
     }
 }

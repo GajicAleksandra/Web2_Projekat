@@ -20,5 +20,6 @@ namespace App.ShopService.Models.DTOs
         public double TotalAmount { get; set; }
         public DateTime? TimeOfMakingOrder { get; set; }
         public DateTime TimeOfDelivery { get; set; }
+        public string? Comment { get; set; }
     }
 }

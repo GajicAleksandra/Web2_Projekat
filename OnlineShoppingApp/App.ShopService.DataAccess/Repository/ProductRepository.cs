@@ -3,6 +3,7 @@ using App.ShopService.DataAccess.Repository.Interface;
 using App.ShopService.Models.DTOs;
 using App.ShopService.Models.Models;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,6 +88,19 @@ namespace App.ShopService.DataAccess.Repository
             _db.SaveChanges();
 
             return true;
+        }
+
+        public void UpdateProducts(OrderItemDto orderItemDto)
+        {
+            Product product = _db.Products.FirstOrDefault(p => p.Id == orderItemDto.ProductId);
+            if(product == null)
+            {
+                return;
+            }
+
+            product.Quantity += orderItemDto.Quantity;
+            _db.Products.Update(product);
+            _db.SaveChanges();
         }
     }
 }

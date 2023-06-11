@@ -42,7 +42,7 @@ namespace App.ShopService.DataAccess.Repository
 
         public OrderDto GetOrder(int orderId)
         {
-            Order order = _db.Orders.FirstOrDefault(o => o.Id == orderId);
+            Order order = _db.Orders.Where(o => o.Id == orderId).Include(o => o.OrderItems).FirstOrDefault();
             if(order == null)
             {
                 return null;
