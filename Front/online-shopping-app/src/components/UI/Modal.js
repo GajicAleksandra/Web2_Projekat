@@ -48,7 +48,7 @@ export default function TransitionsModal({ open, setOpen }) {
         }
     })
     .catch(function(error){
-        console.log(error.response.data)
+        
     });
   };
 

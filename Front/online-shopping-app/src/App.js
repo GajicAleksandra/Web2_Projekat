@@ -28,7 +28,7 @@ function App() {
         <Route path="/changepassword" element={<ProtectedRoute Component={ChangePassword}/>} />
         <Route path="/adminorders" element={<ProtectedRoute Component={AdminOrderList} role="0" />} />
         <Route path="/customerorders/:type" element={<ProtectedRoute Component={CustomerOrderList} role="1" />} />
-        <Route path="/salesmanorders/:type" element={<ProtectedRoute Component={CustomerOrderList} role="2" />} />
+        <Route path="/salesmanorders/:type" element={<ProtectedRoute Component={SalesmanOrderList} role="2" />} />
         <Route path="/pendingrequests" element={<ProtectedRoute Component={VerifySalesmen} role="0" additionalProp="Pending" />} />
         <Route path="/products" element={<ProtectedRoute Component={ProductList} additionalProp="verificationRequired"/>} />
         <Route path="/details" element={<ProtectedRoute Component={ProductDetails} additionalProp="verificationRequired"/>} />

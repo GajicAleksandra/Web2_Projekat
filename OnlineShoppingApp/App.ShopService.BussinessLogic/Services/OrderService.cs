@@ -130,9 +130,34 @@ namespace App.ShopService.BussinessLogic.Services
                 return returnValue;
             }
 
-            List<OrderDto> ordersDto = _orderRepository.GetAll(salesmanId);
+            List<OrderDto> ordersDto = _orderRepository.GetAll();
+            List<OrderVM> orders = ConvertInOrderVM(ordersDto);
+            List<OrderVM> salesmanOrders = new List<OrderVM>();
 
-            if(ordersDto == null || ordersDto.Count == 0)
+            foreach(OrderVM order in orders)
+            {
+                List<OrderItemVM> items = order.OrderItems.FindAll(i => i.Product.SalesmanId == salesmanId);
+
+                if (items == null || items.Count == 0)
+                    continue;
+
+                OrderVM o = new OrderVM()
+                {
+                    Id = order.Id,
+                    Name = order.Name,
+                    LastName = order.LastName,
+                    TimeOfMakingOrder = order.TimeOfMakingOrder,
+                    Address = order.Address,
+                    TimeOfDelivery = order.TimeOfDelivery,
+                    OrderStatus = order.OrderStatus,
+                    TotalAmount = order.TotalAmount,
+                    OrderItems = items
+                };
+
+                salesmanOrders.Add(o);
+            }
+
+            if(salesmanOrders.Count == 0)
             {
                 returnValue.Success = false;
                 returnValue.Message = "Nemate nijednu porudžbinu.";
@@ -141,11 +166,18 @@ namespace App.ShopService.BussinessLogic.Services
                 return returnValue;
             }
 
-            //prodavci
+            if(type == "new")
+            {
+                salesmanOrders = salesmanOrders.Where(o => o.TimeOfDelivery > DateTime.Now && o.OrderStatus != "otkazano").ToList();
+            }
+            else if(type == "previous")
+            {
+                salesmanOrders = salesmanOrders.Where(o => o.TimeOfDelivery < DateTime.Now && o.OrderStatus != "otkazano").ToList();
+            }
 
             returnValue.Success = true;
             returnValue.Message = string.Empty;
-            returnValue.Object = ConvertInOrderVM(ordersDto);
+            returnValue.Object = salesmanOrders;
 
             return returnValue;
         }

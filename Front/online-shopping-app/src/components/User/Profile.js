@@ -47,6 +47,7 @@ const Profile = () => {
       })
       .catch(function (error) {
         if (error.response.status == 401) {
+          localStorage.clear();
           localStorage.setItem("returnUrl", window.location.href);
           navigate("/login");
         } else if (error.response.status == 403) {

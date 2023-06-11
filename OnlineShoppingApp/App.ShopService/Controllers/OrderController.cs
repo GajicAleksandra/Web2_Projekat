@@ -72,7 +72,20 @@ namespace App.ShopService.Controllers
         [HttpGet]
         public async Task<IActionResult> GetSalesmanOrders(string type)
         {
-            return Ok();
+            string email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrEmpty(email))
+            {
+                return NotFound("Desila se greška, pokušajte ponovo.");
+            }
+
+            ReturnValue<List<OrderVM>> returnValue = await _orderService.GetSalesmanOrders(type, email);
+
+            if (!returnValue.Success)
+            {
+                return BadRequest(returnValue.Message);
+            }
+
+            return Ok(returnValue.Object);
         }
 
         [Authorize(Roles = "1")]

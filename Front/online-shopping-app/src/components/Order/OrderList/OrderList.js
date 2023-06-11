@@ -15,17 +15,21 @@ import Nav from "../../UI/Nav";
 import { useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { Divider, Button } from "@mui/material";
-import { getOrders, getSalesmanOrders, getCustomerOrders, cancelOrder } from "../../../services/OrderService";
+import {
+  getOrders,
+  getSalesmanOrders,
+  getCustomerOrders,
+  cancelOrder,
+} from "../../../services/OrderService";
 import Order from "../Order/Order";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import styles from './OrderList.module.css';
+import styles from "./OrderList.module.css";
 
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
-  const navigate = useNavigate();
 
   const getFormattedDate = (date) => {
     var d = date.split("T");
@@ -34,7 +38,7 @@ function Row(props) {
     var month = s[1];
     var day = s[2];
 
-    s = d[1].split(':');
+    s = d[1].split(":");
 
     var hours = s[0];
     var minutes = s[1];
@@ -43,20 +47,20 @@ function Row(props) {
   };
 
   const calculateTime = () => {
-    if(props.type == "new"){
+    if (props.type == "new") {
       var timeOfMakingOrder = new Date(row.timeOfMakingOrder);
       var now = new Date();
 
       var timeDiff = now.getTime() - timeOfMakingOrder.getTime();
       var hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
 
-      if(hoursDiff < 1){
+      if (hoursDiff < 1) {
         return true;
       }
     }
 
     return false;
-  }
+  };
 
   const handleCancelOrder = () => {
     props.onCancelOrder(row.id);
@@ -70,54 +74,97 @@ function Row(props) {
             aria-label="expand row"
             size="small"
             onClick={() => setOpen(!open)}
-            sx={{ textAlign: 'center' }}
+            sx={{ textAlign: "center" }}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row" sx={{ fontWeight: "bold", width: 60 }}>
+        <TableCell
+          component="th"
+          scope="row"
+          sx={{ fontWeight: "bold", width: 60 }}
+        >
           #{row.id}
         </TableCell>
-        <TableCell component="th" scope="row" sx={{ width: 130, textAlign: 'center' }}>
+        <TableCell
+          component="th"
+          scope="row"
+          sx={{ width: 130, textAlign: "center" }}
+        >
           {row.name}
         </TableCell>
-        <TableCell component="th" scope="row" sx={{ width: 200, textAlign: 'center' }}>
+        <TableCell
+          component="th"
+          scope="row"
+          sx={{ width: 200, textAlign: "center" }}
+        >
           {row.lastName}
         </TableCell>
-        <TableCell component="th" scope="row" sx={{ width: 200, textAlign: 'center' }}>
+        <TableCell
+          component="th"
+          scope="row"
+          sx={{ width: 200, textAlign: "center" }}
+        >
           {row.address}
         </TableCell>
-        <TableCell component="th" scope="row" sx={{ width: 200, textAlign: 'center' }}>
+        <TableCell
+          component="th"
+          scope="row"
+          sx={{ width: 200, textAlign: "center" }}
+        >
           {row.totalAmount.toLocaleString("en-US")}.00 RSD
         </TableCell>
-        <TableCell component="th" scope="row" sx={{ width: 200, textAlign: 'center' }}>
+        <TableCell
+          component="th"
+          scope="row"
+          sx={{ width: 200, textAlign: "center" }}
+        >
           {getFormattedDate(row.timeOfMakingOrder)}
         </TableCell>
-        <TableCell component="th" scope="row" sx={{ width: 200, textAlign: 'center' }}>
+        <TableCell
+          component="th"
+          scope="row"
+          sx={{ width: 200, textAlign: "center" }}
+        >
           {getFormattedDate(row.timeOfDelivery)}
         </TableCell>
-        <TableCell component="th" scope="row" sx={{ width: 100, textAlign: 'center' }}>
-          {row.orderStatus == "isporuceno" && <p style={{ color: 'green' }}>Isporučeno</p>}
-          {row.orderStatus == "otkazano" && <p style={{ color: 'red' }}>Otkazano</p>}
-          {
-            props.type == "new" && calculateTime() && <Button className={styles.cancel} onClick={handleCancelOrder}>Otkaži</Button>
-          }
-          {row.orderStatus == "u toku" && !calculateTime() && <p style={{ color: 'gray' }}>U toku</p>}
+        <TableCell
+          component="th"
+          scope="row"
+          sx={{ width: 100, textAlign: "center" }}
+        >
+          {row.orderStatus == "isporuceno" && (
+            <p style={{ color: "green" }}>Isporučeno</p>
+          )}
+          {row.orderStatus == "otkazano" && (
+            <p style={{ color: "red" }}>Otkazano</p>
+          )}
+          {props.type == "new" && calculateTime() && (
+            <Button className={styles.cancel} onClick={handleCancelOrder}>
+              Otkaži
+            </Button>
+          )}
+          {row.orderStatus == "u toku" && !calculateTime() && (
+            <p style={{ color: "gray" }}>U toku</p>
+          )}
         </TableCell>
-        <TableCell component="th" scope="row" sx={{ width: 5, textAlign: 'center' }}>
-        </TableCell>
+        <TableCell
+          component="th"
+          scope="row"
+          sx={{ width: 5, textAlign: "center" }}
+        ></TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-          {row.orderItems.map((orderItem) => (
-            <Paper sx={{ margin: 1, backgroundColor: "beige" }}>
-              <Table size="small" aria-label="purchases">
-                <TableBody>
+            {row.orderItems.map((orderItem) => (
+              <Paper sx={{ margin: 1, backgroundColor: "beige" }}>
+                <Table size="small" aria-label="purchases">
+                  <TableBody>
                     <Order orderItem={orderItem} />
-                </TableBody>
-              </Table>
-            </Paper>
+                  </TableBody>
+                </Table>
+              </Paper>
             ))}
           </Collapse>
         </TableCell>
@@ -149,23 +196,22 @@ export function AdminOrderList(props) {
         setRows(response.data.reverse());
       })
       .catch(function (error) {
-        if(error.response.status === 401){
-            localStorage.setItem('returnUrl', window.location.href);
-            navigate('/login');
-        }
-        else if(error.response.status === 403){
-            toast.error("Niste autorizovani za ovu akciju.", {
-                position: "top-right",
-                autoClose: 4000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
-        }
-        else{
+        if (error.response.status === 401) {
+          localStorage.clear();
+          localStorage.setItem("returnUrl", window.location.href);
+          navigate("/login");
+        } else if (error.response.status === 403) {
+          toast.error("Niste autorizovani za ovu akciju.", {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        } else {
           console.log(error.response.data);
         }
       });
@@ -188,34 +234,86 @@ export function AdminOrderList(props) {
           </h1>
           <Divider />
           <Table aria-label="collapsible table">
-            <TableHead sx={{ backgroundColor: 'beige' }}>
-                <TableCell sx={{ width: 80 }}></TableCell>
-                <TableCell sx={{ width: 60, fontWeight: 'bold', fontSize: 18 }}>
-                    Id
-                </TableCell>
-                <TableCell sx={{ width: 130, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Ime
-                </TableCell>
-                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Prezime
-                </TableCell>
-                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Adresa
-                </TableCell>
-                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Iznos
-                </TableCell>
-                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Vreme poručivanja
-                </TableCell>
-                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Vreme dostave
-                </TableCell>
-                <TableCell sx={{ width: 100, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Status
-                </TableCell>
-                <TableCell component="th" scope="row" sx={{ width: 5, textAlign: 'center' }}>
-                </TableCell>
+            <TableHead sx={{ backgroundColor: "beige" }}>
+              <TableCell sx={{ width: 80 }}></TableCell>
+              <TableCell sx={{ width: 60, fontWeight: "bold", fontSize: 18 }}>
+                Id
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 130,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Ime
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 200,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Prezime
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 200,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Adresa
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 200,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Iznos
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 200,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Vreme poručivanja
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 200,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Vreme dostave
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 100,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Status
+              </TableCell>
+              <TableCell
+                component="th"
+                scope="row"
+                sx={{ width: 5, textAlign: "center" }}
+              ></TableCell>
             </TableHead>
             <TableBody>
               {rows.map((row) => (
@@ -240,23 +338,22 @@ export const SalesmanOrderList = () => {
         setRows(response.data.reverse());
       })
       .catch(function (error) {
-        if(error.response.status === 401){
-            localStorage.setItem('returnUrl', window.location.href);
-            navigate('/login');
-        }
-        else if(error.response.status === 403){
-            toast.error("Niste autorizovani za ovu akciju.", {
-                position: "top-right",
-                autoClose: 4000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
-        }
-        else{
+        if (error.response.status === 401) {
+          localStorage.clear();
+          localStorage.setItem("returnUrl", window.location.href);
+          navigate("/login");
+        } else if (error.response.status === 403) {
+          toast.error("Niste autorizovani za ovu akciju.", {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        } else {
           console.log(error.response.data);
         }
       });
@@ -275,39 +372,91 @@ export const SalesmanOrderList = () => {
           sx={{ width: 1300, marginTop: 15, marginLeft: 12, marginBottom: 20 }}
         >
           <h1 style={{ textAlign: "center", marginTop: 15, marginBottom: 15 }}>
-            {type == "new" && "Nove porudžbine"} 
-            {type == "previous" && "Prethodne porudžbine"} 
+            {type == "new" && "Nove porudžbine"}
+            {type == "previous" && "Prethodne porudžbine"}
           </h1>
           <Divider />
           <Table aria-label="collapsible table">
-            <TableHead sx={{ backgroundColor: 'beige' }}>
-                <TableCell sx={{ width: 80 }}></TableCell>
-                <TableCell sx={{ width: 60, fontWeight: 'bold', fontSize: 18 }}>
-                    Id
-                </TableCell>
-                <TableCell sx={{ width: 130, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Ime
-                </TableCell>
-                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Prezime
-                </TableCell>
-                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Adresa
-                </TableCell>
-                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Iznos
-                </TableCell>
-                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Vreme poručivanja
-                </TableCell>
-                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Vreme dostave
-                </TableCell>
-                <TableCell sx={{ width: 100, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Status
-                </TableCell>
-                <TableCell component="th" scope="row" sx={{ width: 5, textAlign: 'center' }}>
-                </TableCell>
+            <TableHead sx={{ backgroundColor: "beige" }}>
+              <TableCell sx={{ width: 80 }}></TableCell>
+              <TableCell sx={{ width: 60, fontWeight: "bold", fontSize: 18 }}>
+                Id
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 130,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Ime
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 200,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Prezime
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 200,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Adresa
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 200,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Iznos
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 200,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Vreme poručivanja
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 200,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Vreme dostave
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 100,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Status
+              </TableCell>
+              <TableCell
+                component="th"
+                scope="row"
+                sx={{ width: 5, textAlign: "center" }}
+              ></TableCell>
             </TableHead>
             <TableBody>
               {rows.map((row) => (
@@ -332,23 +481,22 @@ export const CustomerOrderList = () => {
         setRows(response.data.reverse());
       })
       .catch(function (error) {
-        if(error.response.status === 401){
-            localStorage.setItem('returnUrl', window.location.href);
-            navigate('/login');
-        }
-        else if(error.response.status === 403){
-            toast.error("Niste autorizovani za ovu akciju.", {
-                position: "top-right",
-                autoClose: 4000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
-        }
-        else{
+        if (error.response.status === 401) {
+          localStorage.clear();
+          localStorage.setItem("returnUrl", window.location.href);
+          navigate("/login");
+        } else if (error.response.status === 403) {
+          toast.error("Niste autorizovani za ovu akciju.", {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        } else {
           toast.error(error.response.data, {
             position: "top-right",
             autoClose: 4000,
@@ -358,9 +506,9 @@ export const CustomerOrderList = () => {
             draggable: true,
             progress: undefined,
             theme: "colored",
-        });
-      }
-    });
+          });
+        }
+      });
   };
 
   useEffect(() => {
@@ -369,39 +517,8 @@ export const CustomerOrderList = () => {
 
   const handleCancelOrder = async (id) => {
     await cancelOrder(id)
-    .then(function(response){
-      toast.success(response.data, {
-        position: "top-right",
-        autoClose: 4000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-
-      setRows(rows.filter(r => r.id != id));
-    })
-    .catch(function(error){
-      if(error.response.status === 401){
-        localStorage.setItem('returnUrl', window.location.href);
-        navigate('/login');
-      }
-      else if(error.response.status === 403){
-          toast.error("Niste autorizovani za ovu akciju.", {
-              position: "top-right",
-              autoClose: 4000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-          });
-      }
-      else{
-        toast.error(error.response.data, {
+      .then(function (response) {
+        toast.success(response.data, {
           position: "top-right",
           autoClose: 4000,
           hideProgressBar: false,
@@ -410,10 +527,40 @@ export const CustomerOrderList = () => {
           draggable: true,
           progress: undefined,
           theme: "colored",
+        });
+
+        setRows(rows.filter((r) => r.id != id));
+      })
+      .catch(function (error) {
+        if (error.response.status === 401) {
+          localStorage.clear();
+          localStorage.setItem("returnUrl", window.location.href);
+          navigate("/login");
+        } else if (error.response.status === 403) {
+          toast.error("Niste autorizovani za ovu akciju.", {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        } else {
+          toast.error(error.response.data, {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
       });
-      }
-    });
-  }
+  };
 
   return (
     <>
@@ -424,43 +571,100 @@ export const CustomerOrderList = () => {
           sx={{ width: 1300, marginTop: 15, marginLeft: 12, marginBottom: 20 }}
         >
           <h1 style={{ textAlign: "center", marginTop: 15, marginBottom: 15 }}>
-            {type == "new" && "Nove porudžbine"} 
-            {type == "previous" && "Prethodne porudžbine"} 
+            {type == "new" && "Nove porudžbine"}
+            {type == "previous" && "Prethodne porudžbine"}
           </h1>
           <Divider />
           <Table aria-label="collapsible table">
-            <TableHead sx={{ backgroundColor: 'beige' }}>
-                <TableCell sx={{ width: 80 }}></TableCell>
-                <TableCell sx={{ width: 60, fontWeight: 'bold', fontSize: 18 }}>
-                    Id
-                </TableCell>
-                <TableCell sx={{ width: 130, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Ime
-                </TableCell>
-                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Prezime
-                </TableCell>
-                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Adresa
-                </TableCell>
-                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Iznos
-                </TableCell>
-                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Vreme poručivanja
-                </TableCell>
-                <TableCell sx={{ width: 200, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Vreme dostave
-                </TableCell>
-                <TableCell sx={{ width: 100, textAlign: 'center', fontWeight: 'bold', fontSize: 17 }}>
-                    Status
-                </TableCell>
-                <TableCell component="th" scope="row" sx={{ width: 5, textAlign: 'center' }}>
-                </TableCell>
+            <TableHead sx={{ backgroundColor: "beige" }}>
+              <TableCell sx={{ width: 80 }}></TableCell>
+              <TableCell sx={{ width: 60, fontWeight: "bold", fontSize: 18 }}>
+                Id
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 130,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Ime
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 200,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Prezime
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 200,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Adresa
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 200,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Iznos
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 200,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Vreme poručivanja
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 200,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Vreme dostave
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 100,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Status
+              </TableCell>
+              <TableCell
+                component="th"
+                scope="row"
+                sx={{ width: 5, textAlign: "center" }}
+              ></TableCell>
             </TableHead>
             <TableBody>
               {rows.map((row) => (
-                <Row key={row.id} row={row} type={type} onCancelOrder={handleCancelOrder}/>
+                <Row
+                  key={row.id}
+                  row={row}
+                  type={type}
+                  onCancelOrder={handleCancelOrder}
+                />
               ))}
             </TableBody>
           </Table>
