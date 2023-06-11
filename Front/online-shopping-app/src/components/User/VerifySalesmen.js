@@ -20,8 +20,10 @@ import {
 import Button from "@mui/material/Button";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Divider } from "@mui/material";
+import { Divider, Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import LoggedInUser from '../../models/LoggedInUser';
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 
 function Row(props) {
   const { row } = props;
@@ -99,6 +101,15 @@ function Row(props) {
             onClick={() => setOpen(!open)}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell component="th" scope="row">
+          <IconButton sx={{ p: 0, color: "black" }}>
+            {row.image != "" ? (
+              <Avatar alt="Remy Sharp" src={row.image} />
+            ) : (
+              <AccountCircleOutlinedIcon fontSize="large" />
+            )}
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
@@ -221,7 +232,9 @@ export default function VerifySalesmen(props) {
     console.log(props.additionalProp);
     await getAllSalesmen(props.additionalProp)
       .then(function (response) {
-        setRows(response.data);
+        let user = LoggedInUser;
+        user = response.data;
+        setRows(user);
       })
       .catch(function (error) {
         if (error.response.status === 401) {

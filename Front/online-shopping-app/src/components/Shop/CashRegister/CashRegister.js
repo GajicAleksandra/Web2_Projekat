@@ -6,7 +6,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState, useEffect } from "react";
 import CashRegisterCartItem from "./CashRegisterCartItem/CashRegisterCartItem";
 import LoggedInUser from "../../../models/LoggedInUser";
-import { GetLoggedInUser } from "../../../services/UserService";
+import { getLoggedInUser } from "../../../services/UserService";
 import CashRegisterModel from "../../../models/CashRegisterModel";
 import { useNavigate } from "react-router-dom";
 import { placeOrder } from "../../../services/OrderService";
@@ -25,8 +25,8 @@ const defaultTheme = createTheme({
 });
 
 const CashRegister = () => {
-  const user = new LoggedInUser();
-  const cashRegister = new CashRegisterModel();
+  const user = LoggedInUser;
+  const cashRegister = CashRegisterModel;
   const [products, setProducts] = useState([]);
   const [summary, setSummary] = useState(0);
   const [summarySummary, setSummarySummary] = useState(0);
@@ -39,7 +39,7 @@ const CashRegister = () => {
   var cartItems = [];
 
   const fetchData = async () => {
-    await GetLoggedInUser()
+    await getLoggedInUser()
       .then(function (response) {
         setUserData(JSON.parse(JSON.stringify(response.data)));
       })

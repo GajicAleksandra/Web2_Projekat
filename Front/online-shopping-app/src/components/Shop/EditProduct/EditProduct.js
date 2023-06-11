@@ -32,10 +32,8 @@ const EditProduct = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const product = new ProductModel();
-  const [productData, setProductData] = useState(
-    JSON.parse(JSON.stringify(product))
-  );
+  const product = ProductModel;
+  const [productData, setProductData] = useState(product);
 
   useEffect(() => {
     fetchData();
@@ -44,8 +42,9 @@ const EditProduct = () => {
   const fetchData = async () => {
     await getProduct(id)
       .then(function (response) {
-        console.log(response.data);
-        setProductData(JSON.parse(JSON.stringify(response.data)));
+        let p = ProductModel;
+        p = response.data;
+        setProductData(p);
       })
       .catch(function (error) {
         if (error.response.status === 401) {

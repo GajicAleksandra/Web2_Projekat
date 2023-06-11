@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { RegisterUser } from "../../services/AuthService";
 import Nav from "../UI/Nav";
-import RegisterVM from "../../models/RegisterVM";
+import RegisterModel from "../../models/RegisterModel";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Paper from "@mui/material/Paper";
@@ -32,19 +32,17 @@ import { FacebookLoginButton } from "react-social-login-buttons";
 const defaultTheme = createTheme({
   palette: {
     primary: {
-      main: "#FFCCCC", // Custom primary color
+      main: "#FFCCCC",
     },
     secondary: {
-      main: "#00ff00", // Custom secondary color
+      main: "#00ff00",
     },
   },
 });
 export default function Register() {
-  const registerVM = new RegisterVM();
+  const registerModel = RegisterModel;
 
-  const [userData, setUserData] = useState(
-    JSON.parse(JSON.stringify(registerVM))
-  );
+  const [userData, setUserData] = useState(registerModel);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

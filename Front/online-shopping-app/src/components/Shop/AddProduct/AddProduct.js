@@ -21,10 +21,10 @@ import { useForm } from "react-hook-form";
 const defaultTheme = createTheme({
   palette: {
     primary: {
-      main: "#000000", // Custom primary color
+      main: "#000000",
     },
     secondary: {
-      main: "#00ff00", // Custom secondary color
+      main: "#00ff00",
     },
   },
 });
@@ -37,10 +37,8 @@ const AddProduct = () => {
     formState: { errors },
   } = useForm();
 
-  const product = new ProductModel();
-  const [productData, setProductData] = useState(
-    JSON.parse(JSON.stringify(product))
-  );
+  const product = ProductModel;
+  const [productData, setProductData] = useState(product);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

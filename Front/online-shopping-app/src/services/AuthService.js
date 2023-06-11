@@ -1,7 +1,8 @@
 import axios from 'axios'
 import jwtDecode from 'jwt-decode'
+import LoginModel from '../models/LoginModel'
 
-export const LoginUser = (data) => {
+export const loginUser = (data) => {
     return axios.post(`${process.env.REACT_APP_API_URL}/login`, data)
     .then(function(response){
         localStorage.setItem('token', response.data)

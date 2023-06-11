@@ -15,16 +15,16 @@ import { useNavigate } from "react-router-dom";
 const defaultTheme = createTheme({
   palette: {
     primary: {
-      main: "#FFCCCC", // Custom primary color
+      main: "#FFCCCC",
     },
     secondary: {
-      main: "#000000", // Custom secondary color
+      main: "#000000",
     },
   },
 });
 
 const ProductList = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([ProductModel]);
   const [role, setRole] = useState("");
   const navigate = useNavigate();
 
@@ -36,7 +36,9 @@ const ProductList = () => {
   const fetchData = async () => {
     await getProducts()
       .then(function (response) {
-        setProducts(response.data);
+        let p = [ProductModel];
+        p = response.data;
+        setProducts(p);
       })
       .catch(function (error) {
         if (error.response.status === 401) {
@@ -73,15 +75,6 @@ const ProductList = () => {
     const updatedProducts = products.filter(
       (product) => product.id !== productId
     );
-    // var badge = parseInt(
-    //   document.querySelector(
-    //     '[data-testid="ShoppingCartIcon"] + span.MuiBadge-badge'
-    //   ).innerHTML
-    // );
-    // badge--;
-    // document.querySelector(
-    //   '[data-testid="ShoppingCartIcon"] + span.MuiBadge-badge'
-    // ).innerHTML = badge;
     setProducts(updatedProducts);
   };
 

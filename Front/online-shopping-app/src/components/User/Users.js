@@ -23,10 +23,11 @@ import BlockIcon from "@mui/icons-material/Block";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LoggedInUser from "../../models/LoggedInUser";
 
 function Row(props) {
   const { row } = props;
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const getFormattedDate = (birthDate) => {
     var date = birthDate.split('T');
@@ -165,7 +166,9 @@ export function Users(props) {
   const fetchData = async () => {
     await getUsers(props.additionalProp)
       .then(function (response) {
-        setRows(response.data);
+        let user = LoggedInUser;
+        user = response.data;
+        setRows(user);
       })
       .catch(function (error) {
         if (error.response.status == 401) {

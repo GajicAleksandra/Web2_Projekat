@@ -11,7 +11,7 @@ import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { LoginUser } from "../../services/AuthService";
+import { loginUser } from "../../services/AuthService";
 import { LoginSocialFacebook } from "reactjs-social-login";
 import { FacebookLoginButton } from "react-social-login-buttons";
 import { useForm } from "react-hook-form";
@@ -20,14 +20,15 @@ import Nav from "../UI/Nav";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Paper from "@mui/material/Paper";
+import LoginModel from '../../models/LoginModel'
 
 const defaultTheme = createTheme({
   palette: {
     primary: {
-      main: "#FFCCCC", // Custom primary color
+      main: "#FFCCCC",
     },
     secondary: {
-      main: "#00ff00", // Custom secondary color
+      main: "#000000",
     },
   },
 });
@@ -41,7 +42,7 @@ export default function Login() {
   const navigate = useNavigate();
 
   const onSubmit = (data) => {
-    LoginUser(data)
+    loginUser(data)
       .then(function (response) {
         var returnUrl = localStorage.getItem('returnUrl');
 

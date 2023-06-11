@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-export const GetLoggedInUser = () => {
+export const getLoggedInUser = () => {
     const config = {
         headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
     }
     return axios.get(`${process.env.REACT_APP_API_URL}/getloggedinuser`, config);
 }
 
-export const ChangeProfile = (data) => {
+export const changeProfile = (data) => {
     const config = {
         headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
     }

@@ -20,25 +20,24 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import ChangePasswordVM from "../../models/ChangePasswordVM";
+import ChangePasswordModel from "../../models/ChangePasswordModel";
 import { changePassword } from "../../services/UserService";
 
 const defaultTheme = createTheme({
   palette: {
     primary: {
-      main: "#000000", // Custom primary color
+      main: "#000000",
     },
     secondary: {
-      main: "#00ff00", // Custom secondary color
+      main: "#00ff00",
     },
   },
 });
 
 const ChangePassword = () => {
 
-    const model = new ChangePasswordVM();
-
-    const [data, setData] = useState(JSON.parse(JSON.stringify(model)));
+    const model = ChangePasswordModel;
+    const [data, setData] = useState(model);
     const navigate = useNavigate();
 
     const formSchema = Yup.object().shape({

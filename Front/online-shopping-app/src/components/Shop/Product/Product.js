@@ -12,13 +12,13 @@ import { getUserRole } from "../../../services/AuthService";
 import { deleteProduct } from "../../../services/ProductService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import CartItemModel from '../../../models/CartItemModel'
+import OrderItemModel from '../../../models/OrderItemModel'
 
 const Product = ({ product, onDeleteProduct }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [role, setRole] = useState("");
   const navigate = useNavigate();
-  var cartItems = [];
+  var cartItems = [OrderItemModel];
   const open = Boolean(anchorEl);
   const [productData, setProductData] = useState(product);
 
@@ -104,11 +104,10 @@ const Product = ({ product, onDeleteProduct }) => {
 
   const addOneToCart = () => {
     var cart = localStorage.getItem("cart");
-    console.log(cart);
     if (cart) {
       cartItems = JSON.parse(cart);
     } else {
-      cartItems = [];
+      cartItems = [OrderItemModel];
     }
 
     var existingItem = cartItems.find(function (i) {
@@ -123,7 +122,7 @@ const Product = ({ product, onDeleteProduct }) => {
       }
     } else {
       if (checkQuantity(1)) {
-        var cartItem = new CartItemModel();
+        var cartItem = OrderItemModel;
         cartItem.product = productData;
         cartItem.quantity = 1;
         cartItems.push(cartItem);

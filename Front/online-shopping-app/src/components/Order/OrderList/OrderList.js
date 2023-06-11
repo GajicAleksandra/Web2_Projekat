@@ -26,10 +26,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "./OrderList.module.css";
+import OrderModel from "../../../models/OrderModel";
 
 function Row(props) {
   const { row } = props;
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const getFormattedDate = (date) => {
     var d = date.split("T");
@@ -204,7 +205,9 @@ export function AdminOrderList(props) {
   const fetchData = async () => {
     await getOrders()
       .then(function (response) {
-        setRows(response.data.reverse());
+        let orderModel = OrderModel;
+        orderModel = response.data;
+        setRows(orderModel.reverse());
       })
       .catch(function (error) {
         if (error.response.status === 401) {
@@ -238,7 +241,7 @@ export function AdminOrderList(props) {
       <div style={{ position: "absolute" }}>
         <TableContainer
           component={Paper}
-          sx={{ width: 1300, marginTop: 15, marginLeft: 12, marginBottom: 20 }}
+          sx={{ width: 1470, marginTop: 12, marginLeft: 0, marginBottom: 20 }}
         >
           <h1 style={{ textAlign: "center", marginTop: 15, marginBottom: 15 }}>
             Sve porudžbine
@@ -246,69 +249,9 @@ export function AdminOrderList(props) {
           <Divider />
           <Table aria-label="collapsible table">
             <TableHead sx={{ backgroundColor: "beige" }}>
-              <TableCell sx={{ width: 80 }}></TableCell>
-              <TableCell sx={{ width: 60, fontWeight: "bold", fontSize: 18 }}>
+              <TableCell sx={{ width: 50 }}></TableCell>
+              <TableCell sx={{ width: 50, fontWeight: "bold", fontSize: 18 }}>
                 Id
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 130,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Ime
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 200,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Prezime
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 200,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Adresa
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 200,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Iznos
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 200,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Vreme poručivanja
-              </TableCell>
-              <TableCell
-                sx={{
-                  width: 200,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Vreme dostave
               </TableCell>
               <TableCell
                 sx={{
@@ -318,17 +261,85 @@ export function AdminOrderList(props) {
                   fontSize: 17,
                 }}
               >
-                Status
+                Ime
               </TableCell>
               <TableCell
-                component="th"
-                scope="row"
-                sx={{ width: 5, textAlign: "center" }}
-              ></TableCell>
+                sx={{
+                  width: 100,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Prezime
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 150,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Adresa
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 110,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Iznos
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 150,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Vreme poručivanja
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 130,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Vreme dostave
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 150,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Komentar
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: 70,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: 17,
+                }}
+              >
+                Status
+              </TableCell>
             </TableHead>
             <TableBody>
               {rows.map((row) => (
-                <Row key={row.id} row={row} type={props.additionalProp} />
+                <Row
+                  key={row.id}
+                  row={row}
+                />
               ))}
             </TableBody>
           </Table>
@@ -346,9 +357,9 @@ export const SalesmanOrderList = () => {
   const fetchData = async () => {
     await getSalesmanOrders(type)
       .then(function (response) {
-        setRows(response.data.reverse());
-
-        console.log(rows);
+        let orderModel = OrderModel;
+        orderModel = response.data;
+        setRows(orderModel.reverse());
       })
       .catch(function (error) {
         if (error.response.status === 401) {
@@ -367,7 +378,16 @@ export const SalesmanOrderList = () => {
             theme: "colored",
           });
         } else {
-          console.log(error.response.data);
+          toast.error(error.response.data, {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
         }
       });
   };
@@ -509,7 +529,9 @@ export const CustomerOrderList = () => {
   const fetchData = async () => {
     await getCustomerOrders(type)
       .then(function (response) {
-        setRows(response.data.reverse());
+        let orderModel = OrderModel;
+        orderModel = response.data;
+        setRows(orderModel.reverse());
       })
       .catch(function (error) {
         if (error.response.status === 401) {

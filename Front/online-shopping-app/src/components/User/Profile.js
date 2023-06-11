@@ -12,7 +12,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Nav from "../UI/Nav";
-import { GetLoggedInUser, ChangeProfile } from "../../services/UserService";
+import { getLoggedInUser, changeProfile } from "../../services/UserService";
 import LoggedInUser from "../../models/LoggedInUser";
 import { Card } from "@mui/material";
 import "./Profile.css";
@@ -22,28 +22,30 @@ import "react-toastify/dist/ReactToastify.css";
 const defaultTheme = createTheme({
   palette: {
     primary: {
-      main: "#000000", // Custom primary color
+      main: "#000000",
     },
     secondary: {
-      main: "#00ff00", // Custom secondary color
+      main: "#00ff00",
     },
   },
 });
 
 const Profile = () => {
-  const user = new LoggedInUser();
+  const user = LoggedInUser;
 
   const navigate = useNavigate();
-  const [userData, setUserData] = useState(JSON.parse(JSON.stringify(user)));
+  const [userData, setUserData] = useState(user);
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
-    await GetLoggedInUser()
+    await getLoggedInUser()
       .then(function (response) {
-        setUserData(JSON.parse(JSON.stringify(response.data)));
+        let user = LoggedInUser;
+        user = response.data;
+        setUserData(user);
       })
       .catch(function (error) {
         if (error.response.status == 401) {
@@ -86,7 +88,7 @@ const Profile = () => {
       });
     }
 
-    await ChangeProfile(userData)
+    await changeProfile(userData)
       .then(function (response) {
         toast.success("Uspešno ste izmenili profil.", {
           position: "top-right",

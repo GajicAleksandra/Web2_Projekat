@@ -10,21 +10,19 @@ import { getProduct } from "../../../services/ProductService";
 import Nav from "../../UI/Nav";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import CartItemModel from "../../../models/CartItemModel";
 import { getUserRole } from "../../../services/AuthService";
+import OrderItemModel from "../../../models/OrderItemModel";
 
 const ProductDetails = () => {
-  const product = new ProductModel();
+  const product = ProductModel;
 
   const { id } = useParams();
   const [quantity, setQuantity] = useState(1);
-  const [productData, setProductData] = useState(
-    JSON.parse(JSON.stringify(product))
-  );
+  const [productData, setProductData] = useState(product);
 
   const [role, setRole] = useState("");
   const navigate = useNavigate();
-  var cartItems = [];
+  var cartItems = [OrderItemModel];
 
   useEffect(() => {
     fetchData();
@@ -34,7 +32,9 @@ const ProductDetails = () => {
   const fetchData = async () => {
     await getProduct(id)
       .then(function (response) {
-        setProductData(JSON.parse(JSON.stringify(response.data)));
+        let p = ProductModel;
+        p = response.data;
+        setProductData(p);
       })
       .catch(function (error) {
         if (error.response.status === 401) {
@@ -98,11 +98,11 @@ const ProductDetails = () => {
 
   const addToCart = () => {
     var cart = localStorage.getItem("cart");
-    console.log(cart);
+
     if (cart) {
       cartItems = JSON.parse(cart);
     } else {
-      cartItems = [];
+      cartItems = [OrderItemModel];
     }
 
     var existingItem = cartItems.find(function (i) {
@@ -116,7 +116,7 @@ const ProductDetails = () => {
       }
     } else {
       if (checkQuantity(quantity)) {
-        var cartItem = new CartItemModel();
+        var cartItem = OrderItemModel;
         cartItem.product = productData;
         cartItem.quantity = quantity;
         cartItems.push(cartItem);
