@@ -20,7 +20,7 @@ export const AdminList = () => {
             </ListItemIcon>
             <ListItemText primary="Verifikacija" />
           </ListItem>
-          <ListItem button component={Link} href="/">
+          <ListItem button component={Link} href="/adminorders">
             <ListItemIcon>
                 <ReceiptIcon/>
             </ListItemIcon>

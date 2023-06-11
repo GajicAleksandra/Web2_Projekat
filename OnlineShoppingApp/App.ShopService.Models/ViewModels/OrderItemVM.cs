@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.ShopService.DataAccess.Repository.Interface
+namespace App.ShopService.Models.ViewModels
 {
-    public interface IOrderRepository
+    public class OrderItemVM
     {
-        void AddOrder(OrderDto orderDto);
-        List<OrderDto> GetAll();
+        public ProductDto Product { get; set; }
+        public int Quantity { get; set; }
     }
 }

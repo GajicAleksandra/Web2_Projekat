@@ -10,6 +10,7 @@ import { getUserRole } from "../../../services/AuthService";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme({
   palette: {
@@ -25,6 +26,7 @@ const defaultTheme = createTheme({
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [role, setRole] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
@@ -37,16 +39,33 @@ const ProductList = () => {
         setProducts(response.data);
       })
       .catch(function (error) {
-        toast.error(error.response.data, {
-          position: "top-right",
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+        if (error.response.status === 401) {
+          localStorage.setItem("returnUrl", window.location.href);
+          navigate("/login");
+        } else if (error.response.status === 403) {
+          toast.error("Niste autorizovani za ovu akciju.", {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
+        else{
+          toast.error(error.response.data, {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
       });
   };
 

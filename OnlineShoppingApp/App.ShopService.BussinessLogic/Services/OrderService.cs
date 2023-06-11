@@ -2,6 +2,7 @@
 using App.ShopService.BussinessLogic.Services.Interfaces;
 using App.ShopService.DataAccess.Repository.Interface;
 using App.ShopService.Models.DTOs;
+using App.ShopService.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -96,7 +97,90 @@ namespace App.ShopService.BussinessLogic.Services
             return returnValue;
         }
 
-        public bool ValidateOrder(OrderDto orderDto, out string message)
+        public async Task<ReturnValue<List<OrderVM>>> GetOrders(string role)
+        {
+            ReturnValue<List<OrderVM>> returnValue = new ReturnValue<List<OrderVM>>();
+
+            if(role == "0")
+            {
+                //admin
+                returnValue.Success = true;
+                returnValue.Message = string.Empty;
+                returnValue.Object = OrdersForAdmin();
+            }
+            else if(role == "1")
+            {
+                //kupac
+                returnValue.Success = true;
+                returnValue.Message = string.Empty;
+                returnValue.Object = OrdersForCustomer();
+            }
+            else
+            {
+                //prodavac
+                returnValue.Success = true;
+                returnValue.Message = string.Empty;
+                returnValue.Object = OrdersForSalesman();
+            }
+
+
+
+            return returnValue;
+        } 
+
+        private List<OrderVM> OrdersForAdmin()
+        {
+            List<OrderVM> orders = new List<OrderVM>();
+            List<OrderDto> ordersDto = _orderRepository.GetAll();
+
+            foreach(OrderDto orderDto in ordersDto)
+            {
+                OrderVM orderVM = new OrderVM()
+                {
+                    Id = orderDto.Id,
+                    Name = orderDto.Name,
+                    LastName = orderDto.LastName,
+                    Address = orderDto.Address,
+                    TimeOfMakingOrder = orderDto.TimeOfMakingOrder,
+                    TimeOfDelivery = orderDto.TimeOfDelivery,
+                    OrderStatus = orderDto.OrderStatus,
+                    TotalAmount = orderDto.TotalAmount,
+                    OrderItems = new List<OrderItemVM>()
+                };
+
+                foreach (OrderItemDto orderItemDto in orderDto.OrderItems)
+                {
+                    ProductDto productDto = _productRepository.GetProduct(orderItemDto.ProductId);
+                    OrderItemVM orderItemVM = new OrderItemVM()
+                    {
+                        Product = productDto,
+                        Quantity = orderItemDto.Quantity,
+                    };
+
+                    orderVM.OrderItems.Add(orderItemVM);
+                }
+
+                orders.Add(orderVM);
+            }
+
+            return orders;
+        }
+
+        private List<OrderVM> OrdersForSalesman()
+        {
+            List<OrderVM> orders = new List<OrderVM>();
+
+            return orders;
+        }
+
+        private List<OrderVM> OrdersForCustomer()
+        {
+            List<OrderVM> orders = new List<OrderVM>();
+
+            return orders;
+        }
+
+        private bool ValidateOrder(OrderDto orderDto, out string message)
         {
             if(string.IsNullOrEmpty(orderDto.Name) || 
                 string.IsNullOrEmpty(orderDto.LastName) ||

@@ -155,7 +155,7 @@ Row.propTypes = {
   }).isRequired,
 };
 
-export function Customers(props) {
+export function Users(props) {
   const [rows, setRows] = useState([]);
 
   const fetchData = async () => {

@@ -43,7 +43,14 @@ export default function Login() {
   const onSubmit = (data) => {
     LoginUser(data)
       .then(function (response) {
-        navigate("/");
+        var returnUrl = localStorage.getItem('returnUrl');
+
+        if(returnUrl){
+          window.location.href = returnUrl;
+        }
+        else{
+          navigate("/");
+        }
       })
       .catch(function (error) {
         toast.error(error.response.data, {

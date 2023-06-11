@@ -4,7 +4,7 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 import styles from "./ProductDetails.module.css";
 import ProductList from "../ProductList/ProductList";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ProductModel from "../../../models/ProductModel";
 import { getProduct } from "../../../services/ProductService";
 import Nav from "../../UI/Nav";
@@ -23,7 +23,7 @@ const ProductDetails = () => {
   );
 
   const [role, setRole] = useState("");
-
+  const navigate = useNavigate();
   var cartItems = [];
 
   useEffect(() => {
@@ -38,16 +38,33 @@ const ProductDetails = () => {
         setProductData(JSON.parse(JSON.stringify(response.data)));
       })
       .catch(function (error) {
-        toast.error(error.response.data, {
-          position: "top-right",
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+        if (error.response.status === 401) {
+          localStorage.setItem("returnUrl", window.location.href);
+          navigate("/login");
+        } else if (error.response.status === 403) {
+          toast.error("Niste autorizovani za ovu akciju.", {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
+        else{
+          toast.error(error.response.data, {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
       });
   };
 

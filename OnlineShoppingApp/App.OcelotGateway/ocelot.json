@@ -179,6 +179,18 @@
       ],
       "UpstreamPathTemplate": "/placeorder",
       "UpstreamHttpMethod": [ "post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/order/getall",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7032
+        }
+      ],
+      "UpstreamPathTemplate": "/getallorders",
+      "UpstreamHttpMethod": [ "get" ]
     }
   ]
 }

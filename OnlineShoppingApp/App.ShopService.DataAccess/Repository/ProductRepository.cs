@@ -55,12 +55,7 @@ namespace App.ShopService.DataAccess.Repository
                 return null;
             }
 
-            if(product.Quantity > 0)
-            {
-                return _mapper.Map<ProductDto>(product);
-            }
-
-            return null;
+            return _mapper.Map<ProductDto>(product);
         }
 
         public bool UpdateProduct(ProductDto productDto)

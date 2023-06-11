@@ -1,6 +1,7 @@
 ﻿using App.Common.Models;
 using App.ShopService.BussinessLogic.Services.Interfaces;
 using App.ShopService.Models.DTOs;
+using App.ShopService.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,27 @@ namespace App.ShopService.Controllers
             }
 
             ReturnValue<string> returnValue = await _orderService.MakeOrder(orderDto, email);
+
+            if (!returnValue.Success)
+            {
+                return BadRequest(returnValue.Message);
+            }
+
+            return Ok(returnValue.Object);
+        }
+
+        [Authorize]
+        [Route("getall")]
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            string role = HttpContext.User.FindFirstValue(ClaimTypes.Role);
+            if (string.IsNullOrEmpty(role))
+            {
+                return NotFound("Desila se greška, pokušajte ponovo.");
+            }
+
+            ReturnValue<List<OrderVM>> returnValue = await _orderService.GetOrders(role);
 
             if (!returnValue.Success)
             {

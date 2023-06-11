@@ -48,7 +48,24 @@ const EditProduct = () => {
         setProductData(JSON.parse(JSON.stringify(response.data)));
       })
       .catch(function (error) {
-        console.log(error);
+        if (error.response.status === 401) {
+          localStorage.setItem("returnUrl", window.location.href);
+          navigate("/login");
+        } else if (error.response.status === 403) {
+          toast.error("Niste autorizovani za ovu akciju.", {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
+        else{
+          console.log(error.response.data);
+        }
       });
   };
 
@@ -95,16 +112,33 @@ const EditProduct = () => {
         navigate("/products");
       })
       .catch(function (error) {
-        toast.error(error.response.data, {
-          position: "top-right",
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+        if (error.response.status === 401) {
+          localStorage.setItem("returnUrl", window.location.href);
+          navigate("/login");
+        } else if (error.response.status === 403) {
+          toast.error("Niste autorizovani za ovu akciju.", {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
+        else{
+          toast.error(error.response.data, {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
       });
   };
 

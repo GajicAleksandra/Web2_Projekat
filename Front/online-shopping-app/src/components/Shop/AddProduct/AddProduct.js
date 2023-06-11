@@ -54,16 +54,19 @@ const AddProduct = () => {
   };
 
   const onSubmit = async () => {
-    if(productData.image == "/images/product-placeholder.png"){
+    if (productData.image == "/images/product-placeholder.png") {
       document.getElementById("imageError").innerHTML = "Izaberite sliku.";
       return;
     }
 
-    if(productData.name === "" || 
-    productData.price === "" ||
-    productData.quantity === "" ||
-    productData.description === ""){
-      document.getElementById('editProductError').innerHTML = "Popunite obavezna polja.";
+    if (
+      productData.name === "" ||
+      productData.price === "" ||
+      productData.quantity === "" ||
+      productData.description === ""
+    ) {
+      document.getElementById("editProductError").innerHTML =
+        "Popunite obavezna polja.";
       return;
     }
 
@@ -84,16 +87,33 @@ const AddProduct = () => {
         navigate("/products");
       })
       .catch(function (error) {
-        toast.error(error.response.data, {
-          position: "top-right",
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+        if (error.response.status === 401) {
+          localStorage.setItem("returnUrl", window.location.href);
+          navigate("/login");
+        } else if (error.response.status === 403) {
+          toast.error("Niste autorizovani za ovu akciju.", {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
+        else{
+          toast.error(error.response.data, {
+            position: "top-right",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
       });
   };
 
@@ -118,7 +138,7 @@ const AddProduct = () => {
 
   return (
     <>
-    <Nav></Nav>
+      <Nav></Nav>
       <div className="container">
         <img src="/images/home.png" alt="Home" className="image" />
         <div className="overlay"></div>

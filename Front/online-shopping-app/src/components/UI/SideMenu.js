@@ -28,8 +28,6 @@ export default function SideMenu() {
     setIsDrawerOpen(open);
   };
 
-  console.log(verified);
-
   return (
     <div>
       <IconButton onClick={toggleDrawer(true)} sx={{ color: "black" }}>

@@ -8,5 +8,8 @@ export const placeOrder = (data) => {
 }
 
 export const getOrders = () => {
-    
+    const config = {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
+    }
+    return axios.get(`${process.env.REACT_APP_API_URL}/getallorders`, config);
 }
