@@ -48,5 +48,19 @@ namespace App.UserService.Controllers
 
             return Ok(returnValue.Object);
         }
+
+        [Route("googlelogin")]
+        [HttpPost]
+        public ActionResult GoogleLogin(GoogleLoginDto loginDto)
+        {
+            ReturnValue<string> returnValue = _authService.LoginWithGoogle(loginDto);
+
+            if (!returnValue.Success)
+            {
+                return BadRequest(returnValue.Message);
+            }
+
+            return Ok(returnValue.Object);
+        }
     }
 }

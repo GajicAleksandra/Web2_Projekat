@@ -7,20 +7,20 @@ import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { loginUser } from "../../services/AuthService";
-import { LoginSocialFacebook } from "reactjs-social-login";
-import { FacebookLoginButton } from "react-social-login-buttons";
+import { googleLogin, loginUser } from "../../services/AuthService";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Nav from "../UI/Nav";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Paper from "@mui/material/Paper";
-import LoginModel from '../../models/LoginModel'
+import LoginModel from "../../models/LoginModel";
+import { useEffect } from "react";
+import jwtDecode from 'jwt-decode'
+import LoggedInUser from '../../models/LoggedInUser'
 
 const defaultTheme = createTheme({
   palette: {
@@ -41,15 +41,64 @@ export default function Login() {
   } = useForm();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    /* global google */
+    google.accounts.id.initialize({
+      client_id: "139978929335-8cgbgav1hp23639k8p984kh6h64mm01d.apps.googleusercontent.com",
+      callback: handleCallbackResponse,
+    });
+    google.accounts.id.renderButton(document.getElementById("signInDiv"), {
+      theme: "outline",
+      size: "large",
+    });
+  }, []);
+
+  function handleCallbackResponse(response) {
+    var userObject = jwtDecode(response.credential);
+
+    let user = LoggedInUser;
+    user.email = userObject.email;
+    user.name = userObject.given_name;
+    user.lastName = userObject.family_name;
+
+    console.log(userObject);
+
+    loginWithGoogle(user);
+  }
+
+  const loginWithGoogle = async (user) => {
+    await googleLogin(user)
+    .then(function(response){
+      var returnUrl = localStorage.getItem("returnUrl");
+      
+      if (returnUrl) {
+        window.location.href = returnUrl;
+      } else {
+        navigate("/");
+      }
+    })
+    .catch(function(error){
+      toast.error(error.response.data, {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    })
+  };
+
   const onSubmit = (data) => {
     loginUser(data)
       .then(function (response) {
-        var returnUrl = localStorage.getItem('returnUrl');
+        var returnUrl = localStorage.getItem("returnUrl");
 
-        if(returnUrl){
+        if (returnUrl) {
           window.location.href = returnUrl;
-        }
-        else{
+        } else {
           navigate("/");
         }
       })
@@ -171,20 +220,9 @@ export default function Login() {
             </Box>
           </Box>
           <Divider sx={{ ml: 4, mb: 3, width: 550 }}>ili</Divider>
-          <LoginSocialFacebook
-            appId="279895857806999"
-            onResolve={(response) => {
-              console.log(response);
-            }}
-            onReject={(error) => {
-              console.log(error);
-            }}
-          >
-            <FacebookLoginButton
-              text="Facebook"
-              style={{ marginLeft: 32, textAlign: "center", width: 555 }}
-            />
-          </LoginSocialFacebook>
+          <div id="signInDiv" style={{ marginLeft: 32, textAlign: "center", width: 555 }}>
+
+          </div>
         </Grid>
       </Grid>
     </ThemeProvider>

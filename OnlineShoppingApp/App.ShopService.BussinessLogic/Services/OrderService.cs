@@ -25,8 +25,9 @@ namespace App.ShopService.BussinessLogic.Services
             _productRepository = productRepository;
         }
          
-        public async Task<ReturnValue<string>> MakeOrder(OrderDto orderDto, string email)
+        public async Task<ReturnValue<string>> MakeOrder(OrderVM orderDto, string email)
         {
+            Thread.Sleep(15000);
             ReturnValue<string> returnValue = new ReturnValue<string>();
 
             if(!ValidateOrder(orderDto, out string message))
@@ -41,22 +42,33 @@ namespace App.ShopService.BussinessLogic.Services
             List<ProductDto> products = new List<ProductDto>();
             List<int> salesmanIds = new List<int>();
 
-            foreach(OrderItemDto orderItem in orderDto.OrderItems)
+            List<OrderItemDto> items = new List<OrderItemDto>();
+
+            foreach(OrderItemVM orderItem in orderDto.OrderItems)
             {
-                ProductDto product = _productRepository.GetProduct(orderItem.ProductId);
+                ProductDto product = _productRepository.GetProduct(orderItem.Product.Id);
 
-                if (!salesmanIds.Contains(product.SalesmanId))
-                    salesmanIds.Add(product.SalesmanId);
-
-                if(product == null) 
+                if (product == null)
                 {
                     returnValue.Success = false;
-                    returnValue.Message = $"Traženi proizvod ne postoji.";
+                    returnValue.Message = $"Proizvoda {orderItem.Product.Name} nema više na stanju.";
                     returnValue.Object = string.Empty;
 
                     return returnValue;
                 }
 
+                if (!salesmanIds.Contains(product.SalesmanId))
+                    salesmanIds.Add(product.SalesmanId);
+
+                if(product.Price != orderItem.Product.Price)
+                {
+                    returnValue.Success = false;
+                    returnValue.Message = $"Cena proizvoda {orderItem.Product.Name} je izmenjena. Nova cena je {product.Price} RSD.";
+                    returnValue.Object = string.Empty;
+
+                    return returnValue;
+                }
+                
                 if(product.Quantity < orderItem.Quantity)
                 {
                     returnValue.Success = false;
@@ -69,6 +81,14 @@ namespace App.ShopService.BussinessLogic.Services
                 product.Quantity -= orderItem.Quantity;
                 products.Add(product);
                 orderDto.TotalAmount += orderItem.Quantity * product.Price;
+
+                OrderItemDto orderItemDto = new OrderItemDto()
+                {
+                    ProductId = orderItem.Product.Id,
+                    Quantity = orderItem.Quantity,
+                };
+
+                items.Add(orderItemDto);
             }
 
             int customerId = await _communicationService.GetUserId(email);
@@ -81,15 +101,24 @@ namespace App.ShopService.BussinessLogic.Services
                 return returnValue;
             }
 
-            orderDto.CustomerId = customerId;
-            orderDto.TimeOfMakingOrder = DateTime.Now;
-
-            orderDto.TotalAmount = orderDto.TotalAmount + (salesmanIds.Count * 200); //dostava
-
             Random random = new Random();
-            orderDto.TimeOfDelivery = DateTime.Now.AddHours(1).AddHours(random.Next(1, 73));
 
-            _orderRepository.AddOrder(orderDto);
+            OrderDto order = new OrderDto()
+            {
+                Id = orderDto.Id,
+                Name = orderDto.Name,
+                LastName = orderDto.LastName,
+                Address = orderDto.Address,
+                TimeOfDelivery = DateTime.Now.AddHours(1).AddHours(random.Next(1, 25)),
+                TimeOfMakingOrder = DateTime.Now,
+                CustomerId = customerId,
+                TotalAmount = orderDto.TotalAmount + (salesmanIds.Count * 200),
+                Comment = orderDto.Comment,
+                OrderStatus = OrderStatus.Pending,
+                OrderItems = items
+            };
+
+            _orderRepository.AddOrder(order);
 
             foreach(ProductDto p in products)
             {
@@ -98,7 +127,7 @@ namespace App.ShopService.BussinessLogic.Services
 
             returnValue.Success = true;
             returnValue.Message = string.Empty;
-            DateTime date = orderDto.TimeOfMakingOrder.Value;
+            DateTime date = order.TimeOfMakingOrder.Value;
             returnValue.Object = $"Uspešno ste poručili proizvode. Očekivano vreme dostave je {date.Day}.{date.Month}.{date.Year}. {date.Hour}h.";
 
             return returnValue;
@@ -350,7 +379,7 @@ namespace App.ShopService.BussinessLogic.Services
             return orders;
         }
 
-        private bool ValidateOrder(OrderDto orderDto, out string message)
+        private bool ValidateOrder(OrderVM orderDto, out string message)
         {
             if(string.IsNullOrEmpty(orderDto.Name) || 
                 string.IsNullOrEmpty(orderDto.LastName) ||
@@ -366,7 +395,7 @@ namespace App.ShopService.BussinessLogic.Services
                 return false;
             }
 
-            foreach(OrderItemDto orderItem in orderDto.OrderItems)
+            foreach(OrderItemVM orderItem in orderDto.OrderItems)
             {
                 if(orderItem.Quantity <= 0)
                 {

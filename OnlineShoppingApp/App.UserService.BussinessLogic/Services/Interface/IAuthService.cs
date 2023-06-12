@@ -12,5 +12,6 @@ namespace App.UserService.BussinessLogic.Services.Interface
     {
         Task<ReturnValue<string>> Register(UserDto userDto);
         ReturnValue<string> Login(LoginDto loginDto);
+        ReturnValue<string> LoginWithGoogle(GoogleLoginDto loginDto);
     }
 }

@@ -8,6 +8,7 @@ using App.UserService.Models.Enums;
 using App.UserService.Models.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Asn1.Mozilla;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -90,6 +91,34 @@ namespace App.UserService.BussinessLogic.Services
             returnValue.Success = true;
             returnValue.Message = "";
             returnValue.Object = token;
+
+            return returnValue;
+        }
+
+        public ReturnValue<string> LoginWithGoogle(GoogleLoginDto loginDto)
+        {
+            ReturnValue<string> returnValue = new ReturnValue<string>();
+
+            UserDto userDto = new UserDto()
+            {
+                Email = loginDto.Email,
+                Name = loginDto.Name,
+                LastName = loginDto.LastName,
+                Username = loginDto.Email.Split('@')[0],
+                Image = "",
+                UserType = 1,
+                Status = 1,
+                Address = "",
+            };
+
+            if (!_userRepository.CheckIfUserExists(loginDto.Email))
+            {
+                _userRepository.AddUser(userDto);
+            }
+
+            returnValue.Success = true;
+            returnValue.Message = "";
+            returnValue.Object = GenerateToken(userDto);
 
             return returnValue;
         }
@@ -187,8 +216,6 @@ namespace App.UserService.BussinessLogic.Services
             var response = await _blobService.UploadImage(image64, guidString);
 
             return response.Message;
-
         }
-
     }
 }

@@ -25,6 +25,18 @@
       "UpstreamHttpMethod": [ "post" ]
     },
     {
+      "DownstreamPathTemplate": "/api/auth/googlelogin",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7059
+        }
+      ],
+      "UpstreamPathTemplate": "/googlelogin",
+      "UpstreamHttpMethod": [ "post" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/auth/register",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

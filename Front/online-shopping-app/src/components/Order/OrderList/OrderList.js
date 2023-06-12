@@ -67,6 +67,39 @@ function Row(props) {
     props.onCancelOrder(row.id);
   };
 
+  const calculateRemainingTime = (timeOfDelivery) => {
+    timeOfDelivery = new Date(timeOfDelivery);
+    const difference = timeOfDelivery.getTime() - new Date().getTime();
+
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+      (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+    return {
+      days,
+      hours,
+      minutes,
+      seconds,
+    };
+  };
+
+  const [remainingTime, setRemainingTime] = useState(
+    calculateRemainingTime(row.timeOfDelivery)
+  );
+
+  useEffect(() => {
+    if (props.count) {
+      const timer = setInterval(() => {
+        setRemainingTime(calculateRemainingTime(row.timeOfDelivery));
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, []);
+
   return (
     <React.Fragment>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
@@ -156,15 +189,19 @@ function Row(props) {
             <p style={{ color: "gray" }}>U toku</p>
           )}
         </TableCell>
-        <TableCell
-                sx={{
-                  width: 70,
-                  textAlign: "center",
-                }}
-              >
-                Preostalo vreme
-              </TableCell>
-        
+        {props.count && (
+          <TableCell
+            sx={{
+              width: 70,
+              textAlign: "center",
+            }}
+          >
+            <p>
+              {remainingTime.days} dana, {remainingTime.hours}:
+              {remainingTime.minutes}:{remainingTime.seconds}
+            </p>
+          </TableCell>
+        )}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
@@ -336,10 +373,7 @@ export function AdminOrderList(props) {
             </TableHead>
             <TableBody>
               {rows.map((row) => (
-                <Row
-                  key={row.id}
-                  row={row}
-                />
+                <Row key={row.id} row={row} count={false} />
               ))}
             </TableBody>
           </Table>
@@ -495,25 +529,33 @@ export const SalesmanOrderList = () => {
               >
                 Status
               </TableCell>
-              <TableCell
-                sx={{
-                  width: 70,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Preostalo vreme
-              </TableCell>
+              {type === "new" && (
+                <TableCell
+                  sx={{
+                    width: 70,
+                    textAlign: "center",
+                    fontWeight: "bold",
+                    fontSize: 17,
+                  }}
+                >
+                  Preostalo vreme
+                </TableCell>
+              )}
             </TableHead>
-            <TableBody>
-              {rows.map((row) => (
-                <Row
-                  key={row.id}
-                  row={row}
-                />
-              ))}
-            </TableBody>
+            {type === "new" && (
+              <TableBody>
+                {rows.map((row) => (
+                  <Row key={row.id} row={row} count={true} />
+                ))}
+              </TableBody>
+            )}
+            {type === "previous" && (
+              <TableBody>
+                {rows.map((row) => (
+                  <Row key={row.id} row={row} count={false} />
+                ))}
+              </TableBody>
+            )}
           </Table>
         </TableContainer>
       </div>
@@ -714,27 +756,45 @@ export const CustomerOrderList = () => {
               >
                 Status
               </TableCell>
-              <TableCell
-                sx={{
-                  width: 70,
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  fontSize: 17,
-                }}
-              >
-                Preostalo vreme
-              </TableCell>
+              {type === "new" && (
+                <TableCell
+                  sx={{
+                    width: 70,
+                    textAlign: "center",
+                    fontWeight: "bold",
+                    fontSize: 17,
+                  }}
+                >
+                  Preostalo vreme
+                </TableCell>
+              )}
             </TableHead>
-            <TableBody>
-              {rows.map((row) => (
-                <Row
-                  key={row.id}
-                  row={row}
-                  type={type}
-                  onCancelOrder={handleCancelOrder}
-                />
-              ))}
-            </TableBody>
+            {type === "new" && (
+              <TableBody>
+                {rows.map((row) => (
+                  <Row
+                    key={row.id}
+                    row={row}
+                    type={type}
+                    onCancelOrder={handleCancelOrder}
+                    count={true}
+                  />
+                ))}
+              </TableBody>
+            )}
+            {type === "previous" && (
+              <TableBody>
+                {rows.map((row) => (
+                  <Row
+                    key={row.id}
+                    row={row}
+                    type={type}
+                    onCancelOrder={handleCancelOrder}
+                    count={false}
+                  />
+                ))}
+              </TableBody>
+            )}
           </Table>
         </TableContainer>
       </div>

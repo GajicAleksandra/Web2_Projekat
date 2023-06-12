@@ -30,10 +30,8 @@ const CashRegister = () => {
   const [products, setProducts] = useState([]);
   const [summary, setSummary] = useState(0);
   const [summarySummary, setSummarySummary] = useState(0);
-  const [userData, setUserData] = useState(JSON.parse(JSON.stringify(user)));
-  const [crData, setCrData] = useState(
-    JSON.parse(JSON.stringify(cashRegister))
-  );
+  const [userData, setUserData] = useState(user);
+  const [crData, setCrData] = useState(cashRegister);
   const [salesmenCount, setSalesmenCount] = useState(1);
   const navigate = useNavigate();
   var cartItems = [];
@@ -107,7 +105,7 @@ const CashRegister = () => {
     cashRegister.lastName = userData.lastName;
     cashRegister.address = userData.address;
     cashRegister.orderItems = products.map((p) => ({
-      productId: p.product.id,
+      product: p.product,
       quantity: p.quantity,
     }));
     cashRegister.comment = "";
@@ -124,7 +122,7 @@ const CashRegister = () => {
     setCrData({
       ...crData,
       orderItems: newProducts.map((p) => ({
-        productId: p.product.id,
+        product: p.product,
         quantity: p.quantity,
       })),
     });
@@ -156,7 +154,7 @@ const CashRegister = () => {
     setCrData({
       ...crData,
       orderItems: products.map((p) => ({
-        productId: p.product.id,
+        product: p.product,
         quantity: p.quantity,
       })),
     });
@@ -175,7 +173,7 @@ const CashRegister = () => {
       setCrData({
         ...crData,
         orderItems: products.map((p) => ({
-          productId: p.product.id,
+          product: p.product,
           quantity: p.quantity,
         })),
       });
@@ -211,9 +209,7 @@ const CashRegister = () => {
     }
 
     crData.comment = document.getElementById("comment").value;
-
-    console.log(crData);
-
+    
     await placeOrder(crData)
       .then(function (response) {
         toast.success(response.data, {

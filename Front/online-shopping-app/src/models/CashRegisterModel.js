@@ -5,6 +5,7 @@ const CashRegisterModel = ({
     lastName: "",
     address: "",
     comment: "",
+    orderStatus: "",
     orderItems: [OrderItemModel]
 })
 

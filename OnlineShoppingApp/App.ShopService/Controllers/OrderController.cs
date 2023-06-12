@@ -16,6 +16,8 @@ namespace App.ShopService.Controllers
     {
         private readonly IOrderService _orderService;
         private readonly IProductService _productService;
+        private static readonly object addOrderLock = new object();
+        private static readonly SemaphoreSlim addOrderSemaphore = new SemaphoreSlim(1, 1);
 
         public OrderController(IOrderService orderService, IProductService productService)
         {
@@ -26,7 +28,7 @@ namespace App.ShopService.Controllers
         [Authorize(Roles = "1")]
         [Route("add")]
         [HttpPost]
-        public async Task<IActionResult> AddOrder(OrderDto orderDto)
+        public async Task<IActionResult> AddOrder(OrderVM orderVM)
         {
             string email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
             if (string.IsNullOrEmpty(email))
@@ -34,7 +36,7 @@ namespace App.ShopService.Controllers
                 return NotFound("Desila se greška, pokušajte ponovo.");
             }
 
-            ReturnValue<string> returnValue = await _orderService.MakeOrder(orderDto, email);
+            ReturnValue<string> returnValue = _orderService.MakeOrder(orderVM, email).GetAwaiter().GetResult();
 
             if (!returnValue.Success)
             {
