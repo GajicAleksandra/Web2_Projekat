@@ -36,7 +36,7 @@ namespace App.ShopService.Controllers
                 return NotFound("Desila se greška, pokušajte ponovo.");
             }
 
-            ReturnValue<string> returnValue = _orderService.MakeOrder(orderVM, email).GetAwaiter().GetResult();
+            ReturnValue<string> returnValue = await _orderService.MakeOrder(orderVM, email);
 
             if (!returnValue.Success)
             {

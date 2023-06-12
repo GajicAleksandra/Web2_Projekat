@@ -43,11 +43,11 @@ export default function Login() {
 
   useEffect(() => {
     /* global google */
-    google.accounts.id.initialize({
+    window.google.accounts.id.initialize({
       client_id: "139978929335-8cgbgav1hp23639k8p984kh6h64mm01d.apps.googleusercontent.com",
       callback: handleCallbackResponse,
     });
-    google.accounts.id.renderButton(document.getElementById("signInDiv"), {
+    window.google.accounts.id.renderButton(document.getElementById("signInDiv"), {
       theme: "outline",
       size: "large",
     });

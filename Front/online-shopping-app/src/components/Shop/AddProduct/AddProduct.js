@@ -40,6 +40,10 @@ const AddProduct = () => {
   const product = ProductModel;
   const [productData, setProductData] = useState(product);
 
+  function isNumber(value) {
+    return !isNaN(parseFloat(value)) && isFinite(value);
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (value === "") {
@@ -65,6 +69,16 @@ const AddProduct = () => {
     ) {
       document.getElementById("editProductError").innerHTML =
         "Popunite obavezna polja.";
+      return;
+    }
+
+    if(!isNumber(productData.price) || productData.price <= 0){
+      document.getElementById("priceError").innerHTML = "Cena mora biti pozitivan broj.";
+      return;
+    }
+
+    if(!isNumber(productData.quantity) || productData.quantity <= 0){
+      document.getElementById("quantityError").innerHTML = "Količina mora biti pozitivan broj.";
       return;
     }
 

@@ -107,7 +107,7 @@ const Product = ({ product, onDeleteProduct }) => {
     if (cart) {
       cartItems = JSON.parse(cart);
     } else {
-      cartItems = [OrderItemModel];
+      cartItems = [];
     }
 
     var existingItem = cartItems.find(function (i) {

@@ -27,7 +27,7 @@ namespace App.ShopService.BussinessLogic.Services
          
         public async Task<ReturnValue<string>> MakeOrder(OrderVM orderDto, string email)
         {
-            Thread.Sleep(15000);
+            Thread.Sleep(4000);
             ReturnValue<string> returnValue = new ReturnValue<string>();
 
             if(!ValidateOrder(orderDto, out string message))
@@ -127,7 +127,7 @@ namespace App.ShopService.BussinessLogic.Services
 
             returnValue.Success = true;
             returnValue.Message = string.Empty;
-            DateTime date = order.TimeOfMakingOrder.Value;
+            DateTime date = order.TimeOfDelivery;
             returnValue.Object = $"Uspešno ste poručili proizvode. Očekivano vreme dostave je {date.Day}.{date.Month}.{date.Year}. {date.Hour}h.";
 
             return returnValue;
